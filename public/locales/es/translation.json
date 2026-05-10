@@ -16,7 +16,16 @@
       "invalidCredentials": "Nombre de usuario o contraseña inválidos",
       "error": "Ocurrió un error. Por favor intenta de nuevo.",
       "noAccount": "¿No tienes cuenta?",
-      "register": "Regístrate aquí"
+      "register": "Regístrate aquí",
+      "forgotPassword": "¿Olvidaste tu contraseña?"
+    },
+    "forgotPassword": {
+      "title": "Recuperar Contraseña",
+      "subtitle": "Ingresa tu correo electrónico para recibir un enlace de recuperación",
+      "button": "Enviar Enlace",
+      "loading": "Enviando...",
+      "rememberPassword": "¿Recordaste tu contraseña?",
+      "login": "Inicia sesión aquí"
     },
     "register": {
       "title": "Crear Cuenta",

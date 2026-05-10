@@ -87,9 +87,18 @@ export function Login() {
           </div>
           
           <div>
-            <label htmlFor="password" className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">
-              {t('form.password')}
-            </label>
+            <div className="flex justify-between items-center">
+              <label htmlFor="password" className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">
+                {t('form.password')}
+              </label>
+              <button
+                type="button"
+                onClick={() => window.location.href = '/forgot-password'}
+                className="text-[10px] text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+              >
+                {t('login.forgotPassword')}
+              </button>
+            </div>
             <input
               id="password" name="password" type="password" required
               className="input-clean mt-1"

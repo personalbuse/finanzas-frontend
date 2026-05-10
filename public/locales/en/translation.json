@@ -17,7 +17,16 @@
       "error": "An error occurred. Please try again.",
       "noAccount": "Don't have an account?",
       "register": "Register here",
-      "invalidCredentials": "Invalid username or password"
+      "invalidCredentials": "Invalid username or password",
+      "forgotPassword": "Forgot password?"
+    },
+    "forgotPassword": {
+      "title": "Recover Password",
+      "subtitle": "Enter your email to receive a recovery link",
+      "button": "Send Link",
+      "loading": "Sending...",
+      "rememberPassword": "Remember your password?",
+      "login": "Sign in here"
     },
     "register": {
       "title": "Create Account",
