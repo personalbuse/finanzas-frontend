@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../provider/LanguageProvider';
 import { useStore } from '../store/useStore';
 import api from '../services/api';
+import { OnboardingModal } from '../components/onboarding/OnboardingModal';
 import { 
   LineChart, 
   Line, 
@@ -23,14 +24,36 @@ const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'
 export function Dashboard() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { user } = useStore();
+  const { user, updateBalance } = useStore();
   const [portfolio, setPortfolio] = useState<any>(null);
   const [transactions, setTransactions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [courseProgress, setCourseProgress] = useState({ completed_courses: 0, bonus_earned: 0 });
 
   useEffect(() => {
     fetchData();
+    checkOnboarding();
   }, []);
+
+  const checkOnboarding = async () => {
+    const hasSeenOnboarding = localStorage.getItem('onboarding_shown');
+    
+    try {
+      const progressRes = await api.get('/course-progress');
+      setCourseProgress(progressRes.data);
+      
+      if (progressRes.data.completed_courses === 0 && !hasSeenOnboarding) {
+        setShowOnboarding(true);
+      }
+    } catch (error) {
+      console.error('Error fetching course progress:', error);
+    }
+  };
+
+  const handleOnboardingClose = () => {
+    setShowOnboarding(false);
+  };
 
   const fetchData = async () => {
     try {
@@ -73,11 +96,48 @@ export function Dashboard() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in">
+      <OnboardingModal isOpen={showOnboarding} onClose={handleOnboardingClose} />
+      
+      {courseProgress.completed_courses > 0 && (
+        <div className="mb-6 p-4 rounded-lg bg-emerald-900/20 border border-emerald-800/50">
+          <div className="flex items-center justify-between">
+            <div>
+              {courseProgress.completed_courses === 3 ? (
+                <p className="text-sm text-emerald-400 font-medium">
+                  {t('learning.courseCompleted')}
+                </p>
+              ) : (
+                <p className="text-sm text-emerald-400 font-medium">
+                  {t('learning.courseProgress', { 
+                    count: courseProgress.completed_courses, 
+                    bonus: courseProgress.bonus_earned 
+                  })}
+                </p>
+              )}
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => navigate('/learn')}
+                className="px-3 py-1.5 text-xs font-medium text-emerald-400 bg-emerald-900/30 rounded-lg hover:bg-emerald-900/50 transition-colors"
+              >
+                {t('learning.reviewCourse')}
+              </button>
+              <button
+                onClick={() => navigate('/stocks')}
+                className="px-3 py-1.5 text-xs font-medium text-white bg-emerald-600 rounded-lg hover:bg-emerald-500 transition-colors"
+              >
+                {t('learning.goToInvest')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="mb-10">
-        <h1 className="text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+        <h1 className="text-3xl font-semibold text-slate-900 dark:text-white tracking-tight">
           {t('dashboard.welcome')}, {currentUser.username || 'Investor'}
         </h1>
-        <p className="text-slate-500 dark:text-slate-400 font-medium mt-2">{t('app.subtitle')}</p>
+        <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">{t('app.subtitle')}</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">

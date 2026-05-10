@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from '../../provider/LanguageProvider';
+import { useStore } from '../../store/useStore';
+import api from '../../services/api';
+import { toast } from 'react-toastify';
 
 export function LessonDetail() {
   const { id } = useParams<{ id: string }>();
@@ -34,10 +37,23 @@ export function LessonDetail() {
     setShowResult(true);
   };
 
-  const nextStep = () => {
+  const nextStep = async () => {
     if (step === 'theory') setStep('quiz');
     else if (step === 'quiz') setStep('simulation');
-    else navigate('/learn');
+    else {
+      try {
+        const res = await api.post(`/complete-module/${id}`);
+        if (res.data.current_balance) {
+          const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+          currentUser.current_balance = res.data.current_balance;
+          localStorage.setItem('user', JSON.stringify(currentUser));
+        }
+        toast.success(`${t('learning.moduleCompleted')} ${t('learning.bonusEarned')}`);
+      } catch (error) {
+        console.error('Error completing module:', error);
+      }
+      navigate('/learn');
+    }
   };
 
   const getStepLabel = () => {

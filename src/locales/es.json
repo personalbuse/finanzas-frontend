@@ -265,13 +265,37 @@
     "ascending": "Ascendente",
     "descending": "Descendente"
   },
-  "toast": {
-    "loginSuccess": "¡Bienvenido/a de vuelta!",
+"toast": {
+    "loginSuccess": "¡Bienvenido/a de nuevo!",
     "logoutSuccess": "Sesión cerrada correctamente",
     "registerSuccess": "¡Cuenta creada exitosamente!",
     "buySuccess": "¡Acción comprada exitosamente!",
     "sellSuccess": "¡Acción vendida exitosamente!",
     "error": "Ocurrió un error",
     "loading": "Cargando..."
+  },
+  "onboarding": {
+    "welcome": "¡Bienvenido a tu Simulador!",
+    "welcomeDesc": "Has recibido $10,000 virtuales para practicar inversiones",
+    "learnFirst": "Primero Aprende",
+    "learnFirstDesc": "Antes de invertir, completa nuestro curso gratuito. Aprenderás conceptos fundamentales que te ayudarán a tomar mejores decisiones.",
+    "courseModules": "3 Módulos: Fundamentos, Análisis, Estrategia",
+    "balance": "Tu Dinero está Listo",
+    "balanceDesc": "Tus $10,000 esperan. Completa cada módulo para ganar $1,000 extra.",
+    "readyToInvest": "Listo para Invertir",
+    "readyToInvestDesc": "Después del curso podrás explorar acciones y construir tu portafolio",
+    "next": "Siguiente",
+    "skip": "Ahora no",
+    "startCourse": "Empezar el Curso",
+    "step": "Paso {current} de {total}"
+  },
+  "learning": {
+    "moduleCompleted": "¡Módulo completado!",
+    "bonusEarned": "+$1,000 agregados a tu balance",
+    "courseProgress": "Has completado {count} módulo(s). +${bonus} en bonuses.",
+    "courseCompleted": "¡Felicitaciones! Has completado el curso. +$3,000 agregados a tu balance",
+    "reviewCourse": "Repasar curso",
+    "goToInvest": "Ir a invertir"
   }
+}
 }
