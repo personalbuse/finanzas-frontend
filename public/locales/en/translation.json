@@ -38,7 +38,8 @@
       "password": "Password",
       "passwordPlaceholder": "Enter your password",
       "confirmPassword": "Confirm Password",
-      "confirmPasswordPlaceholder": "Confirm your password"
+      "confirmPasswordPlaceholder": "Confirm your password",
+      "passwordRequirements": "Password must have:"
     },
     "dashboard": {
       "title": "Dashboard",

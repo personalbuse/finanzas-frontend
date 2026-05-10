@@ -37,7 +37,8 @@
       "password": "Contraseña",
       "passwordPlaceholder": "Ingresa tu contraseña",
       "confirmPassword": "Confirmar Contraseña",
-      "confirmPasswordPlaceholder": "Confirma tu contraseña"
+      "confirmPasswordPlaceholder": "Confirma tu contraseña",
+      "passwordRequirements": "La contraseña debe tener:"
     },
     "dashboard": {
       "title": "Tablero",

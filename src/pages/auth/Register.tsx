@@ -4,6 +4,7 @@ import { useAuth } from '../../provider/AuthProvider';
 import { useTranslation } from '../../provider/LanguageProvider';
 import { useStore } from '../../store/useStore';
 import { toast } from 'react-toastify';
+import { CheckCircle, XCircle } from 'lucide-react';
 
 export function Register() {
   const { login } = useAuth();
@@ -15,6 +16,13 @@ export function Register() {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [passwordRequirements, setPasswordRequirements] = useState({
+    length: false,
+    uppercase: false,
+    lowercase: false,
+    number: false,
+    symbol: false,
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,8 +88,21 @@ export function Register() {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    
+    if (name === 'password') {
+      setPasswordRequirements({
+        length: value.length >= 12,
+        uppercase: /[A-Z]/.test(value),
+        lowercase: /[a-z]/.test(value),
+        number: /\d/.test(value),
+        symbol: /[@$!%*?&]/.test(value),
+      });
+    }
   };
+
+  const allRequirementsMet = Object.values(passwordRequirements).every(Boolean);
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center py-12 px-4 animate-fade-in">
@@ -135,6 +156,33 @@ export function Register() {
               value={formData.password}
               onChange={handleChange}
             />
+            {formData.password && (
+              <div className="mt-3 space-y-1.5 bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg">
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">
+                  {t('form.passwordRequirements') || 'La contraseña debe tener:'}
+                </p>
+                <div className={`flex items-center gap-2 text-xs ${passwordRequirements.length ? 'text-emerald-600' : 'text-slate-400'}`}>
+                  {passwordRequirements.length ? <CheckCircle className="w-3.5 h-3.5" /> : <XCircle className="w-3.5 h-3.5" />}
+                  <span>Mínimo 12 caracteres</span>
+                </div>
+                <div className={`flex items-center gap-2 text-xs ${passwordRequirements.uppercase ? 'text-emerald-600' : 'text-slate-400'}`}>
+                  {passwordRequirements.uppercase ? <CheckCircle className="w-3.5 h-3.5" /> : <XCircle className="w-3.5 h-3.5" />}
+                  <span>Una mayúscula (A-Z)</span>
+                </div>
+                <div className={`flex items-center gap-2 text-xs ${passwordRequirements.lowercase ? 'text-emerald-600' : 'text-slate-400'}`}>
+                  {passwordRequirements.lowercase ? <CheckCircle className="w-3.5 h-3.5" /> : <XCircle className="w-3.5 h-3.5" />}
+                  <span>Una minúscula (a-z)</span>
+                </div>
+                <div className={`flex items-center gap-2 text-xs ${passwordRequirements.number ? 'text-emerald-600' : 'text-slate-400'}`}>
+                  {passwordRequirements.number ? <CheckCircle className="w-3.5 h-3.5" /> : <XCircle className="w-3.5 h-3.5" />}
+                  <span>Un número (0-9)</span>
+                </div>
+                <div className={`flex items-center gap-2 text-xs ${passwordRequirements.symbol ? 'text-emerald-600' : 'text-slate-400'}`}>
+                  {passwordRequirements.symbol ? <CheckCircle className="w-3.5 h-3.5" /> : <XCircle className="w-3.5 h-3.5" />}
+                  <span>Un símbolo (@$!%*?&)</span>
+                </div>
+              </div>
+            )}
           </div>
 
           <div>
@@ -152,8 +200,8 @@ export function Register() {
 
           <button
             type="submit"
-            disabled={loading}
-            className="btn-primary w-full mt-2"
+            disabled={loading || !allRequirementsMet || formData.password !== formData.confirmPassword}
+            className={`btn-primary w-full mt-2 ${(!allRequirementsMet || formData.password !== formData.confirmPassword) ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             {loading ? t('register.loading') : t('register.button')}
           </button>
