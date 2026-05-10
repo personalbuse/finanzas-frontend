@@ -55,7 +55,13 @@
     "error": "An error occurred during registration",
     "loginError": "Registration successful, but login failed",
     "hasAccount": "Already have an account?",
-    "login": "Sign in here"
+    "login": "Sign in here",
+    "success": "Account created successfully!",
+    "verifyTitle": "Verify Your Email",
+    "verifySubtitle": "Enter the code we sent you",
+    "verifying": "Verifying...",
+    "verifyButton": "Create Account",
+    "resendCode": "Didn't receive the code? Request another"
   },
   "forgotPassword": {
     "title": "Recover Password",

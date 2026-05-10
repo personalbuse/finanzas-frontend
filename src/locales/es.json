@@ -55,7 +55,13 @@
     "error": "Ocurrió un error durante el registro",
     "loginError": "Registro exitoso, pero inicio de sesión fallido",
     "hasAccount": "¿Ya tienes cuenta?",
-    "login": "Inicia sesión aquí"
+    "login": "Inicia sesión aquí",
+    "success": "¡Cuenta creada exitosamente!",
+    "verifyTitle": "Verifica tu Email",
+    "verifySubtitle": "Ingresa el código que te enviamos",
+    "verifying": "Verificando...",
+    "verifyButton": "Crear Cuenta",
+    "resendCode": "¿No recibiste el código? Solicitar otro"
   },
   "forgotPassword": {
     "title": "Recuperar Contraseña",
