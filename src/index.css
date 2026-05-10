@@ -17,15 +17,15 @@
 }
 
 .dark {
-  --bg-primary: #0f172a;
-  --bg-secondary: #1e293b;
-  --bg-card: #1e293b;
-  --accent-primary: #f1f5f9;
+  --bg-primary: #000000;
+  --bg-secondary: #121212;
+  --bg-card: #1e1e1e;
+  --accent-primary: #ffffff;
   --accent-green: #10b981;
   --accent-red: #ef4444;
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --border-subtle: #334155;
+  --text-primary: #ffffff;
+  --text-secondary: #a1a1aa;
+  --border-subtle: #262626;
 }
 
 * {
@@ -66,36 +66,36 @@ h1, h2, h3, h4, .font-display {
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: rgba(100, 116, 139, 0.3);
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: rgba(100, 116, 139, 0.5);
+  background: rgba(255, 255, 255, 0.25);
 }
 
 @layer components {
   .glass-card {
-    @apply bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm transition-all duration-300;
+    @apply bg-white dark:bg-[#1e1e1e] border border-slate-200 dark:border-[#262626] rounded-2xl shadow-sm transition-all duration-300;
   }
   
   .glass-card:hover {
-    @apply border-slate-300 dark:border-slate-600 shadow-lg;
+    @apply border-slate-300 dark:border-[#3a3a3a] shadow-lg;
   }
 
   .header-clean {
-    @apply sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800;
+    @apply sticky top-0 z-50 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-slate-200 dark:border-[#1a1a1a];
   }
 
   .stat-card {
-    @apply bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 transition-all duration-300;
+    @apply bg-white dark:bg-[#1e1e1e] rounded-2xl p-6 border border-slate-200 dark:border-[#262626] transition-all duration-300;
   }
   
   .stat-card:hover {
-    @apply border-slate-300 dark:border-slate-600 shadow-lg -translate-y-1;
+    @apply border-slate-300 dark:border-[#3a3a3a] shadow-lg -translate-y-1;
   }
 
   .btn-primary {
-    @apply px-6 py-2.5 text-sm font-semibold text-white bg-slate-900 dark:bg-white dark:text-slate-900 rounded-xl transition-all duration-200 hover:bg-slate-800 dark:hover:bg-slate-100 disabled:opacity-50;
+    @apply px-6 py-2.5 text-sm font-semibold text-white bg-slate-900 dark:bg-white dark:text-black rounded-xl transition-all duration-200 hover:bg-slate-800 dark:hover:bg-slate-200 disabled:opacity-50;
   }
   
   .btn-danger {
@@ -103,11 +103,11 @@ h1, h2, h3, h4, .font-display {
   }
 
   .btn-secondary {
-    @apply px-6 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 rounded-xl transition-all duration-200 hover:bg-slate-200 dark:hover:bg-slate-600;
+    @apply px-6 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-[#2a2a2a] rounded-xl transition-all duration-200 hover:bg-slate-200 dark:hover:bg-[#3a3a3a];
   }
 
   .input-clean {
-    @apply w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-900/5 dark:focus:ring-white/10 focus:border-slate-900 dark:focus:border-white transition-all duration-200;
+    @apply w-full px-4 py-2.5 bg-slate-50 dark:bg-[#2a2a2a] border border-slate-200 dark:border-[#3a3a3a] rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-900/5 dark:focus:ring-white/10 focus:border-slate-900 dark:focus:border-white transition-all duration-200;
   }
 
   .table-clean {
@@ -115,7 +115,7 @@ h1, h2, h3, h4, .font-display {
   }
   
   .table-clean thead {
-    @apply bg-slate-50 dark:bg-slate-700/50 border-b border-slate-200 dark:border-slate-700;
+    @apply bg-slate-50 dark:bg-[#1e1e1e]/50 border-b border-slate-200 dark:border-[#262626];
   }
   
   .table-clean th {
@@ -123,7 +123,7 @@ h1, h2, h3, h4, .font-display {
   }
   
   .table-clean td {
-    @apply px-6 py-4 text-slate-700 dark:text-slate-300 border-b border-slate-100 dark:border-slate-700;
+    @apply px-6 py-4 text-slate-700 dark:text-slate-300 border-b border-slate-100 dark:border-[#262626];
   }
   
   .table-clean tbody tr:last-child td {
@@ -131,7 +131,7 @@ h1, h2, h3, h4, .font-display {
   }
   
   .table-clean tbody tr:hover {
-    @apply bg-slate-50/50 dark:bg-slate-700/30;
+    @apply bg-slate-50/50 dark:bg-[#2a2a2a]/30;
   }
 
   .tag-success {
