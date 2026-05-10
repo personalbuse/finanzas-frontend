@@ -109,9 +109,9 @@ export function Transactions() {
         {t('transactions.title')}
       </h1>
 
-      <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden shadow-lg">
-        <div className="p-6 border-b border-slate-100 dark:border-slate-700 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
+      <div className="bg-white dark:bg-[#0d0d0d] border border-slate-200 dark:border-[#1a1a1a] rounded-xl overflow-hidden">
+        <div className="p-4 border-b border-slate-100 dark:border-[#1a1a1a] flex flex-col sm:flex-row justify-between items-center gap-4">
+          <h3 className="text-base font-semibold text-slate-900 dark:text-white tracking-tight">
             {t('transactions.recentActivity')}
           </h3>
           <div className="flex items-center gap-4">
@@ -120,7 +120,7 @@ export function Transactions() {
             </span>
             <button 
               onClick={fetchTransactions} 
-              className="flex items-center gap-2 px-4 py-2 text-xs font-bold text-slate-400 hover:text-slate-900 dark:hover:text-white uppercase tracking-widest transition-colors bg-slate-50 dark:bg-slate-700 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-600"
+              className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-slate-400 hover:text-slate-900 dark:hover:text-white uppercase tracking-widest transition-colors bg-slate-50 dark:bg-[#1a1a1a] rounded-lg hover:bg-slate-100 dark:hover:bg-[#262626]"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />

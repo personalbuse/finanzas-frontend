@@ -194,14 +194,14 @@ export function Portfolio() {
         </div>
       </div>
 
-      <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden shadow-lg">
-        <div className="p-6 border-b border-slate-100 dark:border-slate-700">
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">{t('portfolio.holdings')}</h3>
+      <div className="bg-white dark:bg-[#0d0d0d] border border-slate-200 dark:border-[#1a1a1a] rounded-xl overflow-hidden">
+        <div className="p-4 border-b border-slate-100 dark:border-[#1a1a1a]">
+          <h3 className="text-base font-semibold text-slate-900 dark:text-white tracking-tight">{t('portfolio.holdings')}</h3>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-slate-50 dark:bg-slate-700/50">
+            <thead className="bg-slate-50 dark:bg-[#1a1a1a]/50">
               <tr>
                 {[
                   { key: 'symbol', label: t('portfolio.stock') },

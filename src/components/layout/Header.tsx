@@ -27,27 +27,20 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-white/90 dark:bg-black/90 backdrop-blur-xl border-b border-slate-200 dark:border-[#1a1a1a] transition-colors duration-200">
+    <header className="sticky top-0 z-50 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-slate-200 dark:border-[#1a1a1a] transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-14">
           <div 
-            className="flex items-center space-x-3 cursor-pointer group" 
+            className="cursor-pointer group" 
             onClick={() => navigate('/dashboard')}
           >
-            <div className="relative">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
-                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                </svg>
-              </div>
-            </div>
-            <div>
-              <div className="font-display text-lg font-bold tracking-tight text-slate-900 dark:text-white">
-                SIMULADOR
-              </div>
-              <div className="text-[9px] font-medium text-slate-400 uppercase tracking-widest hidden sm:block">
-                STOCK MARKET
-              </div>
+            <div className="flex items-baseline">
+              <span className="font-display text-2xl font-light tracking-[0.3em] text-slate-900 dark:text-white uppercase">
+                Simulador
+              </span>
+              <span className="ml-3 font-display text-sm font-light tracking-[0.25em] text-slate-400 dark:text-slate-500 uppercase hidden sm:block">
+                Stock Market
+              </span>
             </div>
           </div>
           
@@ -56,10 +49,10 @@ export function Header() {
               <button
                 key={item.path}
                 onClick={() => navigate(item.path)}
-                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
                   isActive(item.path)
-                    ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-md'
-                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
+                    ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900'
+                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 {item.label}
@@ -70,7 +63,7 @@ export function Header() {
           <div className="flex items-center space-x-3">
             <button
               onClick={toggleTheme}
-              className="p-2.5 rounded-xl text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all"
+              className="p-2 rounded-lg text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-[#1a1a1a] hover:bg-slate-200 dark:hover:bg-[#262626] transition-all"
               title={darkMode ? t('nav.lightMode') : t('nav.darkMode')}
             >
               {darkMode ? (
@@ -86,14 +79,14 @@ export function Header() {
             
             <button
               onClick={() => changeLanguage(language === 'en' ? 'es' : 'en')}
-              className="px-4 py-2 text-xs font-bold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-all uppercase tracking-widest"
+              className="px-3 py-1.5 text-xs font-medium text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-[#1a1a1a] rounded-lg hover:bg-slate-200 dark:hover:bg-[#262626] transition-all uppercase tracking-widest"
             >
               {language === 'en' ? 'ES' : 'EN'}
             </button>
             
             <button
               onClick={handleLogout}
-              className="px-4 py-2 text-xs font-bold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30 rounded-xl hover:bg-red-100 dark:hover:bg-red-900/50 transition-all uppercase tracking-widest"
+              className="px-3 py-1.5 text-xs font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/40 transition-all uppercase tracking-widest"
             >
               {t('nav.logout')}
             </button>

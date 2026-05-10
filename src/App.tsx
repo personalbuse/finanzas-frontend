@@ -23,8 +23,8 @@ function AppContent() {
   const { logout, isAuthenticated } = useAuth();
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-black transition-colors duration-200">
-      {isAuthenticated && <Header onLogout={logout} />}
+    <div className="min-h-screen bg-slate-50 dark:bg-[#000000] transition-colors duration-200">
+      {isAuthenticated && <Header />}
       
       <main className="container mx-auto px-4 py-8">
         <Routes>

@@ -37,32 +37,32 @@ export function ForgotPassword() {
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center py-12 px-4 animate-fade-in">
-      <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-2xl border border-slate-200 shadow-sm">
+      <div className="max-w-md w-full space-y-6 bg-white dark:bg-[#0d0d0d] p-8 rounded-xl border border-slate-200 dark:border-[#1a1a1a]">
         <div className="text-center">
-          <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+          <h2 className="text-3xl font-semibold text-slate-900 dark:text-white tracking-tight">
             {t('forgotPassword.title')}
           </h2>
-          <p className="mt-3 text-slate-500 font-medium">
+          <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
             {t('forgotPassword.subtitle')}
           </p>
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-100 text-red-600 px-4 py-3 rounded-xl text-sm font-medium animate-fade-in">
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-lg text-sm font-medium animate-fade-in">
             {error}
           </div>
         )}
 
         {message && (
-          <div className="bg-emerald-50 border border-emerald-100 text-emerald-600 px-4 py-3 rounded-xl text-sm font-medium animate-fade-in">
+          <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400 px-4 py-3 rounded-lg text-sm font-medium animate-fade-in">
             {message}
           </div>
         )}
 
         {!message && (
-          <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <form className="mt-6 space-y-5" onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="email" className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">
+              <label htmlFor="email" className="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">
                 {t('form.email')}
               </label>
               <input
@@ -87,12 +87,12 @@ export function ForgotPassword() {
           </form>
         )}
 
-        <div className="text-center mt-6">
-          <p className="text-sm text-slate-500">
+        <div className="text-center mt-4">
+          <p className="text-sm text-slate-500 dark:text-slate-400">
             {t('forgotPassword.rememberPassword')}{' '}
             <button
               onClick={() => window.location.href = '/login'}
-              className="font-bold text-slate-900 hover:underline transition-all"
+              className="font-medium text-slate-900 dark:text-white hover:underline transition-all"
             >
               {t('forgotPassword.login')}
             </button>

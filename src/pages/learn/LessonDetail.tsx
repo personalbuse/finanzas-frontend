@@ -57,10 +57,10 @@ export function LessonDetail() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in py-8 md:py-12">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in py-6 md:py-8">
       <button 
         onClick={() => navigate('/learn')}
-        className="group flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-slate-900 dark:hover:text-white uppercase tracking-widest mb-8 transition-colors"
+        className="group flex items-center gap-2 text-xs font-medium text-slate-400 hover:text-slate-900 dark:hover:text-white uppercase tracking-widest mb-6 transition-colors"
       >
         <svg className="w-4 h-4 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -68,33 +68,33 @@ export function LessonDetail() {
         {t('learn.backToAcademy')}
       </button>
 
-      <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl overflow-hidden shadow-xl">
-        <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-700 flex">
-          <div className={`h-full bg-gradient-to-r from-emerald-500 to-emerald-600 transition-all duration-500 ${getProgressWidth()}`} />
+      <div className="bg-white dark:bg-[#0d0d0d] border border-slate-200 dark:border-[#1a1a1a] rounded-xl overflow-hidden">
+        <div className="h-1 w-full bg-slate-100 dark:bg-[#1a1a1a] flex">
+          <div className={`h-full bg-emerald-500 transition-all duration-500 ${getProgressWidth()}`} />
         </div>
 
-        <div className="p-8 md:p-14">
-          <div className="flex items-center gap-3 mb-6">
-            <div className={`w-3 h-3 rounded-full ${
+        <div className="p-6 md:p-8">
+          <div className="flex items-center gap-2 mb-4">
+            <div className={`w-2 h-2 rounded-full ${
               step === 'theory' ? 'bg-blue-500' : step === 'quiz' ? 'bg-amber-500' : 'bg-emerald-500'
             }`} />
-            <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+            <span className="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest">
               {getStepLabel()}
             </span>
           </div>
           
-          <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-10">
+          <h2 className="text-2xl md:text-3xl font-semibold text-slate-900 dark:text-white tracking-tight mb-6">
             {t(`learn.modules.${id}.title`)}
           </h2>
 
           {step === 'theory' && (
             <div className="animate-fade-in">
-              <div className="bg-slate-50 dark:bg-slate-700/50 rounded-2xl p-8 mb-10 border border-slate-100 dark:border-slate-600">
-                <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
+              <div className="bg-slate-50 dark:bg-[#1a1a1a] rounded-lg p-5 mb-6 border border-slate-100 dark:border-[#262626]">
+                <p className="text-base md:text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
                   {t(`learn.modules.${id}.theory`)}
                 </p>
               </div>
-              <button onClick={nextStep} className="btn-primary px-10 py-3 shadow-lg hover:shadow-xl transition-shadow">
+              <button onClick={nextStep} className="btn-primary px-8 py-2.5">
                 {t('learn.continueCourse')}
               </button>
             </div>
@@ -102,29 +102,29 @@ export function LessonDetail() {
 
           {step === 'quiz' && (
             <div className="animate-fade-in">
-              <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-2xl p-6 mb-8 border border-amber-100 dark:border-amber-800">
-                <p className="text-lg md:text-xl text-slate-900 dark:text-white font-bold mb-2">
+              <div className="bg-amber-50 dark:bg-amber-900/20 rounded-lg p-4 mb-5 border border-amber-100 dark:border-amber-900">
+                <p className="text-base md:text-lg text-slate-900 dark:text-white font-medium mb-1">
                   {t(`learn.modules.${id}.quiz.q1`)}
                 </p>
               </div>
               
-              <div className="space-y-4 mb-10">
+              <div className="space-y-3 mb-6">
                 {[1, 2].map((num) => (
                   <button
                     key={num}
                     onClick={() => !showResult && setSelectedOption(num.toString())}
-                    className={`w-full p-5 rounded-2xl border-2 text-left font-bold transition-all duration-200 ${
+                    className={`w-full p-4 rounded-xl border-2 text-left font-medium transition-all duration-200 ${
                       selectedOption === num.toString() 
                         ? 'border-slate-900 dark:border-white bg-slate-900 dark:bg-white text-white dark:text-slate-900' 
-                        : 'border-slate-200 dark:border-slate-600 hover:border-slate-400 dark:hover:border-slate-500 text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800'
-                    } ${showResult && t(`learn.modules.${id}.quiz.a`) === num.toString() ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-900 dark:text-emerald-400' : ''}`}
+                        : 'border-slate-200 dark:border-[#262626] hover:border-slate-400 dark:hover:border-[#333] text-slate-600 dark:text-slate-300 bg-white dark:bg-[#0d0d0d]'
+                    } ${showResult && t(`learn.modules.${id}.quiz.a`) === num.toString() ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-900 dark:text-emerald-400' : ''}`}
                     disabled={showResult}
                   >
-                    <span className="flex items-center gap-3">
-                      <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                    <span className="flex items-center gap-2">
+                      <span className={`w-6 h-6 rounded-lg flex items-center justify-center text-xs font-medium ${
                         selectedOption === num.toString() 
                           ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white' 
-                          : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                          : 'bg-slate-100 dark:bg-[#1a1a1a] text-slate-600 dark:text-slate-300'
                       }`}>
                         {num === 1 ? 'A' : 'B'}
                       </span>
