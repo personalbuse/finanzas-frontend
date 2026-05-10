@@ -88,8 +88,8 @@ export function ResetPassword() {
 
   if (!token) {
     return (
-      <div className="min-h-[80vh] flex items-center justify-center py-12 px-4">
-        <div className="max-w-md w-full space-y-6 bg-white dark:bg-[#0d0d0d] p-8 rounded-xl border border-red-200 dark:border-red-900">
+      <div className="min-h-[80vh] flex items-center justify-center py-8 px-4">
+        <div className="max-w-md w-full space-y-5 bg-white dark:bg-[#0d0d0d] p-6 sm:p-8 rounded-xl border border-red-200 dark:border-red-900">
           <div className="text-center">
             <h2 className="text-xl font-semibold text-red-600 dark:text-red-400">Token Inválido</h2>
             <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">El enlace de recuperación no es válido o ha expirado.</p>
@@ -106,8 +106,8 @@ export function ResetPassword() {
   }
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center py-12 px-4 animate-fade-in">
-      <div className="max-w-md w-full space-y-6 bg-white dark:bg-[#0d0d0d] p-8 rounded-xl border border-slate-200 dark:border-[#1a1a1a]">
+    <div className="min-h-[80vh] flex items-center justify-center py-8 px-4 animate-fade-in">
+      <div className="max-w-md w-full space-y-5 bg-white dark:bg-[#0d0d0d] p-6 sm:p-8 rounded-xl border border-slate-200 dark:border-[#1a1a1a]">
         <div className="text-center">
           <h2 className="text-3xl font-semibold text-slate-900 dark:text-white tracking-tight">
             Nueva Contraseña

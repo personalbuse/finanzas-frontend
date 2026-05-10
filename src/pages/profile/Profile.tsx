@@ -13,17 +13,17 @@ export function Profile() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in">
-      <h1 className="text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-10">{t('profile.title')}</h1>
+      <h1 className="text-2xl sm:text-3xl font-semibold text-slate-900 dark:text-white tracking-tight mb-6 sm:mb-10">{t('profile.title')}</h1>
 
-      <div className="space-y-6">
-        <div className="bg-white dark:bg-[#0d0d0d] border border-slate-200 dark:border-[#1a1a1a] rounded-xl p-6">
-          <div className="flex items-center space-x-5 mb-6">
-            <div className="h-16 w-16 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center text-white text-2xl font-medium font-display">
+      <div className="space-y-5 sm:space-y-6">
+        <div className="bg-white dark:bg-[#0d0d0d] border border-slate-200 dark:border-[#1a1a1a] rounded-xl p-4 sm:p-6">
+          <div className="flex items-center space-x-3 sm:space-x-5 mb-4 sm:mb-6">
+            <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-lg sm:rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center text-white text-xl sm:text-2xl font-medium font-display">
               {currentUser.username?.charAt(0).toUpperCase()}
             </div>
             <div>
-              <h2 className="text-xl font-semibold text-slate-900 dark:text-white tracking-tight">{currentUser.username}</h2>
-              <p className="text-slate-500 dark:text-slate-400 text-sm">{currentUser.email}</p>
+              <h2 className="text-lg sm:text-xl font-semibold text-slate-900 dark:text-white tracking-tight">{currentUser.username}</h2>
+              <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm">{currentUser.email}</p>
             </div>
           </div>
 

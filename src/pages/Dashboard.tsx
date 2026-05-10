@@ -143,17 +143,17 @@ export function Dashboard() {
         </h1>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-8 sm:mb-10">
         <div className="stat-card group cursor-pointer" onClick={() => navigate('/portfolio')}>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">{t('dashboard.balance')}</p>
-              <p className="text-2xl font-bold text-slate-900 dark:text-white mt-2">
+              <p className="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest">{t('dashboard.balance')}</p>
+              <p className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-white mt-1 sm:mt-2">
                 {formatCurrency(currentUser.current_balance || 10000)}
               </p>
             </div>
-            <div className="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Wallet className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <Wallet className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 dark:text-emerald-400" />
             </div>
           </div>
         </div>

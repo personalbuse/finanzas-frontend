@@ -142,12 +142,12 @@ export function Stocks() {
       )}
 
       {/* Stock Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         {stocks.map((stock: any) => (
           <div key={stock.symbol} className="glass-card overflow-hidden">
-            <div className="p-4 border-b border-slate-100 dark:border-[#1a1a1a]">
+            <div className="p-3 sm:p-4 border-b border-slate-100 dark:border-[#1a1a1a]">
               <div className="flex justify-between items-center">
-                <h3 className="text-xl font-semibold text-slate-900 dark:text-white tracking-tight">{stock.symbol}</h3>
+                <h3 className="text-lg sm:text-xl font-semibold text-slate-900 dark:text-white tracking-tight">{stock.symbol}</h3>
                 <span className={stock.change >= 0 ? 'tag-success' : 'tag-danger'}>
                   {stock.change_percent}
                 </span>
@@ -155,13 +155,13 @@ export function Stocks() {
               <p className="text-slate-400 dark:text-slate-500 text-[10px] font-medium uppercase tracking-widest mt-1">{stock.source}</p>
             </div>
 
-            <div className="p-4">
-              <div className="mb-4">
+            <div className="p-3 sm:p-4">
+              <div className="mb-3 sm:mb-4">
                 <p className="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest">{t('stocks.currentPrice')}</p>
-                <p className="text-2xl font-semibold text-slate-900 dark:text-white mt-1">{formatCurrency(stock.price)}</p>
+                <p className="text-xl sm:text-2xl font-semibold text-slate-900 dark:text-white mt-1">{formatCurrency(stock.price)}</p>
               </div>
 
-              <div className="grid grid-cols-2 gap-3 mb-4">
+              <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-3 sm:mb-4">
                 <div>
                   <p className="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest">{t('stocks.previousClose')}</p>
                   <p className="text-slate-600 dark:text-slate-400 text-sm mt-1">{formatCurrency(stock.previous_close)}</p>
