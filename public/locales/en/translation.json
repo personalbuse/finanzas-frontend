@@ -1,5 +1,4 @@
 {
-  "translation": {
     "app": {
       "title": "Stock Investment Simulator",
       "subtitle": "Learn investing, no real money involved"
@@ -119,5 +118,4 @@
       "transactions": "Transactions",
       "profile": "Profile"
     }
-  }
 }

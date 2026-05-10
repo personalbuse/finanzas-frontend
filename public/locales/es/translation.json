@@ -1,5 +1,4 @@
 {
-  "translation": {
     "app": {
       "title": "Simulador de Inversiones",
       "subtitle": "Aprende a invertir, sin dinero real"
@@ -118,5 +117,4 @@
       "transactions": "Transacciones",
       "profile": "Perfil"
     }
-  }
 }

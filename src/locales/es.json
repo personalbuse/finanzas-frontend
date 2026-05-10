@@ -35,6 +35,7 @@
     "error": "Ocurrió un error. Intenta de nuevo.",
     "noAccount": "¿No tienes cuenta?",
     "register": "Regístrate aquí",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
     "welcomeMessage": "¡Bienvenido/a"
   },
   "register": {
@@ -54,6 +55,14 @@
     "error": "Ocurrió un error durante el registro",
     "loginError": "Registro exitoso, pero inicio de sesión fallido",
     "hasAccount": "¿Ya tienes cuenta?",
+    "login": "Inicia sesión aquí"
+  },
+  "forgotPassword": {
+    "title": "Recuperar Contraseña",
+    "subtitle": "Ingresa tu correo electrónico para recibir un enlace de recuperación",
+    "button": "Enviar Enlace",
+    "loading": "Enviando...",
+    "rememberPassword": "¿Recordaste tu contraseña?",
     "login": "Inicia sesión aquí"
   },
   "form": {
