@@ -4,6 +4,7 @@ import { useTranslation } from '../provider/LanguageProvider';
 import { useStore } from '../store/useStore';
 import api from '../services/api';
 import { OnboardingModal } from '../components/onboarding/OnboardingModal';
+import { ExchangeRateChart } from '../components/charts/ExchangeRatesChart';
 import { 
   LineChart, 
   Line, 
@@ -30,6 +31,7 @@ export function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [courseProgress, setCourseProgress] = useState({ completed_courses: 0, bonus_earned: 0 });
+  const [exchangeRates, setExchangeRates] = useState<any>(null);
 
   useEffect(() => {
     fetchData();
@@ -60,13 +62,15 @@ export function Dashboard() {
       const userId = user?.id || JSON.parse(localStorage.getItem('user') || '{}').id;
       if (!userId) { setLoading(false); return; }
 
-      const [portfolioRes, transactionsRes] = await Promise.allSettled([
+      const [portfolioRes, transactionsRes, exchangeRes] = await Promise.allSettled([
         api.get(`/portfolio/values/${userId}`),
         api.get(`/portfolio/history/${userId}`),
+        api.get(`/exchange-rates/multi`),
       ]);
 
       if (portfolioRes.status === 'fulfilled') setPortfolio(portfolioRes.value.data);
       if (transactionsRes.status === 'fulfilled') setTransactions(transactionsRes.value.data.transactions?.slice(0, 5) || []);
+      if (exchangeRes.status === 'fulfilled') setExchangeRates(exchangeRes.value.data);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
     } finally {
@@ -133,11 +137,10 @@ export function Dashboard() {
         </div>
       )}
 
-      <div className="mb-10">
-        <h1 className="text-3xl font-semibold text-slate-900 dark:text-white tracking-tight">
-          {t('dashboard.welcome')}, {currentUser.username || 'Investor'}
+      <div className="mb-8">
+        <h1 className="text-2xl font-medium text-slate-900 dark:text-white tracking-tight">
+          Hola, {currentUser.username || 'Usuario'}
         </h1>
-        <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">{t('app.subtitle')}</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
@@ -308,10 +311,34 @@ export function Dashboard() {
         </div>
       </div>
 
+      {exchangeRates && (
+        <div className="mb-10">
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-white tracking-tight mb-4">
+            Tasas de Cambio (COP)
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <ExchangeRateChart 
+              data={exchangeRates.usd_cop?.history || []}
+              currentRate={exchangeRates.usd_cop?.rate || 0}
+              changePercent={exchangeRates.usd_cop?.change_percent}
+              fromCurrency="USD"
+              toCurrency="COP"
+            />
+            <ExchangeRateChart 
+              data={exchangeRates.eur_cop?.history || []}
+              currentRate={exchangeRates.eur_cop?.rate || 0}
+              changePercent={exchangeRates.eur_cop?.change_percent}
+              fromCurrency="EUR"
+              toCurrency="COP"
+            />
+          </div>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="glass-card">
-          <div className="p-6 border-b border-slate-100 dark:border-slate-700">
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">{t('dashboard.quickActions')}</h3>
+          <div className="p-4 border-b border-slate-100 dark:border-[#1a1a1a]">
+            <h3 className="text-base font-semibold text-slate-900 dark:text-white tracking-tight">{t('dashboard.quickActions')}</h3>
           </div>
           <div className="p-6 grid grid-cols-2 gap-4">
             <button onClick={() => navigate('/stocks')} className="btn-primary flex items-center justify-center gap-2">

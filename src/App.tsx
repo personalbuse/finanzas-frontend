@@ -18,6 +18,7 @@ import { LessonDetail } from './pages/learn/LessonDetail';
 import { Header } from './components/layout/Header';
 import { Footer } from './components/layout/Footer';
 import { PrivateRoute } from './components/routing/PrivateRoute';
+import { SEOHead } from './components/seo/SEOHead';
 
 function AppContent() {
   const { logout, isAuthenticated } = useAuth();
@@ -109,6 +110,7 @@ function App() {
       <ThemeProvider>
         <AuthProvider>
           <LanguageProvider>
+            <SEOHead />
             <ToastContainer
               position="bottom-right"
               autoClose={3000}

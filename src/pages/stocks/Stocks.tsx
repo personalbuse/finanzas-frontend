@@ -14,7 +14,12 @@ export function Stocks() {
   const [buying, setBuying] = useState<string | null>(null);
   const [initialLoad, setInitialLoad] = useState(true);
 
-  const defaultStocks = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'META', 'NVDA', 'NFLX', 'AMD', 'INTC'];
+  const defaultStocks = [
+    'AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'META', 'NVDA', 'NFLX', 'AMD', 'INTC',
+    'BA', 'JNJ', 'UNH', 'HD', 'PG', 'MA', 'DIS', 'V', 'KO', 'PEP',
+    'CSCO', 'T', 'ADBE', 'CRM', 'CMCSA', 'XOM', 'PFE', 'ORCL', 'QCOM', 'TXN',
+    'AVGO', 'COST', 'MCD', 'NKE', 'WMT'
+  ];
 
   useEffect(() => {
     fetchStocks();
@@ -41,19 +46,22 @@ export function Stocks() {
     // For multiple stocks (initial load), do them sequentially with a small delay
     // This respects the Alpha Vantage 5-calls-per-minute limit
     const results: any[] = [];
+    const total = symbols.length;
+    let loaded = 0;
+    
     for (const symbol of symbols) {
       try {
         const res = await api.get(`/stocks/${symbol}`);
         if (res.data) {
           results.push(res.data);
-          // Update UI incrementally
+          loaded++;
           setStocks([...results]);
         }
       } catch (err) {
         console.error(`Failed to fetch ${symbol}`, err);
       }
-      // Small pause between requests
-      await new Promise(r => setTimeout(r, 600));
+      // Small pause between requests (reduced for better UX)
+      await new Promise(r => setTimeout(r, 200));
     }
     setLoading(false);
   };
