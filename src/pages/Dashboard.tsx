@@ -136,7 +136,7 @@ export function Dashboard() {
         <div className="mb-6 p-4 rounded-lg bg-emerald-900/20 border border-emerald-800/50">
           <div className="flex items-center justify-between">
             <div>
-              {courseProgress.completed_courses === 3 ? (
+              {courseProgress.completed_courses >= 6 ? (
                 <p className="text-sm text-emerald-400 font-medium">
                   {t('learning.courseCompleted')}
                 </p>

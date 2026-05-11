@@ -328,8 +328,8 @@
   "learning": {
     "moduleCompleted": "¡Módulo completado!",
     "bonusEarned": "+$1,000 agregados a tu balance",
-    "courseProgress": "Has completado {count} módulo(s). +${bonus} en bonuses.",
-    "courseCompleted": "¡Felicitaciones! Has completado el curso. +$3,000 agregados a tu balance",
+    "courseProgress": "Has completado {count} módulos. +${bonus} en bonuses.",
+    "courseCompleted": "¡Felicitaciones! Has completado todos los módulos.",
     "reviewCourse": "Repasar curso",
     "goToInvest": "Ir a invertir",
     "finishLesson": "Terminar Lección",

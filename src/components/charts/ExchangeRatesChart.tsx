@@ -31,13 +31,19 @@ export function ExchangeRateChart({ data, currentRate, changePercent, fromCurren
   };
 
   return (
-    <div className="bg-[#0d0d0d] border border-[#1a1a1a] rounded-xl p-4">
+    <div className={`border rounded-xl p-4 ${
+      darkMode 
+        ? 'bg-[#0d0d0d] border-[#1a1a1a]' 
+        : 'bg-white border-slate-200'
+    }`}>
       <div className="flex items-center justify-between mb-3">
         <div>
           <p className="text-xs text-slate-400 dark:text-slate-500 uppercase tracking-widest">
             {fromCurrency}/{toCurrency}
           </p>
-          <p className="text-xl font-semibold text-white">
+          <p className={`text-xl font-semibold ${
+              darkMode ? 'text-white' : 'text-slate-900'
+            }`}>
             {formatRate(currentRate)}
           </p>
         </div>
