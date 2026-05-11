@@ -22,6 +22,35 @@ import { TrendingUp, TrendingDown, Wallet, BarChart3 } from 'lucide-react';
 
 const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
 
+const generateMockHistory = (baseRate: number, days: number = 7) => {
+  return Array.from({ length: days }, (_, i) => {
+    const date = new Date();
+    date.setDate(date.getDate() - (days - 1 - i));
+    const variation = (Math.random() - 0.5) * 100;
+    return {
+      date: date.toISOString().split('T')[0],
+      rate: Math.round(baseRate + variation)
+    };
+  });
+};
+
+const getMockExchangeRates = () => {
+  const usdBase = 3850;
+  const eurBase = 4200;
+  return {
+    usd_cop: {
+      rate: usdBase + (Math.random() - 0.5) * 50,
+      change_percent: Number((Math.random() * 2 - 1).toFixed(2)),
+      history: generateMockHistory(usdBase)
+    },
+    eur_cop: {
+      rate: eurBase + (Math.random() - 0.5) * 50,
+      change_percent: Number((Math.random() * 2 - 1).toFixed(2)),
+      history: generateMockHistory(eurBase)
+    }
+  };
+};
+
 export function Dashboard() {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -71,6 +100,7 @@ export function Dashboard() {
       if (portfolioRes.status === 'fulfilled') setPortfolio(portfolioRes.value.data);
       if (transactionsRes.status === 'fulfilled') setTransactions(transactionsRes.value.data.transactions?.slice(0, 5) || []);
       if (exchangeRes.status === 'fulfilled') setExchangeRates(exchangeRes.value.data);
+      else setExchangeRates(getMockExchangeRates());
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
     } finally {

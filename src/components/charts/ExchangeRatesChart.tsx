@@ -1,4 +1,5 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { useTheme } from '../../provider/ThemeProvider';
 
 interface ExchangeRateChartProps {
   data: { date: string; rate: number }[];
@@ -9,6 +10,7 @@ interface ExchangeRateChartProps {
 }
 
 export function ExchangeRateChart({ data, currentRate, changePercent, fromCurrency, toCurrency }: ExchangeRateChartProps) {
+  const { darkMode } = useTheme();
   const chartData = data.map(item => ({
     ...item,
     rate: Number(item.rate.toFixed(2))
@@ -53,16 +55,16 @@ export function ExchangeRateChart({ data, currentRate, changePercent, fromCurren
       <div className="h-32">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#262626" />
+            <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? '#262626' : '#e2e8f0'} />
             <XAxis 
               dataKey="date" 
               tickFormatter={formatDate}
-              stroke="#525252"
+              stroke={darkMode ? '#525252' : '#64748b'}
               fontSize={10}
               tickLine={false}
             />
             <YAxis 
-              stroke="#525252" 
+              stroke={darkMode ? '#525252' : '#64748b'} 
               fontSize={10}
               tickFormatter={(val) => `${(val / 1000).toFixed(0)}k`}
               tickLine={false}
@@ -71,19 +73,23 @@ export function ExchangeRateChart({ data, currentRate, changePercent, fromCurren
             />
             <Tooltip 
               contentStyle={{ 
-                backgroundColor: '#1a1a1a', 
-                border: '1px solid #262626',
+                backgroundColor: darkMode ? '#1a1a1a' : '#ffffff', 
+                border: darkMode ? '1px solid #262626' : '1px solid #e2e8f0',
                 borderRadius: '8px',
-                fontSize: '12px'
+                fontSize: '12px',
+                color: darkMode ? '#ffffff' : '#1e293b'
               }}
-              labelStyle={{ color: '#a1a1aa', marginBottom: '4px' }}
+              labelStyle={{ color: darkMode ? '#a1a1aa' : '#64748b', marginBottom: '4px' }}
               formatter={(value: number) => [formatRate(value), 'Tasa']}
               labelFormatter={(label) => formatDate(label)}
             />
             <Line 
               type="monotone" 
               dataKey="rate" 
-              stroke={changePercent !== null && changePercent >= 0 ? '#10b981' : '#ef4444'}
+              stroke={darkMode 
+                ? (changePercent !== null && changePercent >= 0 ? '#10b981' : '#ef4444')
+                : (changePercent !== null && changePercent >= 0 ? '#059669' : '#dc2626')
+              }
               strokeWidth={2}
               dot={false}
             />
