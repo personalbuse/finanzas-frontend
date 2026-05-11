@@ -15,7 +15,7 @@ export function LessonDetail() {
   const [showResult, setShowResult] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
 
-  if (!id || !['m1', 'm2', 'm3'].includes(id)) {
+  if (!id || !['m1', 'm2', 'm3', 'm4', 'm5', 'm6'].includes(id)) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -110,9 +110,34 @@ export function LessonDetail() {
                   {t(`learn.modules.${id}.theory`)}
                 </p>
               </div>
-              <button onClick={nextStep} className="btn-primary px-8 py-2.5">
-                {t('learn.continueCourse')}
-              </button>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <button 
+                  onClick={async () => {
+                    try {
+                      await api.post(`/complete-module/${id}`);
+                      const res = await api.get('/user');
+                      if (res.data.current_balance) {
+                        const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+                        currentUser.current_balance = res.data.current_balance;
+                        localStorage.setItem('user', JSON.stringify(currentUser));
+                      }
+                      toast.success(`${t('learning.moduleCompleted')} ${t('learning.bonusEarned')}`);
+                    } catch (error) {
+                      console.error('Error completing module:', error);
+                    }
+                    navigate('/learn');
+                  }} 
+                  className="btn-primary px-8 py-2.5 bg-emerald-600 hover:bg-emerald-700"
+                >
+                  {t('learning.finishLesson')}
+                </button>
+                <button 
+                  onClick={() => setStep('quiz')} 
+                  className="btn-secondary px-8 py-2.5"
+                >
+                  {t('learning.testKnowledge')}
+                </button>
+              </div>
             </div>
           )}
 

@@ -2,6 +2,7 @@ import { useStore } from '../../store/useStore';
 import { useTranslation } from '../../provider/LanguageProvider';
 import { useTheme } from '../../provider/ThemeProvider';
 import { useAuth } from '../../provider/AuthProvider';
+import { LogOut } from 'lucide-react';
 
 export function Profile() {
   const { user } = useStore();
@@ -105,8 +106,9 @@ export function Profile() {
               </div>
               <button 
                 onClick={logout}
-                className="text-xs font-bold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 uppercase tracking-widest transition-colors"
+                className="flex items-center gap-2 text-xs font-bold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 uppercase tracking-widest transition-colors"
               >
+                <LogOut className="w-4 h-4" />
                 {t('nav.logout')}
               </button>
             </div>

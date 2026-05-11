@@ -9,6 +9,9 @@ export function Learn() {
     { id: 'm1', level: '1' },
     { id: 'm2', level: '2' },
     { id: 'm3', level: '3' },
+    { id: 'm4', level: '4' },
+    { id: 'm5', level: '5' },
+    { id: 'm6', level: '6' },
   ];
 
   return (

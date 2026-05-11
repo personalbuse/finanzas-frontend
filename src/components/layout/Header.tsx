@@ -91,7 +91,6 @@ export function Header() {
               title={t('nav.logout')}
             >
               <LogOut className="w-4 h-4 sm:w-4 sm:h-4" />
-              <span className="hidden sm:inline ml-1 text-xs font-medium uppercase tracking-widest">{t('nav.logout')}</span>
             </button>
           </div>
         </div>
