@@ -28,6 +28,16 @@ export function Stocks() {
   const [buying, setBuying] = useState<string | null>(null);
 
   useEffect(() => {
+    // Intentar actualizar datos en background cuando el usuario entra
+    const triggerRefresh = async () => {
+      try {
+        await api.post('/stocks/refresh');
+      } catch (error) {
+        console.log('Background refresh triggered (may not return data)');
+      }
+    };
+    
+    triggerRefresh();
     fetchStocks();
   }, []);
 
@@ -42,7 +52,24 @@ export function Stocks() {
         cache_ttl: STOCKS_CONFIG.cacheTTL
       });
       
-      setStocks(res.data || []);
+      if (res.data && res.data.length > 0) {
+        setStocks(res.data);
+      } else {
+        // Si no hay datos, intentar refresh síncrono
+        try {
+          const refreshRes = await api.post('/stocks/refresh-sync');
+          if (refreshRes.data?.result?.loaded > 0) {
+            // Reintentar obtener datos
+            const retryRes = await api.post('/stocks/batch', {
+              symbols: uniqueSymbols,
+              cache_ttl: STOCKS_CONFIG.cacheTTL
+            });
+            setStocks(retryRes.data || []);
+          }
+        } catch (refreshError) {
+          console.error('Error en refresh:', refreshError);
+        }
+      }
     } catch (error: unknown) {
       console.error('Error fetching stocks:', error);
       const err = error as { response?: { data?: { detail?: string } } };
@@ -50,6 +77,7 @@ export function Stocks() {
       setStocks([]);
     } finally {
       setLoading(false);
+      setInitialLoad(false);
     }
   };
 
@@ -137,7 +165,19 @@ export function Stocks() {
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
             </svg>
-            {t('stocks.loading')}
+            Obteniendo información en tiempo real...
+          </div>
+        </div>
+      )}
+
+      {initialLoad && loading && (
+        <div className="text-center py-8">
+          <div className="inline-flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
+            <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            </svg>
+            Cargando datos del mercado...
           </div>
         </div>
       )}
