@@ -224,21 +224,13 @@ export function Stocks() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 mb-3 text-xs">
+            <div className="grid grid-cols-1 gap-2 mb-3 text-xs">
               <div>
                 <p className="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest">
                   {t('stocks.previousClose')}
                 </p>
                 <p className="text-slate-600 dark:text-slate-300">
                   ${stock.previous_close?.toFixed(2) || '0.00'}
-                </p>
-              </div>
-              <div>
-                <p className="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest">
-                  {t('stocks.volume')}
-                </p>
-                <p className="text-slate-600 dark:text-slate-300">
-                  {stock.volume ? stock.volume.toLocaleString() : '0'}
                 </p>
               </div>
             </div>
