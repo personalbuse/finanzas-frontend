@@ -1,9 +1,14 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from '../../provider/LanguageProvider';
-import { useStore } from '../../store/useStore';
 import api from '../../services/api';
 import { toast } from 'react-toastify';
+import { 
+  FileText,
+  CheckCircle,
+  Lightbulb,
+  CreditCard
+} from 'lucide-react';
 
 export function LessonDetail() {
   const { id } = useParams<{ id: string }>();
@@ -56,6 +61,30 @@ export function LessonDetail() {
     }
   };
 
+  const getTheorySections = (theoryText: string) => {
+    const sections: { title: string; content: string; type: 'intro' | 'list' | 'cards' | 'facts' }[] = [];
+    const parts = theoryText.split('\n\n');
+    
+    parts.forEach((part, index) => {
+      const trimmed = part.trim();
+      if (!trimmed) return;
+      
+      if (index === 0) {
+        sections.push({ title: 'Introduccion', content: trimmed, type: 'intro' });
+      } else if (trimmed.includes(':') && trimmed.split('\n').length > 3) {
+        sections.push({ title: trimmed.split(':')[0].trim(), content: trimmed, type: 'list' });
+      } else if (trimmed.includes('•') || trimmed.includes('- ')) {
+        sections.push({ title: 'Puntos Clave', content: trimmed, type: 'list' });
+      } else {
+        sections.push({ title: 'Resumen', content: trimmed, type: 'intro' });
+      }
+    });
+    
+    return sections;
+  };
+
+  const theorySections = getTheorySections(t(`learn.modules.${id}.theory`));
+  
   const getStepLabel = () => {
     switch (step) {
       case 'theory': return t('learn.steps.theory');
@@ -104,13 +133,45 @@ export function LessonDetail() {
           </h2>
 
           {step === 'theory' && (
-            <div className="animate-fade-in">
-              <div className="bg-slate-50 dark:bg-[#1a1a1a] rounded-lg p-5 mb-6 border border-slate-100 dark:border-[#262626]">
-                <p className="text-base md:text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
-                  {t(`learn.modules.${id}.theory`)}
-                </p>
-              </div>
-              <div className="flex flex-col sm:flex-row gap-3">
+            <div className="animate-fade-in space-y-4">
+              {theorySections.map((section, idx) => (
+                <div key={idx} className={`rounded-xl border overflow-hidden ${
+                  section.type === 'intro' 
+                    ? 'bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-800'
+                    : section.type === 'list'
+                    ? 'bg-slate-50 dark:bg-[#1a1a1a] border-slate-200 dark:border-[#262626]'
+                    : 'bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800'
+                }`}>
+                  <div className="px-5 py-4 border-b border-slate-200 dark:border-[#262626] flex items-center gap-3">
+                    {section.type === 'intro' && <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400" />}
+                    {section.type === 'list' && <CheckCircle className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />}
+                    {section.type === 'cards' && <CreditCard className="w-5 h-5 text-purple-600 dark:text-purple-400" />}
+                    {section.type === 'facts' && <Lightbulb className="w-5 h-5 text-amber-600 dark:text-amber-400" />}
+                    <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-200 uppercase tracking-wide">
+                      {section.title}
+                    </h3>
+                  </div>
+                  <div className="p-5">
+                    {section.type === 'list' ? (
+                      <ul className="space-y-3">
+                        {section.content.split('\n').filter(line => line.trim()).map((line, lineIdx) => (
+                          <li key={lineIdx} className="flex items-start gap-3">
+                            <span className="w-2 h-2 rounded-full bg-emerald-500 mt-2 flex-shrink-0" />
+                            <span className="text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+                              {line.replace(/^[•\-]\s*/, '').trim()}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="text-base md:text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
+                        {section.content}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              ))}
+              <div className="flex flex-col sm:flex-row gap-3 pt-4">
                 <button 
                   onClick={async () => {
                     try {
