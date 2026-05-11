@@ -142,10 +142,7 @@ export function Dashboard() {
                 </p>
               ) : (
                 <p className="text-sm text-emerald-400 font-medium">
-                  {t('learning.courseProgress', { 
-                    count: courseProgress.completed_courses, 
-                    bonus: courseProgress.bonus_earned 
-                  })}
+                  Has completado {courseProgress.completed_courses || 0} módulos. +${courseProgress.bonus_earned || 0} en bonuses.
                 </p>
               )}
             </div>
