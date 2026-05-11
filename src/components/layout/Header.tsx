@@ -2,6 +2,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from '../../provider/LanguageProvider';
 import { useAuth } from '../../provider/AuthProvider';
 import { useTheme } from '../../provider/ThemeProvider';
+import { LogOut, ArrowLeft } from 'lucide-react';
 
 export function Header() {
   const { language, changeLanguage, t } = useTranslation();
@@ -86,9 +87,11 @@ export function Header() {
             
             <button
               onClick={handleLogout}
-              className="px-2 py-1 text-[10px] sm:px-3 sm:py-1.5 sm:text-xs font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/40 transition-all uppercase tracking-widest"
+              className="p-1.5 sm:px-3 sm:py-1.5 rounded-lg text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 transition-all"
+              title={t('nav.logout')}
             >
-              {t('nav.logout')}
+              <LogOut className="w-4 h-4 sm:w-4 sm:h-4" />
+              <span className="hidden sm:inline ml-1 text-xs font-medium uppercase tracking-widest">{t('nav.logout')}</span>
             </button>
           </div>
         </div>

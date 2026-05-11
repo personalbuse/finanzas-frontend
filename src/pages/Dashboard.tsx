@@ -173,40 +173,40 @@ export function Dashboard() {
         </h1>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-8 sm:mb-10">
-        <div className="stat-card group cursor-pointer" onClick={() => navigate('/portfolio')}>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest">{t('dashboard.balance')}</p>
-              <p className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-white mt-1 sm:mt-2">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4 mb-6 sm:mb-10">
+        <div className="stat-card group cursor-pointer p-2 sm:p-4" onClick={() => navigate('/portfolio')}>
+          <div className="flex items-center justify-between gap-2">
+            <div className="min-w-0">
+              <p className="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest truncate">{t('dashboard.balance')}</p>
+              <p className="text-sm sm:text-xl font-bold text-slate-900 dark:text-white mt-0.5 sm:mt-2 truncate">
                 {formatCurrency(currentUser.current_balance || 10000)}
               </p>
             </div>
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Wallet className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 dark:text-emerald-400" />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center flex-shrink-0 bg-emerald-100 dark:bg-emerald-900/30 group-hover:scale-110 transition-transform">
+              <Wallet className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
             </div>
           </div>
         </div>
 
-        <div className="stat-card group cursor-pointer" onClick={() => navigate('/portfolio')}>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">{t('dashboard.portfolioValue')}</p>
-              <p className="text-2xl font-bold text-slate-900 dark:text-white mt-2">
+        <div className="stat-card group cursor-pointer p-2 sm:p-4" onClick={() => navigate('/portfolio')}>
+          <div className="flex items-center justify-between gap-2">
+            <div className="min-w-0">
+              <p className="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest truncate">{t('dashboard.portfolioValue')}</p>
+              <p className="text-sm sm:text-xl font-bold text-slate-900 dark:text-white mt-0.5 sm:mt-2 truncate">
                 {formatCurrency(portfolio?.total_value)}
               </p>
             </div>
-            <div className="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <BarChart3 className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center flex-shrink-0 bg-blue-100 dark:bg-blue-900/30 group-hover:scale-110 transition-transform">
+              <BarChart3 className="w-4 h-4 text-blue-600 dark:text-blue-400" />
             </div>
           </div>
         </div>
 
-        <div className="stat-card group cursor-pointer" onClick={() => navigate('/portfolio')}>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">{t('dashboard.totalProfit')}</p>
-              <p className={`text-2xl font-bold mt-2 ${
+        <div className="stat-card group cursor-pointer p-2 sm:p-4" onClick={() => navigate('/portfolio')}>
+          <div className="flex items-center justify-between gap-2">
+            <div className="min-w-0">
+              <p className="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest truncate">{t('dashboard.totalProfit')}</p>
+              <p className={`text-sm sm:text-xl font-bold mt-0.5 sm:mt-2 truncate ${
                 (portfolio?.total_profit || 0) >= 0 
                   ? 'text-emerald-600 dark:text-emerald-400' 
                   : 'text-red-600 dark:text-red-400'
@@ -214,30 +214,30 @@ export function Dashboard() {
                 {formatCurrency(portfolio?.total_profit)}
               </p>
             </div>
-            <div className={`w-12 h-12 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform ${
+            <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform ${
               (portfolio?.total_profit || 0) >= 0 
                 ? 'bg-emerald-100 dark:bg-emerald-900/30' 
                 : 'bg-red-100 dark:bg-red-900/30'
             }`}>
               {(portfolio?.total_profit || 0) >= 0 ? (
-                <TrendingUp className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+                <TrendingUp className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
               ) : (
-                <TrendingDown className="w-6 h-6 text-red-600 dark:text-red-400" />
+                <TrendingDown className="w-4 h-4 text-red-600 dark:text-red-400" />
               )}
             </div>
           </div>
         </div>
 
-        <div className="stat-card group cursor-pointer" onClick={() => navigate('/transactions')}>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">{t('dashboard.cashBalance')}</p>
-              <p className="text-2xl font-bold text-slate-900 dark:text-white mt-2">
+        <div className="stat-card group cursor-pointer p-2 sm:p-4" onClick={() => navigate('/transactions')}>
+          <div className="flex items-center justify-between gap-2">
+            <div className="min-w-0">
+              <p className="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest truncate">{t('dashboard.cashBalance')}</p>
+              <p className="text-sm sm:text-xl font-bold text-slate-900 dark:text-white mt-0.5 sm:mt-2 truncate">
                 {formatCurrency(currentUser.current_balance || 10000)}
               </p>
             </div>
-            <div className="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <svg className="w-6 h-6 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center flex-shrink-0 bg-amber-100 dark:bg-amber-900/30 group-hover:scale-110 transition-transform">
+              <svg className="w-4 h-4 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
