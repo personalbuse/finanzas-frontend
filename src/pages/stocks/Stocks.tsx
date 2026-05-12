@@ -72,6 +72,7 @@ export function Stocks() {
       setStocks(res.data ? [res.data] : []);
     } catch (error) {
       console.error('Error searching stock:', error);
+      toast.error('Accion no encontrada. Verifica el simbolo e intenta de nuevo.');
       setStocks([]);
     } finally {
       setLoading(false);
