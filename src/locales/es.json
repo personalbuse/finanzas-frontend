@@ -41,7 +41,12 @@
     "balance": "Saldo",
     "active": "Activo",
     "banned": "Baneado",
-    "comingSoon": "Próximamente..."
+    "comingSoon": "Proximamente..."
+  },
+  "notFound": {
+    "title": "Pagina no encontrada",
+    "description": "La pagina que buscas no existe o ha sido movida.",
+    "goHome": "Ir al Dashboard"
   },
   "login": {
     "title": "Bienvenido de Nuevo",

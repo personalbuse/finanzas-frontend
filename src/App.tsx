@@ -16,6 +16,8 @@ import { Profile } from './pages/profile/Profile';
 import { Learn } from './pages/learn/Learn';
 import { LessonDetail } from './pages/learn/LessonDetail';
 import { Admin } from './pages/admin/Admin';
+import { NotFound } from './pages/NotFound';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { Header } from './components/layout/Header';
 import { Footer } from './components/layout/Footer';
 import { PrivateRoute } from './components/routing/PrivateRoute';
@@ -107,6 +109,7 @@ function AppContent() {
           />
           
           <Route path="/" element={<Navigate to="/dashboard" />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
       {isAuthenticated && <Footer />}
@@ -131,7 +134,9 @@ function App() {
               theme="colored"
               className="toast-container"
             />
-            <AppContent />
+            <ErrorBoundary>
+              <AppContent />
+            </ErrorBoundary>
           </LanguageProvider>
         </AuthProvider>
       </ThemeProvider>

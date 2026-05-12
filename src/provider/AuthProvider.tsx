@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useAuthStore } from '../store/useAuthStore';
+import { useStore } from '../store/useStore';
 import { toast } from 'react-toastify';
 
 interface AuthContextType {
@@ -17,7 +17,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
   const [token, setToken] = useState<string | null>(null);
-  const { loadFromStorage, clearStorage } = useAuthStore();
+  const { loadFromStorage, clearStorage } = useStore();
 
   useEffect(() => {
     loadFromStorage();

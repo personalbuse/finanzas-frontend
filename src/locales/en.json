@@ -43,6 +43,11 @@
     "banned": "Banned",
     "comingSoon": "Coming soon..."
   },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you are looking for does not exist or has been moved.",
+    "goHome": "Go to Dashboard"
+  },
   "login": {
     "title": "Welcome Back",
     "subtitle": "Sign in to your account to start investing",
