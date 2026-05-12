@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../provider/LanguageProvider';
 import { useStore } from '../store/useStore';
@@ -63,8 +63,13 @@ export function Dashboard() {
   const [courseProgress, setCourseProgress] = useState({ completed_courses: 0, bonus_earned: 0 });
   const [exchangeRates, setExchangeRates] = useState<any>(null);
   const [exchangeRatesFallback, setExchangeRatesFallback] = useState(false);
+  const [storedUser, setStoredUser] = useState<any>(null);
 
   useEffect(() => {
+    const userFromStorage = localStorage.getItem('user');
+    if (userFromStorage) {
+      setStoredUser(JSON.parse(userFromStorage));
+    }
     fetchData();
     checkOnboarding();
   }, []);
@@ -90,7 +95,7 @@ export function Dashboard() {
 
   const fetchData = async () => {
     try {
-      const userId = user?.id || JSON.parse(localStorage.getItem('user') || '{}').id;
+      const userId = user?.id || storedUser?.id;
       if (!userId) { setLoading(false); return; }
 
       const [portfolioRes, transactionsRes, exchangeRes] = await Promise.allSettled([
@@ -122,7 +127,7 @@ export function Dashboard() {
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount || 0);
   };
 
-  const currentUser = user || JSON.parse(localStorage.getItem('user') || '{}');
+  const currentUser = user || storedUser;
 
   const pieChartData = portfolio?.stocks?.slice(0, 5).map((stock: any, index: number) => ({
     name: stock.symbol,
