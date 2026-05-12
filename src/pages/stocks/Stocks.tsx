@@ -19,7 +19,7 @@ const STOCKS_CONFIG = {
 
 export function Stocks() {
   const { t } = useTranslation();
-  const { user, updateBalance } = useStore();
+  const { updateBalance } = useStore();
   const [stocks, setStocks] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
@@ -28,16 +28,6 @@ export function Stocks() {
   const [buying, setBuying] = useState<string | null>(null);
 
   useEffect(() => {
-    // Intentar actualizar datos en background cuando el usuario entra
-    const triggerRefresh = async () => {
-      try {
-        await api.post('/stocks/refresh');
-      } catch (error) {
-        console.log('Background refresh triggered (may not return data)');
-      }
-    };
-    
-    triggerRefresh();
     fetchStocks();
   }, []);
 
@@ -55,20 +45,7 @@ export function Stocks() {
       if (res.data && res.data.length > 0) {
         setStocks(res.data);
       } else {
-        // Si no hay datos, intentar refresh síncrono
-        try {
-          const refreshRes = await api.post('/stocks/refresh-sync');
-          if (refreshRes.data?.result?.loaded > 0) {
-            // Reintentar obtener datos
-            const retryRes = await api.post('/stocks/batch', {
-              symbols: uniqueSymbols,
-              cache_ttl: STOCKS_CONFIG.cacheTTL
-            });
-            setStocks(retryRes.data || []);
-          }
-        } catch (refreshError) {
-          console.error('Error en refresh:', refreshError);
-        }
+        setStocks([]);
       }
     } catch (error: unknown) {
       console.error('Error fetching stocks:', error);
@@ -106,18 +83,16 @@ export function Stocks() {
     setBuying(symbol);
     
     try {
-      const userId = user?.id || JSON.parse(localStorage.getItem('user') || '{}').id;
       const res = await api.post('/portfolio/buy', {
-        user_id: userId,
         symbol: symbol,
         quantity: qty
       });
       
       if (res.data) {
         const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
-        currentUser.current_balance = res.data.new_balance;
+        currentUser.current_balance = res.data.remaining_balance;
         localStorage.setItem('user', JSON.stringify(currentUser));
-        updateBalance(res.data.new_balance);
+        updateBalance(res.data.remaining_balance);
         
         setQuantities((prev) => ({ ...prev, [symbol]: 1 }));
         toast.success(`${t('stocks.successBuy')}\n${res.data.message}`);

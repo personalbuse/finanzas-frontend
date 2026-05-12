@@ -20,7 +20,28 @@
     "logout": "Cerrar Sesión",
     "language": "Cambiar Idioma",
     "darkMode": "Modo Oscuro",
-    "lightMode": "Modo Claro"
+    "lightMode": "Modo Claro",
+    "admin": "Panel Admin"
+  },
+  "admin": {
+    "title": "Panel de Administración",
+    "users": "Usuarios",
+    "kpis": "KPIs",
+    "data": "Datos",
+    "validations": "Validaciones",
+    "config": "Configuraciones",
+    "totalUsers": "Usuarios Totales",
+    "activeUsers": "Activos",
+    "admins": "Administradores",
+    "totalTx": "Transacciones",
+    "totalVolume": "Volumen",
+    "username": "Usuario",
+    "role": "Rol",
+    "status": "Estado",
+    "balance": "Saldo",
+    "active": "Activo",
+    "banned": "Baneado",
+    "comingSoon": "Próximamente..."
   },
   "login": {
     "title": "Bienvenido de Nuevo",

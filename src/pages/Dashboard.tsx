@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../provider/LanguageProvider';
 import { useStore } from '../store/useStore';
@@ -55,7 +55,7 @@ const getMockExchangeRates = (isFallback: boolean = false) => {
 export function Dashboard() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { user, updateBalance } = useStore();
+  const { user } = useStore();
   const [portfolio, setPortfolio] = useState<any>(null);
   const [transactions, setTransactions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -95,12 +95,9 @@ export function Dashboard() {
 
   const fetchData = async () => {
     try {
-      const userId = user?.id || storedUser?.id;
-      if (!userId) { setLoading(false); return; }
-
       const [portfolioRes, transactionsRes, exchangeRes] = await Promise.allSettled([
-        api.get(`/portfolio/values/${userId}`),
-        api.get(`/portfolio/history/${userId}`),
+        api.get('/portfolio/values'),
+        api.get('/portfolio/history'),
         api.get(`/exchange-rates/multi`),
       ]);
 

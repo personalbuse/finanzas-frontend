@@ -48,24 +48,6 @@ export function Profile() {
           <h3 className="text-base font-semibold text-slate-900 dark:text-white tracking-tight mb-4">{t('profile.settings')}</h3>
           
           <div className="space-y-3">
-            <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-[#1a1a1a]/50 border border-slate-100 dark:border-[#262626] group hover:border-slate-200 dark:hover:border-[#333] transition-all">
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                  <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-sm font-bold text-slate-900 dark:text-white">{t('profile.notifications')}</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">{t('profile.notificationsDesc')}</p>
-                </div>
-              </div>
-              <div className="relative">
-                <input type="checkbox" className="sr-only peer" />
-                <div className="w-11 h-6 bg-slate-200 dark:bg-slate-600 rounded-full peer peer-checked:bg-emerald-500 peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all cursor-pointer" />
-              </div>
-            </div>
-
             <div 
               onClick={toggleTheme}
               className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-[#1a1a1a]/50 border border-slate-100 dark:border-[#262626] group hover:border-slate-200 dark:hover:border-[#333] transition-all cursor-pointer"

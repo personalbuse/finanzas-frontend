@@ -7,6 +7,7 @@ interface User {
   email: string;
   initial_balance: number;
   current_balance: number;
+  rol: string;
   created_at: string;
 }
 
@@ -34,7 +35,7 @@ export const useStore = create<AuthState>()(
         set({ user: null, token: null }),
 
       updateBalance: (newBalance: number) => {
-        const { user, token } = get();
+        const { user } = get();
         if (user) {
           const updatedUser = { ...user, current_balance: newBalance };
           set({ user: updatedUser });
@@ -47,7 +48,13 @@ export const useStore = create<AuthState>()(
         const storedToken = localStorage.getItem('token');
 
         if (storedUser && storedToken) {
-          set({ user: JSON.parse(storedUser), token: storedToken });
+          try {
+            set({ user: JSON.parse(storedUser), token: storedToken });
+          } catch {
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
+            set({ user: null, token: null });
+          }
         }
       },
 

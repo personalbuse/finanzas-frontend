@@ -10,7 +10,7 @@ type SortDirection = 'asc' | 'desc';
 
 export function Portfolio() {
   const { t } = useTranslation();
-  const { user, updateBalance } = useStore();
+  const { updateBalance } = useStore();
   const [portfolio, setPortfolio] = useState<any>({
     total_cost: 0,
     total_value: 0,
@@ -30,10 +30,7 @@ export function Portfolio() {
 
   const fetchPortfolio = async () => {
     try {
-      const userId = user?.id || JSON.parse(localStorage.getItem('user') || '{}').id;
-      if (!userId) { setLoading(false); return; }
-
-      const res = await api.get(`/portfolio/values/${userId}`);
+      const res = await api.get('/portfolio/values');
       setPortfolio(res.data);
     } catch (error) {
       console.error('Error fetching portfolio:', error);
@@ -46,9 +43,7 @@ export function Portfolio() {
     const qty = sellQuantities[symbol] || 1;
     setSelling(symbol);
     try {
-      const userId = user?.id || JSON.parse(localStorage.getItem('user') || '{}').id;
       const res = await api.post('/portfolio/sell', {
-        user_id: userId,
         symbol,
         quantity: qty,
       });

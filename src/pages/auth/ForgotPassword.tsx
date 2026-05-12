@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from '../../provider/LanguageProvider';
+import { API_BASE_URL } from '../../services/api';
 
 export function ForgotPassword() {
   const { t } = useTranslation();
@@ -15,7 +16,7 @@ export function ForgotPassword() {
     setMessage('');
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/forgot-password`, {
+      const response = await fetch(`${API_BASE_URL}/forgot-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({ email }),

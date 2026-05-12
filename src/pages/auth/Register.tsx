@@ -5,6 +5,7 @@ import { useTranslation } from '../../provider/LanguageProvider';
 import { useStore } from '../../store/useStore';
 import { toast } from 'react-toastify';
 import { CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import { API_BASE_URL } from '../../services/api';
 
 export function Register() {
   const { login } = useAuth();
@@ -19,7 +20,6 @@ export function Register() {
   const [verificationCode, setVerificationCode] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [codeSent, setCodeSent] = useState(false);
   const [passwordRequirements, setPasswordRequirements] = useState({
     length: false,
     uppercase: false,
@@ -56,7 +56,7 @@ export function Register() {
 
     setLoading(true);
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/register-init`, {
+      const response = await fetch(`${API_BASE_URL}/register-init`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -77,7 +77,6 @@ export function Register() {
         throw new Error(errorDetail || t('register.error'));
       }
 
-      setCodeSent(true);
       setStep(2);
     } catch (err: any) {
       setError(err.message || t('register.error'));
@@ -92,7 +91,7 @@ export function Register() {
     setLoading(true);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/register-verify`, {
+      const response = await fetch(`${API_BASE_URL}/register-verify`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({
@@ -130,7 +129,7 @@ export function Register() {
     setError('');
     setLoading(true);
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/resend-code`, {
+      const response = await fetch(`${API_BASE_URL}/resend-code`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({ email: formData.email }),

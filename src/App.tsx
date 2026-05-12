@@ -15,13 +15,14 @@ import { Transactions } from './pages/transactions/Transactions';
 import { Profile } from './pages/profile/Profile';
 import { Learn } from './pages/learn/Learn';
 import { LessonDetail } from './pages/learn/LessonDetail';
+import { Admin } from './pages/admin/Admin';
 import { Header } from './components/layout/Header';
 import { Footer } from './components/layout/Footer';
 import { PrivateRoute } from './components/routing/PrivateRoute';
 import { SEOHead } from './components/seo/SEOHead';
 
 function AppContent() {
-  const { logout, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#000000] transition-colors duration-200">
@@ -92,6 +93,15 @@ function AppContent() {
             element={
               <PrivateRoute>
                 <Profile />
+              </PrivateRoute>
+            }
+          />
+          
+          <Route
+            path="/admin"
+            element={
+              <PrivateRoute>
+                <Admin />
               </PrivateRoute>
             }
           />

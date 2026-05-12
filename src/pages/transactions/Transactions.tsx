@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from '../../provider/LanguageProvider';
-import { useStore } from '../../store/useStore';
 import api from '../../services/api';
 import { ChevronUp, ChevronDown } from 'lucide-react';
 
@@ -9,7 +8,6 @@ type SortDirection = 'asc' | 'desc';
 
 export function Transactions() {
   const { t } = useTranslation();
-  const { user } = useStore();
   const [transactions, setTransactions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [sortField, setSortField] = useState<SortField>('date');
@@ -23,10 +21,7 @@ export function Transactions() {
 
   const fetchTransactions = async () => {
     try {
-      const userId = user?.id || JSON.parse(localStorage.getItem('user') || '{}').id;
-      if (!userId) { setLoading(false); return; }
-
-      const res = await api.get(`/portfolio/history/${userId}`);
+      const res = await api.get('/portfolio/history');
       setTransactions(res.data.transactions || []);
     } catch (error) {
       console.error('Error fetching transactions:', error);
