@@ -34,10 +34,11 @@ const generateMockHistory = (baseRate: number, days: number = 7) => {
   });
 };
 
-const getMockExchangeRates = () => {
+const getMockExchangeRates = (isFallback: boolean = false) => {
   const usdBase = 3850;
   const eurBase = 4200;
   return {
+    is_fallback: isFallback,
     usd_cop: {
       rate: usdBase + (Math.random() - 0.5) * 50,
       change_percent: Number((Math.random() * 2 - 1).toFixed(2)),
@@ -61,6 +62,7 @@ export function Dashboard() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [courseProgress, setCourseProgress] = useState({ completed_courses: 0, bonus_earned: 0 });
   const [exchangeRates, setExchangeRates] = useState<any>(null);
+  const [exchangeRatesFallback, setExchangeRatesFallback] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -99,8 +101,16 @@ export function Dashboard() {
 
       if (portfolioRes.status === 'fulfilled') setPortfolio(portfolioRes.value.data);
       if (transactionsRes.status === 'fulfilled') setTransactions(transactionsRes.value.data.transactions?.slice(0, 5) || []);
-      if (exchangeRes.status === 'fulfilled') setExchangeRates(exchangeRes.value.data);
-      else setExchangeRates(getMockExchangeRates());
+      if (exchangeRes.status === 'fulfilled') {
+        const data = exchangeRes.value.data;
+        if (data.is_fallback) {
+          setExchangeRatesFallback(true);
+        }
+        setExchangeRates(data);
+      } else {
+        setExchangeRatesFallback(true);
+        setExchangeRates(getMockExchangeRates(true));
+      }
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
     } finally {
@@ -337,6 +347,20 @@ export function Dashboard() {
           </div>
         </div>
       </div>
+
+      {exchangeRatesFallback && (
+        <div className="mb-6 p-4 rounded-lg bg-amber-900/20 border border-amber-800/50">
+          <div className="flex items-center gap-3">
+            <svg className="w-5 h-5 text-amber-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <div>
+              <p className="text-sm text-amber-400 font-medium">Datos de tasas de cambio近似</p>
+              <p className="text-xs text-amber-400/70">Mostrando estimaciones basadas en datos históricos. Los valores reales pueden variar.</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {exchangeRates && (
         <div className="mb-10">
