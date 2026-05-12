@@ -51,7 +51,7 @@ export function Admin() {
       api('/admin/kpis').then(setKpis).catch(() => {}),
       api('/admin/users').then((d) => setUsers(d.users)).catch(() => {}),
     ]).finally(() => setLoading(false));
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const tabs: { key: Tab; label: string }[] = [
     { key: 'kpis', label: t('admin.kpis') },

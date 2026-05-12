@@ -268,7 +268,7 @@ export function Dashboard() {
                   value: s.stock_value,
                   profit: s.stock_profit,
                 }))}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" darkStroke="#334155" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                   <XAxis dataKey="name" stroke="#64748b" fontSize={12} />
                   <YAxis stroke="#64748b" fontSize={12} tickFormatter={(value) => `$${value}`} />
                   <Tooltip 
