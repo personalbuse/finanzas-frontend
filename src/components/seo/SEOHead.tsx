@@ -10,7 +10,7 @@ interface SEOHeadProps {
 
 const DEFAULT_SITE_NAME = 'Simulador de Inversiones';
 const DEFAULT_DESCRIPTION = 'Aprende a invertir en bolsa sin riesgo. Simula trading con $10,000 virtuales y domina los mercados financieros.';
-const DEFAULT_URL = 'https://finances.dabuma.site';
+const DEFAULT_URL = '';
 const DEFAULT_IMAGE = '/og-image.png';
 
 export function useSiteMetadata() {
