@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from '../../provider/LanguageProvider';
 import api from '../../services/api';
 import { toast } from 'react-toastify';
+import { useStore } from '../../store/useStore';
 import { 
   FileText,
   CheckCircle,
@@ -14,6 +15,7 @@ export function LessonDetail() {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { updateBalance } = useStore();
   
   const [step, setStep] = useState<'theory' | 'quiz' | 'simulation'>('theory');
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
@@ -52,6 +54,7 @@ export function LessonDetail() {
           const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
           currentUser.current_balance = res.data.current_balance;
           localStorage.setItem('user', JSON.stringify(currentUser));
+          updateBalance(res.data.current_balance);
         }
         toast.success(`${t('learning.moduleCompleted')} ${t('learning.bonusEarned')}`);
       } catch (error) {
@@ -158,7 +161,7 @@ export function LessonDetail() {
                           <li key={lineIdx} className="flex items-start gap-3">
                             <span className="w-2 h-2 rounded-full bg-emerald-500 mt-2 flex-shrink-0" />
                             <span className="text-base text-slate-600 dark:text-slate-300 leading-relaxed">
-                              {line.replace(/^[•\-]\s*/, '').trim()}
+                            {line.replace(/^[•-]\s*/, '').trim()}
                             </span>
                           </li>
                         ))}
@@ -175,12 +178,12 @@ export function LessonDetail() {
                 <button 
                   onClick={async () => {
                     try {
-                      await api.post(`/complete-module/${id}`);
-                      const res = await api.get('/user');
+                      const res = await api.post(`/complete-module/${id}`);
                       if (res.data.current_balance) {
                         const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
                         currentUser.current_balance = res.data.current_balance;
                         localStorage.setItem('user', JSON.stringify(currentUser));
+                        updateBalance(res.data.current_balance);
                       }
                       toast.success(`${t('learning.moduleCompleted')} ${t('learning.bonusEarned')}`);
                     } catch (error) {

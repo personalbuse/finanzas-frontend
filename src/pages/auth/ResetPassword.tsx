@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { CheckCircle, XCircle } from 'lucide-react';
+import { API_BASE_URL } from '../../services/api';
 
 export function ResetPassword() {
   const [searchParams] = useSearchParams();
@@ -63,7 +64,7 @@ export function ResetPassword() {
     }
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/reset-password`, {
+      const response = await fetch(`${API_BASE_URL}/reset-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({ token, new_password: password }),

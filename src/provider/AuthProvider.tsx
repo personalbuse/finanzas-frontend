@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useAuthStore } from '../store/useAuthStore';
+import { useStore } from '../store/useStore';
 import { toast } from 'react-toastify';
 
 interface AuthContextType {
@@ -17,18 +17,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
   const [token, setToken] = useState<string | null>(null);
-  const { loadFromStorage, clearStorage } = useAuthStore();
+  const { loadFromStorage, clearStorage } = useStore();
 
   useEffect(() => {
     loadFromStorage();
     const storedUser = localStorage.getItem('user');
     const storedToken = localStorage.getItem('token');
     if (storedUser && storedToken) {
-      setUser(JSON.parse(storedUser));
-      setToken(storedToken);
+      try {
+        setUser(JSON.parse(storedUser));
+        setToken(storedToken);
+      } catch {
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+      }
     }
     setLoading(false);
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const login = (user: any, token: string) => {
     localStorage.setItem('token', token);
@@ -41,6 +46,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    localStorage.removeItem('auth-storage');
     clearStorage();
     window.location.href = '/login';
   };

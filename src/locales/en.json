@@ -20,7 +20,33 @@
     "logout": "Logout",
     "language": "Switch Language",
     "darkMode": "Dark Mode",
-    "lightMode": "Light Mode"
+    "lightMode": "Light Mode",
+    "admin": "Admin Panel"
+  },
+  "admin": {
+    "title": "Admin Panel",
+    "users": "Users",
+    "kpis": "KPIs",
+    "data": "Data",
+    "validations": "Validations",
+    "config": "Settings",
+    "totalUsers": "Total Users",
+    "activeUsers": "Active",
+    "admins": "Admins",
+    "totalTx": "Transactions",
+    "totalVolume": "Volume",
+    "username": "Username",
+    "role": "Role",
+    "status": "Status",
+    "balance": "Balance",
+    "active": "Active",
+    "banned": "Banned",
+    "comingSoon": "Coming soon..."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you are looking for does not exist or has been moved.",
+    "goHome": "Go to Dashboard"
   },
   "login": {
     "title": "Welcome Back",

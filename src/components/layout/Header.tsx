@@ -2,7 +2,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from '../../provider/LanguageProvider';
 import { useAuth } from '../../provider/AuthProvider';
 import { useTheme } from '../../provider/ThemeProvider';
-import { LogOut, ArrowLeft } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 
 export function Header() {
   const { language, changeLanguage, t } = useTranslation();
@@ -10,6 +10,7 @@ export function Header() {
   const location = useLocation();
   const { logout } = useAuth();
   const { darkMode, toggleTheme } = useTheme();
+  const { user } = useAuth();
 
   const navItems = [
     { path: '/dashboard', label: t('nav.dashboard') },
@@ -18,6 +19,7 @@ export function Header() {
     { path: '/learn', label: t('nav.learn') },
     { path: '/transactions', label: t('nav.transactions') },
     { path: '/profile', label: t('nav.profile') },
+    ...(user?.rol === 'admin' ? [{ path: '/admin', label: t('nav.admin') }] : []),
   ];
 
   const isActive = (path: string) => location.pathname === path;
