@@ -9,15 +9,14 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-# Stage 2: Serve with Nginx
+# Stage 2: Serve static files with Nginx
 FROM nginx:alpine
 
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-RUN rm /etc/nginx/conf.d/default.conf
-ENV BACKEND_UPSTREAM=http://backend:8000
-COPY nginx.conf /etc/nginx/templates/default.conf.template
+RUN rm /etc/nginx/conf.d/default.conf && \
+    echo 'server { listen 3000; server_name _; root /usr/share/nginx/html; index index.html; location / { try_files $uri $uri/ /index.html; } }' > /etc/nginx/conf.d/default.conf
 
-EXPOSE 80
+EXPOSE 3000
 
 CMD ["nginx", "-g", "daemon off;"]

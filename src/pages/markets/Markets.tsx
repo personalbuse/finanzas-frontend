@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from '../../provider/LanguageProvider';
 import api from '../../services/api';
 import { TrendingUp, TrendingDown, Globe } from 'lucide-react';
@@ -79,11 +79,14 @@ export function Markets() {
   };
 
   const displayStocks = selectedRegion ? regionData : stocks;
-  const groupedStocks = selectedRegion ? null : stocks.reduce((acc: any, stock: any) => {
-    if (!acc[stock.region]) acc[stock.region] = [];
-    acc[stock.region].push(stock);
-    return acc;
-  }, {});
+  const groupedStocks = useMemo(() => {
+    if (selectedRegion) return null;
+    return stocks.reduce((acc: any, stock: any) => {
+      if (!acc[stock.region]) acc[stock.region] = [];
+      acc[stock.region].push(stock);
+      return acc;
+    }, {});
+  }, [stocks, selectedRegion]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in py-6">

@@ -8,30 +8,23 @@ export function Leaderboard() {
   const [myRank, setMyRank] = useState<any>(null);
 
   useEffect(() => {
-    fetchLeaderboard();
-    fetchMyRank();
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const [leaderboardRes, myRankRes] = await Promise.all([
+          api.get('/leaderboard'),
+          api.get('/leaderboard/me').catch(() => ({ data: null }))
+        ]);
+        setLeaderboard(leaderboardRes.data.leaderboard || []);
+        setMyRank(myRankRes.data);
+      } catch (error) {
+        console.error('Error fetching leaderboard data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
   }, []);
-
-  const fetchLeaderboard = async () => {
-    setLoading(true);
-    try {
-      const res = await api.get('/leaderboard');
-      setLeaderboard(res.data.leaderboard || []);
-    } catch (error) {
-      console.error('Error fetching leaderboard:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchMyRank = async () => {
-    try {
-      const res = await api.get('/leaderboard/me');
-      setMyRank(res.data);
-    } catch (error) {
-      console.error('Error fetching my rank:', error);
-    }
-  };
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount || 0);

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from '../../provider/LanguageProvider';
 import { useStore } from '../../store/useStore';
 import api from '../../services/api';
@@ -69,42 +69,44 @@ export function Portfolio() {
     }
   };
 
-  const sortedStocks = [...portfolio.stocks].sort((a, b) => {
-    let aVal: any, bVal: any;
-    
-    switch (sortField) {
-      case 'symbol':
-        aVal = a.symbol.toLowerCase();
-        bVal = b.symbol.toLowerCase();
-        break;
-      case 'quantity':
-        aVal = a.quantity;
-        bVal = b.quantity;
-        break;
-      case 'avgCost':
-        aVal = a.average_cost;
-        bVal = b.average_cost;
-        break;
-      case 'currentPrice':
-        aVal = a.current_price;
-        bVal = b.current_price;
-        break;
-      case 'value':
-        aVal = a.stock_value;
-        bVal = b.stock_value;
-        break;
-      case 'profit':
-        aVal = a.stock_profit;
-        bVal = b.stock_profit;
-        break;
-      default:
-        return 0;
-    }
-    
-    if (aVal < bVal) return sortDirection === 'asc' ? -1 : 1;
-    if (aVal > bVal) return sortDirection === 'asc' ? 1 : -1;
-    return 0;
-  });
+  const sortedStocks = useMemo(() => {
+    return [...portfolio.stocks].sort((a, b) => {
+      let aVal: any, bVal: any;
+      
+      switch (sortField) {
+        case 'symbol':
+          aVal = a.symbol.toLowerCase();
+          bVal = b.symbol.toLowerCase();
+          break;
+        case 'quantity':
+          aVal = a.quantity;
+          bVal = b.quantity;
+          break;
+        case 'avgCost':
+          aVal = a.average_cost;
+          bVal = b.average_cost;
+          break;
+        case 'currentPrice':
+          aVal = a.current_price;
+          bVal = b.current_price;
+          break;
+        case 'value':
+          aVal = a.stock_value;
+          bVal = b.stock_value;
+          break;
+        case 'profit':
+          aVal = a.stock_profit;
+          bVal = b.stock_profit;
+          break;
+        default:
+          return 0;
+      }
+      
+      if (aVal < bVal) return sortDirection === 'asc' ? -1 : 1;
+      if (aVal > bVal) return sortDirection === 'asc' ? 1 : -1;
+      return 0;
+    });
+  }, [portfolio.stocks, sortField, sortDirection]);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount || 0);
