@@ -18,6 +18,7 @@ export function Header() {
     { path: '/indices', label: t('nav.indices') },
     { path: '/stocks', label: t('nav.stocks') },
     { path: '/forex', label: t('nav.forex') },
+    { path: '/leaderboard', label: 'Ranking' },
     { path: '/portfolio', label: t('nav.portfolio') },
     { path: '/learn', label: t('nav.learn') },
     { path: '/transactions', label: t('nav.transactions') },

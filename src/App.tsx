@@ -20,6 +20,7 @@ import { NotFound } from './pages/NotFound';
 import { Markets } from './pages/markets/Markets';
 import { Indices } from './pages/indices/Indices';
 import { Forex } from './pages/forex/Forex';
+import { Leaderboard } from './pages/leaderboard/Leaderboard';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { Header } from './components/layout/Header';
 import { Footer } from './components/layout/Footer';
@@ -81,6 +82,15 @@ function AppContent() {
             element={
               <PrivateRoute>
                 <Forex />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/leaderboard"
+            element={
+              <PrivateRoute>
+                <Leaderboard />
               </PrivateRoute>
             }
           />

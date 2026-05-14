@@ -64,6 +64,21 @@ export function Dashboard() {
   const [exchangeRates, setExchangeRates] = useState<any>(null);
   const [exchangeRatesFallback, setExchangeRatesFallback] = useState(false);
   const [storedUser, setStoredUser] = useState<any>(null);
+  const [news, setNews] = useState<any[]>([]);
+  const [newsLoading, setNewsLoading] = useState(true);
+
+  const formatTimeAgo = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMins / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffMins < 60) return `hace ${diffMins} min`;
+    if (diffHours < 24) return `hace ${diffHours} h`;
+    return `hace ${diffDays} días`;
+  };
 
   useEffect(() => {
     const userFromStorage = localStorage.getItem('user');
@@ -95,10 +110,11 @@ export function Dashboard() {
 
   const fetchData = async () => {
     try {
-      const [portfolioRes, transactionsRes, exchangeRes] = await Promise.allSettled([
+      const [portfolioRes, transactionsRes, exchangeRes, newsRes] = await Promise.allSettled([
         api.get('/portfolio/values'),
         api.get('/portfolio/history'),
         api.get(`/exchange-rates/multi`),
+        api.get('/news'),
       ]);
 
       if (portfolioRes.status === 'fulfilled') setPortfolio(portfolioRes.value.data);
@@ -113,10 +129,14 @@ export function Dashboard() {
         setExchangeRatesFallback(true);
         setExchangeRates(getMockExchangeRates(true));
       }
+      if (newsRes.status === 'fulfilled') {
+        setNews(newsRes.value.data.news || []);
+      }
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
     } finally {
       setLoading(false);
+      setNewsLoading(false);
     }
   };
 
@@ -370,14 +390,14 @@ export function Dashboard() {
             Tasas de Cambio (COP)
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <ExchangeRateChart 
+            <ExchangeRateChart
               data={exchangeRates.usd_cop?.history || []}
               currentRate={exchangeRates.usd_cop?.rate || 0}
               changePercent={exchangeRates.usd_cop?.change_percent}
               fromCurrency="USD"
               toCurrency="COP"
             />
-            <ExchangeRateChart 
+            <ExchangeRateChart
               data={exchangeRates.eur_cop?.history || []}
               currentRate={exchangeRates.eur_cop?.rate || 0}
               changePercent={exchangeRates.eur_cop?.change_percent}
@@ -387,6 +407,57 @@ export function Dashboard() {
           </div>
         </div>
       )}
+
+      <div className="mb-10">
+        <h3 className="text-lg font-semibold text-slate-900 dark:text-white tracking-tight mb-4">
+          Noticias Financieras
+        </h3>
+        {newsLoading ? (
+          <div className="flex items-center justify-center h-32">
+            <div className="animate-spin rounded-full h-6 w-6 border-2 border-emerald-500 border-t-transparent" />
+          </div>
+        ) : news.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {news.slice(0, 3).map((item: any) => (
+              <a
+                key={item.id}
+                href={item.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block bg-white dark:bg-[#0d0d0d] border border-slate-200 dark:border-[#1a1a1a] rounded-xl overflow-hidden hover:border-emerald-500 transition-all group"
+              >
+                {item.image && (
+                  <div className="h-32 bg-slate-100 dark:bg-[#1a1a1a] overflow-hidden">
+                    <img
+                      src={item.image}
+                      alt={item.headline}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = 'none';
+                      }}
+                    />
+                  </div>
+                )}
+                <div className="p-4">
+                  <p className="text-xs text-emerald-600 dark:text-emerald-400 font-medium mb-1">
+                    {item.source}
+                  </p>
+                  <h4 className="text-sm font-semibold text-slate-900 dark:text-white line-clamp-2 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                    {item.headline}
+                  </h4>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">
+                    {formatTimeAgo(item.datetime)}
+                  </p>
+                </div>
+              </a>
+            ))}
+          </div>
+        ) : (
+          <p className="text-slate-400 dark:text-slate-500 text-center py-8">
+            No hay noticias disponibles
+          </p>
+        )}
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="glass-card">

@@ -1,0 +1,160 @@
+import { useState, useEffect } from 'react';
+import api from '../../services/api';
+import { Trophy, TrendingUp, TrendingDown } from 'lucide-react';
+
+export function Leaderboard() {
+  const [leaderboard, setLeaderboard] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [myRank, setMyRank] = useState<any>(null);
+
+  useEffect(() => {
+    fetchLeaderboard();
+    fetchMyRank();
+  }, []);
+
+  const fetchLeaderboard = async () => {
+    setLoading(true);
+    try {
+      const res = await api.get('/leaderboard');
+      setLeaderboard(res.data.leaderboard || []);
+    } catch (error) {
+      console.error('Error fetching leaderboard:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchMyRank = async () => {
+    try {
+      const res = await api.get('/leaderboard/me');
+      setMyRank(res.data);
+    } catch (error) {
+      console.error('Error fetching my rank:', error);
+    }
+  };
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount || 0);
+  };
+
+  const getMedal = (rank: number) => {
+    switch (rank) {
+      case 1:
+        return <span className="text-3xl">🥇</span>;
+      case 2:
+        return <span className="text-3xl">🥈</span>;
+      case 3:
+        return <span className="text-3xl">🥉</span>;
+      default:
+        return <span className="text-lg font-bold text-slate-400 dark:text-slate-500">{rank}</span>;
+    }
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in py-6">
+      <div className="mb-8">
+        <h1 className="text-3xl font-semibold text-slate-900 dark:text-white tracking-tight flex items-center gap-3">
+          <Trophy className="w-8 h-8 text-amber-500" />
+          Ranking de Inversores
+        </h1>
+        <p className="text-slate-500 dark:text-slate-400 mt-2">
+          Los inversores con mejor rentabilidad del simulador
+        </p>
+      </div>
+
+      {myRank && myRank.rank && (
+        <div className="mb-6 p-4 rounded-xl bg-gradient-to-r from-emerald-500 to-blue-500 text-white">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm opacity-90">Tu posición</p>
+              <p className="text-3xl font-bold">#{myRank.rank} de {myRank.total_users}</p>
+            </div>
+            <div className="text-right">
+              <p className="text-sm opacity-90">Tu rentabilidad</p>
+              <p className="text-2xl font-bold">{myRank.profitability >= 0 ? '+' : ''}{myRank.profitability?.toFixed(2)}%</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {loading ? (
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-10 w-10 border-3 border-slate-900 dark:border-white border-t-transparent" />
+        </div>
+      ) : (
+        <div className="bg-white dark:bg-[#0d0d0d] border border-slate-200 dark:border-[#1a1a1a] rounded-xl overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-slate-50 dark:bg-[#1a1a1a]/50">
+                <tr>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+                    Posición
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+                    Inversor
+                  </th>
+                  <th className="px-6 py-4 text-right text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+                    Valor Total
+                  </th>
+                  <th className="px-6 py-4 text-right text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+                    Rentabilidad
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
+                {leaderboard.map((user, index) => (
+                  <tr
+                    key={user.user_id}
+                    className={`hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors ${
+                      index < 3 ? 'bg-amber-50/50 dark:bg-amber-900/10' : ''
+                    }`}
+                  >
+                    <td className="px-6 py-4">
+                      <div className="flex items-center justify-center w-10">
+                        {getMedal(user.rank)}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-blue-500 flex items-center justify-center text-white font-bold">
+                          {user.username.charAt(0).toUpperCase()}
+                        </div>
+                        <span className="font-bold text-slate-900 dark:text-white">
+                          {user.username}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <span className="text-slate-600 dark:text-slate-400">
+                        {formatCurrency(user.total_value)}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <span className={`inline-flex items-center gap-1 px-2 py-1 rounded text-sm font-bold ${
+                        user.profitability >= 0
+                          ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
+                          : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+                      }`}>
+                        {user.profitability >= 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+                        {user.profitability >= 0 ? '+' : ''}{user.profitability.toFixed(2)}%
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {leaderboard.length === 0 && !loading && (
+        <div className="text-center py-12">
+          <Trophy className="w-16 h-16 mx-auto text-slate-300 dark:text-slate-600 mb-4" />
+          <p className="text-slate-400 dark:text-slate-500">
+            No hay datos disponibles aún
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
