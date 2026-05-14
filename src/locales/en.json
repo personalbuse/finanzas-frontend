@@ -12,7 +12,7 @@
   },
   "nav": {
     "dashboard": "Dashboard",
-    "stocks": "Stocks",
+    "stocks": "US Stocks",
     "portfolio": "Portfolio",
     "learn": "Learn",
     "transactions": "Transactions",
@@ -21,7 +21,10 @@
     "language": "Switch Language",
     "darkMode": "Dark Mode",
     "lightMode": "Light Mode",
-    "admin": "Admin Panel"
+    "admin": "Admin Panel",
+    "markets": "Markets",
+    "indices": "Indices",
+    "forex": "Forex"
   },
   "admin": {
     "title": "Admin Panel",
@@ -360,5 +363,19 @@
     "goToInvest": "Go to invest",
     "finishLesson": "Finish Lesson",
     "testKnowledge": "Test My Knowledge"
+  },
+  "markets": {
+    "title": "Global Markets",
+    "subtitle": "Invest in stocks from international markets",
+    "region": "Region",
+    "stocks": "Stocks"
+  },
+  "indices": {
+    "title": "World Indices",
+    "subtitle": "Follow the major indices of global stock markets"
+  },
+  "forex": {
+    "title": "Foreign Exchange (Forex)",
+    "subtitle": "Check exchange rates of major currencies"
   }
 }

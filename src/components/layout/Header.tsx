@@ -14,7 +14,10 @@ export function Header() {
 
   const navItems = [
     { path: '/dashboard', label: t('nav.dashboard') },
+    { path: '/markets', label: t('nav.markets') },
+    { path: '/indices', label: t('nav.indices') },
     { path: '/stocks', label: t('nav.stocks') },
+    { path: '/forex', label: t('nav.forex') },
     { path: '/portfolio', label: t('nav.portfolio') },
     { path: '/learn', label: t('nav.learn') },
     { path: '/transactions', label: t('nav.transactions') },

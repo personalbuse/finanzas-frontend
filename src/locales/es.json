@@ -12,7 +12,7 @@
   },
   "nav": {
     "dashboard": "Panel",
-    "stocks": "Acciones",
+    "stocks": "Acciones USA",
     "portfolio": "Portafolio",
     "learn": "Aprender",
     "transactions": "Transacciones",
@@ -21,7 +21,10 @@
     "language": "Cambiar Idioma",
     "darkMode": "Modo Oscuro",
     "lightMode": "Modo Claro",
-    "admin": "Panel Admin"
+    "admin": "Panel Admin",
+    "markets": "Mercados",
+    "indices": "Índices",
+    "forex": "Divisas"
   },
   "admin": {
     "title": "Panel de Administración",
@@ -360,5 +363,19 @@
     "goToInvest": "Ir a invertir",
     "finishLesson": "Terminar Lección",
     "testKnowledge": "Probar Mis Aprendizajes"
+  },
+  "markets": {
+    "title": "Mercados Globales",
+    "subtitle": "Invierte en acciones de mercados internacionales",
+    "region": "Región",
+    "stocks": "Acciones"
+  },
+  "indices": {
+    "title": "Índices Mundiales",
+    "subtitle": "Sigue los principales índices de las bolsas globales"
+  },
+  "forex": {
+    "title": "Mercado de Divisas (Forex)",
+    "subtitle": "Consulta las tasas de cambio de las principales monedas"
   }
 }

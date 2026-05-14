@@ -17,6 +17,9 @@ import { Learn } from './pages/learn/Learn';
 import { LessonDetail } from './pages/learn/LessonDetail';
 import { Admin } from './pages/admin/Admin';
 import { NotFound } from './pages/NotFound';
+import { Markets } from './pages/markets/Markets';
+import { Indices } from './pages/indices/Indices';
+import { Forex } from './pages/forex/Forex';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { Header } from './components/layout/Header';
 import { Footer } from './components/layout/Footer';
@@ -54,7 +57,34 @@ function AppContent() {
               </PrivateRoute>
             }
           />
-          
+
+          <Route
+            path="/markets"
+            element={
+              <PrivateRoute>
+                <Markets />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/indices"
+            element={
+              <PrivateRoute>
+                <Indices />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/forex"
+            element={
+              <PrivateRoute>
+                <Forex />
+              </PrivateRoute>
+            }
+          />
+
           <Route
             path="/portfolio"
             element={
