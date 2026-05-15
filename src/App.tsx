@@ -16,6 +16,7 @@ import { Profile } from './pages/profile/Profile';
 import { Learn } from './pages/learn/Learn';
 import { LessonDetail } from './pages/learn/LessonDetail';
 import { Admin } from './pages/admin/Admin';
+import { Maintenance } from './pages/Maintenance';
 import { NotFound } from './pages/NotFound';
 import { Markets } from './pages/markets/Markets';
 import { Indices } from './pages/indices/Indices';
@@ -150,6 +151,8 @@ function AppContent() {
               </PrivateRoute>
             }
           />
+
+          <Route path="/maintenance" element={<Maintenance />} />
           
           <Route path="/" element={<Navigate to="/dashboard" />} />
           <Route path="*" element={<NotFound />} />

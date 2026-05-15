@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../provider/AuthProvider';
 
@@ -7,9 +7,27 @@ interface PrivateRouteProps {
 }
 
 export function PrivateRoute({ children }: PrivateRouteProps) {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, user } = useAuth();
+  const [maintenanceMode, setMaintenanceMode] = useState(false);
+  const [checkingMaintenance, setCheckingMaintenance] = useState(true);
 
-  if (loading) {
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setCheckingMaintenance(false);
+      return;
+    }
+    fetch('/health')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.maintenance_mode === true) {
+          setMaintenanceMode(true);
+        }
+      })
+      .catch(() => {})
+      .finally(() => setCheckingMaintenance(false));
+  }, [isAuthenticated]);
+
+  if (loading || checkingMaintenance) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white dark:bg-black">
         <div className="animate-spin rounded-full h-10 w-10 border-3 border-slate-900 dark:border-white border-t-transparent" />
@@ -19,6 +37,10 @@ export function PrivateRoute({ children }: PrivateRouteProps) {
 
   if (!isAuthenticated) {
     return <Navigate to="/login" />;
+  }
+
+  if (maintenanceMode && user?.rol !== 'admin') {
+    return <Navigate to="/maintenance" />;
   }
 
   return <>{children}</>;
