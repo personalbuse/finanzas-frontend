@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../provider/LanguageProvider';
 import { useStore } from '../store/useStore';
 import api from '../services/api';
-import { OnboardingModal } from '../components/onboarding/OnboardingModal';
 import { ExchangeRateChart } from '../components/charts/ExchangeRatesChart';
-import { 
+import { useTourStore } from '../store/tourStore';
+import {
   LineChart, 
   Line, 
   XAxis, 
@@ -59,7 +59,6 @@ export function Dashboard() {
   const [portfolio, setPortfolio] = useState<any>(null);
   const [transactions, setTransactions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showOnboarding, setShowOnboarding] = useState(false);
   const [courseProgress, setCourseProgress] = useState({ completed_courses: 0, bonus_earned: 0 });
   const [exchangeRates, setExchangeRates] = useState<any>(null);
   const [exchangeRatesFallback, setExchangeRatesFallback] = useState(false);
@@ -87,25 +86,27 @@ export function Dashboard() {
     }
     fetchData();
     checkOnboarding();
+    fetchCourseProgress();
   }, []);
 
-  const checkOnboarding = async () => {
-    const hasSeenOnboarding = localStorage.getItem('onboarding_shown');
-    
-    try {
-      const progressRes = await api.get('/course-progress');
-      setCourseProgress(progressRes.data);
-      
-      if (progressRes.data.completed_courses === 0 && !hasSeenOnboarding) {
-        setShowOnboarding(true);
-      }
-    } catch (error) {
-      console.error('Error fetching course progress:', error);
+  const startTour = useTourStore((state) => state.startTour);
+
+  const checkOnboarding = () => {
+    const hasSeenTour = localStorage.getItem('guided_tour_done');
+    const shouldStartTour = localStorage.getItem('guided_tour');
+
+    if (shouldStartTour && !hasSeenTour) {
+      startTour();
     }
   };
 
-  const handleOnboardingClose = () => {
-    setShowOnboarding(false);
+  const fetchCourseProgress = async () => {
+    try {
+      const progressRes = await api.get('/course-progress');
+      setCourseProgress(progressRes.data);
+    } catch (error) {
+      console.error('Error fetching course progress:', error);
+    }
   };
 
   const fetchData = async () => {
@@ -162,7 +163,6 @@ export function Dashboard() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in">
-      <OnboardingModal isOpen={showOnboarding} onClose={handleOnboardingClose} />
       
       {courseProgress.completed_courses > 0 && (
         <div className="mb-6 p-4 rounded-lg bg-emerald-900/20 border border-emerald-800/50">

@@ -117,6 +117,7 @@ export function Register() {
 
       login(userData, data.access_token);
       toast.success(t('register.success') || '¡Cuenta creada exitosamente!');
+      localStorage.setItem('guided_tour', 'true');
       navigate('/dashboard');
     } catch (err: any) {
       setError(err.message || t('register.error'));

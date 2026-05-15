@@ -26,6 +26,7 @@ import { Header } from './components/layout/Header';
 import { Footer } from './components/layout/Footer';
 import { PrivateRoute } from './components/routing/PrivateRoute';
 import { SEOHead } from './components/seo/SEOHead';
+import { GuidedTour } from './components/tour/GuidedTour';
 
 function AppContent() {
   const { isAuthenticated } = useAuth();
@@ -34,6 +35,8 @@ function AppContent() {
     <div className="min-h-screen bg-slate-50 dark:bg-[#000000] transition-colors duration-200">
       {isAuthenticated && <Header />}
       
+      <GuidedTour />
+
       <main className="container mx-auto px-4 py-8">
         <Routes>
           <Route path="/login" element={<Login />} />
