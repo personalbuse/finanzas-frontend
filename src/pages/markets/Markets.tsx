@@ -4,23 +4,23 @@ import api from '../../services/api';
 import { TrendingUp, TrendingDown, Globe } from 'lucide-react';
 
 const REGIONS = [
-  { id: 'North America', name: 'Norteamérica', nameEn: 'North America', flag: '🌎' },
-  { id: 'South America', name: 'Sudamérica', nameEn: 'South America', flag: '🌎' },
-  { id: 'Europe', name: 'Europa', nameEn: 'Europe', flag: '🇪🇺' },
-  { id: 'Asia', name: 'Asia', nameEn: 'Asia', flag: '🌏' },
+  { id: 'North America', flag: '🌎' },
+  { id: 'South America', flag: '🌎' },
+  { id: 'Europe', flag: '🇪🇺' },
+  { id: 'Asia', flag: '🌏' },
 ];
 
-const COUNTRIES: Record<string, { name: string; flag: string; currency: string }> = {
-  US: { name: 'Estados Unidos', flag: '🇺🇸', currency: 'USD' },
-  MX: { name: 'México', flag: '🇲🇽', currency: 'MXN' },
-  BR: { name: 'Brasil', flag: '🇧🇷', currency: 'BRL' },
-  CO: { name: 'Colombia', flag: '🇨🇴', currency: 'COP' },
-  CL: { name: 'Chile', flag: '🇨🇱', currency: 'CLP' },
-  GB: { name: 'Reino Unido', flag: '🇬🇧', currency: 'GBP' },
-  DE: { name: 'Alemania', flag: '🇩🇪', currency: 'EUR' },
-  FR: { name: 'Francia', flag: '🇫🇷', currency: 'EUR' },
-  JP: { name: 'Japón', flag: '🇯🇵', currency: 'JPY' },
-  CN: { name: 'China', flag: '🇨🇳', currency: 'CNY' },
+const COUNTRIES: Record<string, { flag: string; currency: string }> = {
+  US: { flag: '🇺🇸', currency: 'USD' },
+  MX: { flag: '🇲🇽', currency: 'MXN' },
+  BR: { flag: '🇧🇷', currency: 'BRL' },
+  CO: { flag: '🇨🇴', currency: 'COP' },
+  CL: { flag: '🇨🇱', currency: 'CLP' },
+  GB: { flag: '🇬🇧', currency: 'GBP' },
+  DE: { flag: '🇩🇪', currency: 'EUR' },
+  FR: { flag: '🇫🇷', currency: 'EUR' },
+  JP: { flag: '🇯🇵', currency: 'JPY' },
+  CN: { flag: '🇨🇳', currency: 'CNY' },
 };
 
 export function Markets() {
@@ -91,7 +91,7 @@ export function Markets() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in py-6">
       <div className="mb-8">
-        <h1 className="text-3xl font-semibold text-slate-900 dark:text-white tracking-tight flex items-center gap-3">
+              <h1 className="text-3xl font-semibold text-slate-900 dark:text-white tracking-tight flex items-center gap-3">
           <Globe className="w-8 h-8" />
           {t('markets.title', 'Mercados Globales')}
         </h1>
@@ -105,7 +105,7 @@ export function Markets() {
           <button
             key={region.id}
             onClick={() => fetchByRegion(region.id)}
-            className={`p-4 rounded-xl border transition-all ${
+            className={`p-4 rounded-xl border transition-colors ${
               selectedRegion === region.id
                 ? 'bg-emerald-600 border-emerald-600 text-white'
                 : 'bg-white dark:bg-[#0d0d0d] border-slate-200 dark:border-[#1a1a1a] hover:border-emerald-500'
@@ -113,10 +113,10 @@ export function Markets() {
           >
             <div className="text-2xl mb-2">{region.flag}</div>
             <div className={`font-semibold ${selectedRegion === region.id ? 'text-white' : 'text-slate-900 dark:text-white'}`}>
-              {region.name}
+              {t(`markets.region.${region.id.replace(/\s+/g, '')}`, region.id)}
             </div>
             <div className={`text-xs ${selectedRegion === region.id ? 'text-white/80' : 'text-slate-500'}`}>
-              {selectedRegion === region.id && loading ? '...' : `${stocks.filter((s: any) => s.region === region.id).length} acciones`}
+              {selectedRegion === region.id && loading ? '...' : `${stocks.filter((s: any) => s.region === region.id).length} ${t('markets.stocks')}`}
             </div>
           </button>
         ))}
@@ -127,7 +127,7 @@ export function Markets() {
           onClick={() => { setSelectedRegion(null); setRegionData(null); }}
           className="mb-4 text-sm text-emerald-600 dark:text-emerald-400 hover:underline"
         >
-          ← Volver a todos los mercados
+          ← {t('markets.backToAll')}
         </button>
       )}
 
@@ -140,7 +140,7 @@ export function Markets() {
           {displayStocks?.map((stock: any) => (
             <div
               key={stock.symbol}
-              className="bg-white dark:bg-[#0d0d0d] border border-slate-200 dark:border-[#1a1a1a] rounded-xl p-4 hover:border-slate-300 dark:hover:border-[#262626] transition-all"
+                  className="bg-white dark:bg-[#0d0d0d] border border-slate-200 dark:border-[#1a1a1a] rounded-xl p-4 hover:border-slate-300 dark:hover:border-[#262626] transition-colors"
             >
               <div className="flex justify-between items-start mb-2">
                 <div className="flex items-center gap-2">
@@ -183,7 +183,7 @@ export function Markets() {
                 {regionStocks.slice(0, 6).map((stock: any) => (
                   <div
                     key={stock.symbol}
-                    className="bg-white dark:bg-[#0d0d0d] border border-slate-200 dark:border-[#1a1a1a] rounded-xl p-4 hover:border-slate-300 dark:hover:border-[#262626] transition-all"
+              className="bg-white dark:bg-[#0d0d0d] border border-slate-200 dark:border-[#1a1a1a] rounded-xl p-4 hover:border-slate-300 dark:hover:border-[#262626] transition-colors"
                   >
                     <div className="flex justify-between items-start mb-2">
                       <div className="flex items-center gap-2">

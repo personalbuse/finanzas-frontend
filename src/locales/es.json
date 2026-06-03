@@ -173,7 +173,14 @@
     "cashBalance": "Saldo en Efectivo",
     "performance": "Rendimiento",
     "totalCost": "Costo Total",
-    "profitLoss": "Ganancia/Pérdida"
+    "profitLoss": "Ganancia/Pérdida",
+    "exchangeRateFallback": "Datos de tasas de cambio no disponibles",
+    "exchangeRatesTitle": "Tasas de Cambio (COP)",
+    "financialNews": "Noticias Financieras",
+    "noNews": "No hay noticias disponibles",
+    "timeAgoMin": "hace {min} min",
+    "timeAgoHour": "hace {h} h",
+    "timeAgoDay": "hace {d} días"
   },
   "stocks": {
     "title": "Mercado de Acciones",
@@ -412,8 +419,14 @@
   "markets": {
     "title": "Mercados Globales",
     "subtitle": "Invierte en acciones de mercados internacionales",
-    "region": "Región",
-    "stocks": "Acciones"
+    "stocks": "Acciones",
+    "backToAll": "Volver a todos los mercados",
+    "region": {
+      "NorthAmerica": "Norteamérica",
+      "SouthAmerica": "Sudamérica",
+      "Europe": "Europa",
+      "Asia": "Asia"
+    }
   },
   "indices": {
     "title": "Índices Mundiales",

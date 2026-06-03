@@ -56,7 +56,7 @@ export function Header() {
               <button
                 key={item.path}
                 onClick={() => navigate(item.path)}
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors duration-200 ${
                   isActive(item.path)
                     ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900'
                     : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -70,7 +70,7 @@ export function Header() {
           <div className="flex items-center space-x-3">
             <button
               onClick={toggleTheme}
-              className="p-1.5 sm:p-2 rounded-lg text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-[#1a1a1a] hover:bg-slate-200 dark:hover:bg-[#262626] transition-all"
+              className="p-1.5 sm:p-2 rounded-lg text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-[#1a1a1a] hover:bg-slate-200 dark:hover:bg-[#262626] transition-colors"
               title={darkMode ? t('nav.lightMode') : t('nav.darkMode')}
             >
               {darkMode ? (
@@ -86,14 +86,14 @@ export function Header() {
             
             <button
               onClick={() => changeLanguage(language === 'en' ? 'es' : 'en')}
-              className="px-2 py-1 text-[10px] sm:px-3 sm:py-1.5 sm:text-xs font-medium text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-[#1a1a1a] rounded-lg hover:bg-slate-200 dark:hover:bg-[#262626] transition-all uppercase tracking-widest"
+              className="px-2 py-1 text-[10px] sm:px-3 sm:py-1.5 sm:text-xs font-medium text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-[#1a1a1a] rounded-lg hover:bg-slate-200 dark:hover:bg-[#262626] transition-colors uppercase tracking-widest"
             >
               {language === 'en' ? 'ES' : 'EN'}
             </button>
             
             <button
               onClick={handleLogout}
-              className="p-1.5 sm:px-3 sm:py-1.5 rounded-lg text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 transition-all"
+              className="p-1.5 sm:px-3 sm:py-1.5 rounded-lg text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors"
               title={t('nav.logout')}
             >
               <LogOut className="w-4 h-4 sm:w-4 sm:h-4" />
@@ -106,7 +106,7 @@ export function Header() {
             <button
               key={item.path}
               onClick={() => navigate(item.path)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 whitespace-nowrap ${
+               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors duration-200 whitespace-nowrap ${
                 isActive(item.path)
                   ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900'
                   : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'

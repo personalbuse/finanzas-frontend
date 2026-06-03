@@ -23,6 +23,16 @@ RUN rm /etc/nginx/conf.d/default.conf && \
 \n\
     include /etc/nginx/mime.types;\n\
 \n\
+    gzip on;\n\
+    gzip_vary on;\n\
+    gzip_comp_level 6;\n\
+    gzip_min_length 256;\n\
+    gzip_types application/javascript application/json text/css text/html image/svg+xml;\n\
+\n\
+    add_header X-Frame-Options "SAMEORIGIN" always;\n\
+    add_header X-Content-Type-Options "nosniff" always;\n\
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;\n\
+\n\
     location /assets/ {\n\
         expires 1y;\n\
         add_header Cache-Control "public, immutable";\n\

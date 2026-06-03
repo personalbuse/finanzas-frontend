@@ -173,7 +173,14 @@
     "cashBalance": "Cash Balance",
     "performance": "Performance",
     "totalCost": "Total Cost",
-    "profitLoss": "Profit/Loss"
+    "profitLoss": "Profit/Loss",
+    "exchangeRateFallback": "Exchange rate data unavailable",
+    "exchangeRatesTitle": "Exchange Rates (COP)",
+    "financialNews": "Financial News",
+    "noNews": "No news available",
+    "timeAgoMin": "{min} min ago",
+    "timeAgoHour": "{h}h ago",
+    "timeAgoDay": "{d}d ago"
   },
   "stocks": {
     "title": "Stock Market",
@@ -412,8 +419,14 @@
   "markets": {
     "title": "Global Markets",
     "subtitle": "Invest in stocks from international markets",
-    "region": "Region",
-    "stocks": "Stocks"
+    "stocks": "Stocks",
+    "backToAll": "Back to all markets",
+    "region": {
+      "NorthAmerica": "North America",
+      "SouthAmerica": "South America",
+      "Europe": "Europe",
+      "Asia": "Asia"
+    }
   },
   "indices": {
     "title": "World Indices",

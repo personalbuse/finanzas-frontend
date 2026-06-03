@@ -74,9 +74,9 @@ export function Dashboard() {
     const diffHours = Math.floor(diffMins / 60);
     const diffDays = Math.floor(diffHours / 24);
 
-    if (diffMins < 60) return `hace ${diffMins} min`;
-    if (diffHours < 24) return `hace ${diffHours} h`;
-    return `hace ${diffDays} días`;
+    if (diffMins < 60) return t('dashboard.timeAgoMin', { min: diffMins });
+    if (diffHours < 24) return t('dashboard.timeAgoHour', { h: diffHours });
+    return t('dashboard.timeAgoDay', { d: diffDays });
   };
 
   useEffect(() => {
@@ -174,7 +174,7 @@ export function Dashboard() {
                 </p>
               ) : (
                 <p className="text-sm text-emerald-400 font-medium">
-                  Has completado {courseProgress.completed_courses || 0} módulos. +${courseProgress.bonus_earned || 0} en bonuses.
+                  {t('learning.courseProgress', { count: courseProgress.completed_courses || 0, bonus: courseProgress.bonus_earned || 0 })}
                 </p>
               )}
             </div>
@@ -277,7 +277,7 @@ export function Dashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
         <div className="lg:col-span-2 glass-card overflow-hidden">
           <div className="p-6 border-b border-slate-100 dark:border-slate-700">
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">{t('dashboard.performance')}</h3>
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">{t('dashboard.performance')}</h2>
           </div>
           <div className="p-6">
             {portfolio?.stocks?.length > 0 ? (
@@ -333,7 +333,7 @@ export function Dashboard() {
 
         <div className="glass-card overflow-hidden">
           <div className="p-6 border-b border-slate-100 dark:border-slate-700">
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">{t('portfolio.holdings')}</h3>
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">{t('portfolio.holdings')}</h2>
           </div>
           <div className="p-6">
             {pieChartData.length > 0 ? (
@@ -377,7 +377,7 @@ export function Dashboard() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
             <div>
-              <p className="text-sm text-amber-400 font-medium">Datos de tasas de cambio近似</p>
+              <p className="text-sm text-amber-400 font-medium">{t('dashboard.exchangeRateFallback')}</p>
               <p className="text-xs text-amber-400/70">Mostrando estimaciones basadas en datos históricos. Los valores reales pueden variar.</p>
             </div>
           </div>
@@ -386,9 +386,9 @@ export function Dashboard() {
 
       {exchangeRates && (
         <div className="mb-10">
-          <h3 className="text-lg font-semibold text-slate-900 dark:text-white tracking-tight mb-4">
-            Tasas de Cambio (COP)
-          </h3>
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-white tracking-tight mb-4">
+            {t('dashboard.exchangeRatesTitle')}
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <ExchangeRateChart
               data={exchangeRates.usd_cop?.history || []}
@@ -409,9 +409,9 @@ export function Dashboard() {
       )}
 
       <div className="mb-10">
-        <h3 className="text-lg font-semibold text-slate-900 dark:text-white tracking-tight mb-4">
-          Noticias Financieras
-        </h3>
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-white tracking-tight mb-4">
+          {t('dashboard.financialNews')}
+        </h2>
         {newsLoading ? (
           <div className="flex items-center justify-center h-32">
             <div className="animate-spin rounded-full h-6 w-6 border-2 border-emerald-500 border-t-transparent" />
@@ -431,6 +431,8 @@ export function Dashboard() {
                     <img
                       src={item.image}
                       alt={item.headline}
+                      width={400}
+                      height={128}
                       loading="lazy"
                       decoding="async"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform"
@@ -456,7 +458,7 @@ export function Dashboard() {
           </div>
         ) : (
           <p className="text-slate-400 dark:text-slate-500 text-center py-8">
-            No hay noticias disponibles
+            {t('dashboard.noNews')}
           </p>
         )}
       </div>
@@ -464,7 +466,7 @@ export function Dashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="glass-card">
           <div className="p-4 border-b border-slate-100 dark:border-[#1a1a1a]">
-            <h3 className="text-base font-semibold text-slate-900 dark:text-white tracking-tight">{t('dashboard.quickActions')}</h3>
+            <h2 className="text-base font-semibold text-slate-900 dark:text-white tracking-tight">{t('dashboard.quickActions')}</h2>
           </div>
           <div className="p-6 grid grid-cols-2 gap-4">
             <button onClick={() => navigate('/stocks')} className="btn-primary flex items-center justify-center gap-2">
@@ -484,7 +486,7 @@ export function Dashboard() {
 
         <div className="glass-card">
           <div className="p-6 border-b border-slate-100 dark:border-slate-700">
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">{t('dashboard.recentActivity')}</h3>
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">{t('dashboard.recentActivity')}</h2>
           </div>
           <div className="p-6">
             {transactions.length === 0 ? (
