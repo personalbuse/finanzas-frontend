@@ -1,4 +1,4 @@
-const CACHE_NAME = 'finsimup-v1';
+const CACHE_NAME = 'finsimup-v2';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
