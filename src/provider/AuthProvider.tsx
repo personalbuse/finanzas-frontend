@@ -15,38 +15,24 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<any>(null);
-  const [token, setToken] = useState<string | null>(null);
-  const { loadFromStorage, clearStorage } = useStore();
+  const { user, token, login: storeLogin, logout: storeLogout, loadFromStorage, clearStorage } = useStore();
 
   useEffect(() => {
     loadFromStorage();
-    const storedUser = localStorage.getItem('user');
-    const storedToken = localStorage.getItem('token');
-    if (storedUser && storedToken) {
-      try {
-        setUser(JSON.parse(storedUser));
-        setToken(storedToken);
-      } catch {
-        localStorage.removeItem('user');
-        localStorage.removeItem('token');
-      }
-    }
     setLoading(false);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const login = (user: any, token: string) => {
     localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(user));
-    setUser(user);
-    setToken(token);
+    storeLogin(user, token);
     toast.success('¡Bienvenido de vuelta!');
   };
 
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    localStorage.removeItem('auth-storage');
+    storeLogout();
     clearStorage();
     window.location.href = '/login';
   };

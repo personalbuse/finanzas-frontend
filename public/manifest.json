@@ -1,0 +1,26 @@
+{
+  "name": "Amigo Financiero - FIUP",
+  "short_name": "FIUP",
+  "description": "Simulador de inversiones en bolsa extranjera",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/src/assets/icons8-stocks-liquid-glass-16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "/src/assets/icons8-stocks-liquid-glass-32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/src/assets/icons8-stocks-liquid-glass-96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    }
+  ]
+}

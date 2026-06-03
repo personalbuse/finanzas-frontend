@@ -37,9 +37,7 @@ export const useStore = create<AuthState>()(
       updateBalance: (newBalance: number) => {
         const { user } = get();
         if (user) {
-          const updatedUser = { ...user, current_balance: newBalance };
-          set({ user: updatedUser });
-          localStorage.setItem('user', JSON.stringify(updatedUser));
+          set({ user: { ...user, current_balance: newBalance } });
         }
       },
 
