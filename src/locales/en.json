@@ -18,13 +18,17 @@
     "transactions": "Transactions",
     "profile": "Profile",
     "logout": "Logout",
-    "language": "Switch Language",
+    "language": "Change Language",
     "darkMode": "Dark Mode",
     "lightMode": "Light Mode",
     "admin": "Admin Panel",
     "markets": "Markets",
     "indices": "Indices",
-    "forex": "Forex"
+    "forex": "Forex",
+    "leaderboard": "Ranking"
+  },
+  "footer": {
+    "description": "Investment Simulator - Educational Project for International Finance, Universidad de Pamplona"
   },
   "admin": {
     "title": "Admin Panel",

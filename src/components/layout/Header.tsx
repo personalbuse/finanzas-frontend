@@ -1,4 +1,4 @@
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useTranslation } from '../../provider/LanguageProvider';
 import { useAuth } from '../../provider/AuthProvider';
 import { useTheme } from '../../provider/ThemeProvider';
@@ -18,7 +18,7 @@ export function Header() {
     { path: '/indices', label: t('nav.indices') },
     { path: '/stocks', label: t('nav.stocks') },
     { path: '/forex', label: t('nav.forex') },
-    { path: '/leaderboard', label: 'Ranking' },
+    { path: '/leaderboard', label: t('nav.leaderboard') },
     { path: '/portfolio', label: t('nav.portfolio') },
     { path: '/learn', label: t('nav.learn') },
     { path: '/transactions', label: t('nav.transactions') },
@@ -37,9 +37,10 @@ export function Header() {
     <header className="sticky top-0 z-50 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-slate-200 dark:border-[#1a1a1a] transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex justify-between items-center h-14">
-          <div 
-            className="cursor-pointer group" 
-            onClick={() => navigate('/dashboard')}
+          <Link 
+            to="/dashboard"
+            className="group"
+            aria-label="Ir al inicio"
           >
             <div className="flex items-baseline">
               <span className="font-display text-2xl font-light tracking-[0.3em] text-slate-900 dark:text-white uppercase">
@@ -49,7 +50,7 @@ export function Header() {
                 Stock Market
               </span>
             </div>
-          </div>
+          </Link>
           
           <nav className="hidden lg:flex items-center space-x-1">
             {navItems.map((item) => (

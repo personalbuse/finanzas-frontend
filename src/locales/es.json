@@ -24,7 +24,11 @@
     "admin": "Panel Admin",
     "markets": "Mercados",
     "indices": "Índices",
-    "forex": "Divisas"
+    "forex": "Divisas",
+    "leaderboard": "Ranking"
+  },
+  "footer": {
+    "description": "Simulador de Inversiones - Proyecto Educativo para Finanzas Internacionales, Universidad de Pamplona"
   },
   "admin": {
     "title": "Panel de Administración",

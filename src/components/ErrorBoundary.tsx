@@ -1,4 +1,5 @@
 import { Component, ErrorInfo, ReactNode } from 'react';
+import { Link } from 'react-router-dom';
 
 interface Props {
   children: ReactNode;
@@ -35,12 +36,21 @@ export class ErrorBoundary extends Component<Props, State> {
             <p className="text-slate-500 dark:text-slate-400 mt-2 text-sm leading-relaxed">
               An unexpected error occurred. Please try refreshing the page.
             </p>
-            <button
-              onClick={() => window.location.reload()}
-              className="mt-6 px-5 py-2.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-lg text-sm font-medium hover:bg-slate-800 dark:hover:bg-slate-100 transition-colors"
-            >
-              Refresh page
-            </button>
+            <div className="flex gap-3 justify-center mt-6">
+              <button
+                onClick={() => this.setState({ hasError: false, error: null })}
+                className="px-5 py-2.5 bg-slate-100 dark:bg-[#1a1a1a] text-slate-700 dark:text-slate-300 rounded-lg text-sm font-medium hover:bg-slate-200 dark:hover:bg-[#262626] transition-colors"
+              >
+                Reintentar
+              </button>
+              <Link
+                to="/dashboard"
+                className="px-5 py-2.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-lg text-sm font-medium hover:bg-slate-800 dark:hover:bg-slate-100 transition-colors"
+                onClick={() => this.setState({ hasError: false, error: null })}
+              >
+                Ir al inicio
+              </Link>
+            </div>
           </div>
         </div>
       );
