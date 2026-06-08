@@ -105,7 +105,7 @@ h1, h2, h3, h4, .font-display {
   }
 
   .input-clean {
-    @apply w-full px-3 py-2 bg-slate-50 dark:bg-[#1a1a1a] border border-slate-200 dark:border-[#262626] rounded-lg text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-900/5 dark:focus:ring-white/10 focus:border-slate-900 dark:focus:border-white transition-colors duration-200;
+    @apply w-full px-3 py-2 bg-slate-50 dark:bg-[#1a1a1a] border border-slate-200 dark:border-[#262626] rounded-lg text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-900/5 dark:focus:ring-white/10 focus:border-slate-900 dark:focus:border-white transition-colors duration-200;
   }
 
   .table-clean {

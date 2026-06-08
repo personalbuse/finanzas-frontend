@@ -6,13 +6,20 @@ export function Footer() {
   
   return (
     <footer className="mt-20 pb-12 pt-8 border-t border-slate-200 dark:border-[#1a1a1a]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest leading-loose max-w-2xl mx-auto">
-          {t('footer.description')}
-        </p>
-        <p className="text-[10px] text-slate-300 dark:text-slate-600 font-medium mt-4 tracking-tight">
-          © {year} {t('app.title')}
-        </p>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+          <div>
+            <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">{t('app.title')}</p>
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">{t('footer.description')}</p>
+          </div>
+          <div className="md:text-center">
+            <p className="text-xs font-medium text-slate-400 dark:text-slate-500">Universidad de Pamplona</p>
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">Finanzas Internacionales</p>
+          </div>
+          <div className="md:text-right">
+            <p className="text-xs text-slate-400 dark:text-slate-500">© {year} {t('app.title')}</p>
+          </div>
+        </div>
       </div>
     </footer>
   );
