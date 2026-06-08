@@ -4,6 +4,32 @@ import api from '../../services/api';
 import { TrendingUp, TrendingDown, DollarSign, RefreshCw } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
+interface HistoryEntry {
+  date: string;
+  rate: number;
+}
+
+interface RatePair {
+  rate: number;
+  change_percent: number | null;
+  history: HistoryEntry[];
+  today?: number;
+}
+
+interface ForexData {
+  [key: string]: RatePair | undefined;
+  usd_cop?: RatePair;
+  eur_cop?: RatePair;
+  usd_mxn?: RatePair;
+  usd_brl?: RatePair;
+  usd_clp?: RatePair;
+  usd_pen?: RatePair;
+  usd_ars?: RatePair;
+  eur_usd?: RatePair;
+  gbp_usd?: RatePair;
+  usd_jpy?: RatePair;
+}
+
 const CURRENCIES: Record<string, { name: string; flag: string }> = {
   USD: { name: 'Dólar Americano', flag: '🇺🇸' },
   EUR: { name: 'Euro', flag: '🇪🇺' },
@@ -24,7 +50,7 @@ const PAIRS_ORDER = [
 
 export function Forex() {
   const { t } = useTranslation();
-  const [rates, setRates] = useState<any>(null);
+  const [rates, setRates] = useState<ForexData | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -173,10 +199,10 @@ export function Forex() {
                         </span>
                       </td>
                       <td className="hidden md:table-cell px-4 py-3 text-right text-slate-500 dark:text-slate-400">
-                        {pair.history.length > 0 ? formatRate(pair.history.reduce((m: number, h: any) => h.rate < m ? h.rate : m, Infinity), pair.to) : '-'}
+                        {pair.history.length > 0 ? formatRate(pair.history.reduce((m: number, h: HistoryEntry) => h.rate < m ? h.rate : m, Infinity), pair.to) : '-'}
                       </td>
                       <td className="hidden md:table-cell px-4 py-3 text-right text-slate-500 dark:text-slate-400">
-                        {pair.history.length > 0 ? formatRate(pair.history.reduce((m: number, h: any) => h.rate > m ? h.rate : m, -Infinity), pair.to) : '-'}
+                        {pair.history.length > 0 ? formatRate(pair.history.reduce((m: number, h: HistoryEntry) => h.rate > m ? h.rate : m, -Infinity), pair.to) : '-'}
                       </td>
                     </tr>
                   ))}

@@ -4,6 +4,22 @@ import { useAuthStore } from '../../store/useAuthStore';
 import api from '../../services/api';
 import { toast } from 'react-toastify';
 
+interface StockData {
+  symbol: string;
+  name?: string;
+  price: number;
+  change_percent: string;
+  previous_close: number;
+}
+
+interface BuyError {
+  response?: {
+    data?: {
+      detail?: string;
+    };
+  };
+}
+
 const DEFAULT_STOCKS = [
   'AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'META', 'NVDA', 'NFLX', 'AMD', 'INTC',
   'BA', 'JNJ', 'UNH', 'HD', 'PG', 'MA', 'DIS', 'V', 'KO', 'PEP',
@@ -20,7 +36,7 @@ const STOCKS_CONFIG = {
 export function Stocks() {
   const { t } = useTranslation();
   const { updateBalance } = useAuthStore();
-  const [stocks, setStocks] = useState<any[]>([]);
+  const [stocks, setStocks] = useState<StockData[]>([]);
   const [loading, setLoading] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -97,9 +113,10 @@ export function Stocks() {
         
         await fetchStocks();
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Buy error:', error);
-      toast.error(`Error: ${error.response?.data?.detail || t('stocks.buyError')}`);
+      const buyError = error as BuyError;
+      toast.error(`Error: ${buyError.response?.data?.detail || t('stocks.buyError')}`);
     } finally {
       setBuying(null);
     }
@@ -167,7 +184,7 @@ export function Stocks() {
       )}
 
       <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {stocks.map((stock: any) => (
+        {stocks.map((stock: StockData) => (
           <div
             key={stock.symbol}
             className="bg-white dark:bg-[#0d0d0d] border border-slate-200 dark:border-[#1a1a1a] rounded-xl p-4 hover:border-slate-300 dark:hover:border-[#262626] transition-all"

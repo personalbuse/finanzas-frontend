@@ -10,10 +10,37 @@ import SortIcon from '../../components/ui/SortIcon';
 type SortField = 'symbol' | 'quantity' | 'avgCost' | 'currentPrice' | 'value' | 'profit';
 type SortDirection = 'asc' | 'desc';
 
+interface StockHolding {
+  symbol: string;
+  name?: string;
+  quantity: number;
+  average_cost: number;
+  current_price: number;
+  stock_value: number;
+  stock_profit: number;
+  stock_profit_percent: number;
+}
+
+interface PortfolioData {
+  total_cost: number;
+  total_value: number;
+  total_profit: number;
+  total_profit_percent: number;
+  stocks: StockHolding[];
+}
+
+interface SellError {
+  response?: {
+    data?: {
+      detail?: string;
+    };
+  };
+}
+
 export function Portfolio() {
   const { t } = useTranslation();
   const { updateBalance } = useAuthStore();
-  const [portfolio, setPortfolio] = useState<any>({
+  const [portfolio, setPortfolio] = useState<PortfolioData>({
     total_cost: 0,
     total_value: 0,
     total_profit: 0,
@@ -55,8 +82,9 @@ export function Portfolio() {
       toast.success(res.data.message || t('portfolio.sellSuccess'));
       updateBalance(res.data.remaining_balance);
       fetchPortfolio();
-    } catch (error: any) {
-      toast.error(error.response?.data?.detail || t('portfolio.sellError'));
+    } catch (error: unknown) {
+      const sellError = error as SellError;
+      toast.error(sellError.response?.data?.detail || t('portfolio.sellError'));
     } finally {
       setSelling(null);
     }
@@ -72,8 +100,8 @@ export function Portfolio() {
   };
 
   const sortedStocks = useMemo(() => {
-    return [...portfolio.stocks].sort((a, b) => {
-      let aVal: any, bVal: any;
+    return [...portfolio.stocks].sort((a: StockHolding, b: StockHolding) => {
+      let aVal: string | number, bVal: string | number;
       
       switch (sortField) {
         case 'symbol':
@@ -281,7 +309,7 @@ export function Portfolio() {
                   </td>
                 </tr>
               ) : (
-                sortedStocks.map((stock: any) => (
+                sortedStocks.map((stock: StockHolding) => (
                   <tr key={stock.symbol} className="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
                     <td data-label={t('portfolio.stock')} className="px-6 py-4">
                       <div className="flex items-center gap-3">

@@ -4,6 +4,17 @@ import api from '../../services/api';
 import { TrendingUp, TrendingDown, BarChart2 } from 'lucide-react';
 import { formatValue } from '../../utils/format';
 
+interface IndexData {
+  symbol: string;
+  name: string;
+  region: string;
+  country: string;
+  currency: string;
+  current_value: number;
+  change: number;
+  change_percent: number;
+}
+
 const REGIONS = [
   { id: 'North America', name: 'Norteamérica', flag: '🇺🇸' },
   { id: 'South America', name: 'Sudamérica', flag: '🇧🇷' },
@@ -24,7 +35,7 @@ const REGION_FLAGS: Record<string, string> = {
 
 export function Indices() {
   const { t } = useTranslation();
-  const [indices, setIndices] = useState<any[]>([]);
+  const [indices, setIndices] = useState<IndexData[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
 

@@ -4,11 +4,20 @@ import { Trophy, TrendingUp, TrendingDown } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { formatCurrency } from '../../utils/format';
 
+interface LeaderboardUser {
+  user_id: number;
+  username: string;
+  total_value: number;
+  profitability: number;
+  rank: number;
+  total_users?: number;
+}
+
 export function Leaderboard() {
   const { t } = useTranslation();
-  const [leaderboard, setLeaderboard] = useState<any[]>([]);
+  const [leaderboard, setLeaderboard] = useState<LeaderboardUser[]>([]);
   const [loading, setLoading] = useState(true);
-  const [myRank, setMyRank] = useState<any>(null);
+  const [myRank, setMyRank] = useState<LeaderboardUser | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {

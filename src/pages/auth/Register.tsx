@@ -74,14 +74,14 @@ export function Register() {
       if (!response.ok) {
         let errorDetail = data.detail;
         if (Array.isArray(errorDetail)) {
-          errorDetail = errorDetail.map((e: any) => e.msg).join(', ');
+          errorDetail = errorDetail.map((e: { msg: string }) => e.msg).join(', ');
         }
         throw new Error(errorDetail || t('register.error'));
       }
 
       setStep(2);
-    } catch (err: any) {
-      setError(err.message || t('register.error'));
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : t('register.error'));
     } finally {
       setLoading(false);
     }
@@ -107,19 +107,19 @@ export function Register() {
       if (!response.ok) {
         let errorDetail = data.detail;
         if (Array.isArray(errorDetail)) {
-          errorDetail = errorDetail.map((e: any) => e.msg).join(', ');
+          errorDetail = errorDetail.map((e: { msg: string }) => e.msg).join(', ');
         }
         throw new Error(errorDetail || t('register.error'));
       }
 
       const userData = data.user;
-      store.setAuth(userData, data.access_token);
-      login(userData, data.access_token);
+      store.setAuth(userData);
+      login(userData);
       setShouldStartTour(true);
       toast.success(t('register.success') || '¡Cuenta creada exitosamente!');
       navigate('/dashboard');
-    } catch (err: any) {
-      setError(err.message || t('register.error'));
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : t('register.error'));
     } finally {
       setLoading(false);
     }
@@ -142,8 +142,8 @@ export function Register() {
       }
 
       toast.success('Nuevo código enviado a tu correo');
-    } catch (err: any) {
-      setError(err.message || 'Error al reenviar código');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Error al reenviar código');
     } finally {
       setLoading(false);
     }

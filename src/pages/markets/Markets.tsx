@@ -4,6 +4,17 @@ import api from '../../services/api';
 import { TrendingUp, TrendingDown, Globe } from 'lucide-react';
 import { formatPrice } from '../../utils/format';
 
+interface StockData {
+  symbol: string;
+  name: string;
+  region: string;
+  country: string;
+  exchange: string;
+  currency: string;
+  current_price: number;
+  change_percent: number;
+}
+
 const REGIONS = [
   { id: 'North America', flag: '🌎' },
   { id: 'South America', flag: '🌎' },
@@ -26,10 +37,10 @@ const COUNTRIES: Record<string, { flag: string; currency: string }> = {
 
 export function Markets() {
   const { t } = useTranslation();
-  const [stocks, setStocks] = useState<any[]>([]);
+  const [stocks, setStocks] = useState<StockData[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
-  const [regionData, setRegionData] = useState<any>(null);
+  const [regionData, setRegionData] = useState<StockData[] | null>(null);
 
   useEffect(() => {
     fetchStocks();
@@ -63,7 +74,7 @@ export function Markets() {
   const displayStocks = selectedRegion ? regionData : stocks;
   const groupedStocks = useMemo(() => {
     if (selectedRegion) return null;
-    return stocks.reduce((acc: any, stock: any) => {
+    return stocks.reduce((acc: Record<string, StockData[]>, stock: StockData) => {
       if (!acc[stock.region]) acc[stock.region] = [];
       acc[stock.region].push(stock);
       return acc;
@@ -98,7 +109,7 @@ export function Markets() {
               {t(`markets.region.${region.id.replace(/\s+/g, '')}`, region.id)}
             </div>
             <div className={`text-xs ${selectedRegion === region.id ? 'text-white/80' : 'text-slate-500'}`}>
-              {selectedRegion === region.id && loading ? '...' : `${stocks.filter((s: any) => s.region === region.id).length} ${t('markets.stocks')}`}
+              {selectedRegion === region.id && loading ? '...' : `${stocks.filter((s: StockData) => s.region === region.id).length} ${t('markets.stocks')}`}
             </div>
           </button>
         ))}
@@ -119,7 +130,7 @@ export function Markets() {
         </div>
       ) : selectedRegion ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {displayStocks?.map((stock: any) => (
+          {displayStocks?.map((stock: StockData) => (
             <div
               key={stock.symbol}
                   className="bg-white dark:bg-[#0d0d0d] border border-slate-200 dark:border-[#1a1a1a] rounded-xl p-4 hover:border-slate-300 dark:hover:border-[#262626] transition-colors"
@@ -156,13 +167,13 @@ export function Markets() {
         </div>
       ) : (
         <div className="space-y-8">
-          {Object.entries(groupedStocks || {}).map(([region, regionStocks]: [string, any]) => (
+          {Object.entries(groupedStocks || {}).map(([region, regionStocks]: [string, StockData[]]) => (
             <div key={region}>
               <h2 className="text-xl font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
                 {REGIONS.find(r => r.id === region)?.flag || '🌐'} {region}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {regionStocks.slice(0, 6).map((stock: any) => (
+                {regionStocks.slice(0, 6).map((stock: StockData) => (
                   <div
                     key={stock.symbol}
               className="bg-white dark:bg-[#0d0d0d] border border-slate-200 dark:border-[#1a1a1a] rounded-xl p-4 hover:border-slate-300 dark:hover:border-[#262626] transition-colors"

@@ -8,10 +8,20 @@ import SortIcon from '../../components/ui/SortIcon';
 type SortField = 'date' | 'symbol' | 'quantity' | 'price' | 'total';
 type SortDirection = 'asc' | 'desc';
 
+interface Transaction {
+  id: number;
+  symbol: string;
+  transaction_type: 'buy' | 'sell';
+  total_amount: number;
+  price_per_unit: number;
+  quantity: number;
+  created_at: string;
+}
+
 export function Transactions() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [transactions, setTransactions] = useState<any[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
   const [sortField, setSortField] = useState<SortField>('date');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
@@ -43,8 +53,8 @@ export function Transactions() {
     setCurrentPage(1);
   };
 
-  const sortedTransactions = [...transactions].sort((a, b) => {
-    let aVal: any, bVal: any;
+  const sortedTransactions = [...transactions].sort((a: Transaction, b: Transaction) => {
+    let aVal: string | number, bVal: string | number;
     
     switch (sortField) {
       case 'date':
@@ -167,7 +177,7 @@ export function Transactions() {
                   </td>
                 </tr>
               ) : (
-                paginatedTransactions.map((tx: any) => (
+                paginatedTransactions.map((tx: Transaction) => (
                   <tr key={tx.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
                     <td data-label={t('transactions.date')} className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400 font-medium whitespace-nowrap">
                       {new Date(tx.created_at).toLocaleDateString()}

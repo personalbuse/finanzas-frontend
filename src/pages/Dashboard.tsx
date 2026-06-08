@@ -19,6 +19,62 @@ import {
 } from 'recharts';
 import { TrendingUp, TrendingDown, Wallet, BarChart3 } from 'lucide-react';
 
+interface StockHolding {
+  symbol: string;
+  name?: string;
+  quantity: number;
+  average_cost: number;
+  current_price: number;
+  stock_value: number;
+  stock_profit: number;
+  stock_profit_percent?: number;
+}
+
+interface PortfolioData {
+  total_cost: number;
+  total_value: number;
+  total_profit: number;
+  total_profit_percent: number;
+  stocks: StockHolding[];
+}
+
+interface Transaction {
+  id: number;
+  symbol: string;
+  transaction_type: 'buy' | 'sell';
+  total_amount: number;
+  price_per_unit?: number;
+  quantity?: number;
+  created_at?: string;
+}
+
+interface HistoryEntry {
+  date: string;
+  rate: number;
+}
+
+interface RatePair {
+  rate: number;
+  change_percent: number;
+  history: HistoryEntry[];
+}
+
+interface ExchangeRateData {
+  usd_cop: RatePair;
+  eur_cop: RatePair;
+  is_fallback?: boolean;
+  [key: string]: RatePair | boolean | undefined;
+}
+
+interface NewsItem {
+  id: number;
+  headline: string;
+  url: string;
+  source: string;
+  image?: string;
+  datetime: string;
+}
+
 const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
 
 const MOCK_RATES = {
@@ -30,13 +86,13 @@ export function Dashboard() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { user } = useAuthStore();
-  const [portfolio, setPortfolio] = useState<any>(null);
-  const [transactions, setTransactions] = useState<any[]>([]);
+  const [portfolio, setPortfolio] = useState<PortfolioData | null>(null);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
   const [courseProgress, setCourseProgress] = useState({ completed_courses: 0, bonus_earned: 0 });
-  const [exchangeRates, setExchangeRates] = useState<any>(null);
+  const [exchangeRates, setExchangeRates] = useState<ExchangeRateData | null>(null);
   const [exchangeRatesFallback, setExchangeRatesFallback] = useState(false);
-  const [news, setNews] = useState<any[]>([]);
+  const [news, setNews] = useState<NewsItem[]>([]);
   const [newsLoading, setNewsLoading] = useState(true);
 
   const formatTimeAgo = (dateString: string) => {
@@ -115,7 +171,7 @@ export function Dashboard() {
 
   const currentUser = user!;
 
-  const pieChartData = portfolio?.stocks?.slice(0, 5).map((stock: any, index: number) => ({
+  const pieChartData = portfolio?.stocks?.slice(0, 5).map((stock: StockHolding, index: number) => ({
     name: stock.symbol,
     value: stock.stock_value,
     color: COLORS[index % COLORS.length],
@@ -250,7 +306,7 @@ export function Dashboard() {
           <div className="p-6">
             {portfolio?.stocks?.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={portfolio.stocks.map((s: any) => ({
+                <LineChart data={portfolio.stocks.map((s: StockHolding) => ({
                   name: s.symbol,
                   cost: s.average_cost * s.quantity,
                   value: s.stock_value,
@@ -316,7 +372,7 @@ export function Dashboard() {
                     paddingAngle={2}
                     dataKey="value"
                   >
-                    {pieChartData.map((entry: any, index: number) => (
+                    {pieChartData.map((entry: { name: string; value: number; color: string }, index: number) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
@@ -386,7 +442,7 @@ export function Dashboard() {
           </div>
         ) : news.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {news.slice(0, 3).map((item: any) => (
+            {news.slice(0, 3).map((item: NewsItem) => (
               <a
                 key={item.id}
                 href={item.url}
@@ -467,7 +523,7 @@ export function Dashboard() {
               </div>
             ) : (
               <div className="space-y-3">
-                {transactions.map((tx: any) => (
+                {transactions.map((tx: Transaction) => (
                   <div key={tx.id} className="flex items-center justify-between py-2.5 px-3 rounded-lg bg-slate-50 dark:bg-[#1a1a1a]/50 group hover:bg-slate-100 dark:hover:bg-[#262626] transition-colors">
                     <div className="flex items-center space-x-4">
                       <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${

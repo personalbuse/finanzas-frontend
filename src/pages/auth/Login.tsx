@@ -41,11 +41,11 @@ export function Login() {
       const data = await response.json();
       const userData = data.user;
 
-      store.setAuth(userData, data.access_token);
-      login(userData, data.access_token);
+      store.setAuth(userData);
+      login(userData);
       navigate('/dashboard');
-    } catch (err: any) {
-      setError(err.message || t('login.error'));
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : t('login.error'));
     } finally {
       setLoading(false);
     }

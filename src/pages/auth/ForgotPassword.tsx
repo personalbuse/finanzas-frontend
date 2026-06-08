@@ -31,8 +31,8 @@ export function ForgotPassword() {
       }
 
       setMessage(data.message);
-    } catch (err: any) {
-      setError(err.message || 'Error al procesar la solicitud');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Error al procesar la solicitud');
     } finally {
       setLoading(false);
     }

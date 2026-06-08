@@ -7,7 +7,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
   loading: boolean;
-  login: (user: User, accessToken: string, refreshToken?: string | null) => void;
+  login: (user: User) => void;
   logout: () => void;
   hydrated: boolean;
 }
@@ -17,7 +17,6 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
   const user = useAuthStore((s) => s.user);
-  const accessToken = useAuthStore((s) => s.accessToken);
   const hydrated = useAuthStore((s) => s.isHydrated);
   const setAuth = useAuthStore((s) => s.setAuth);
   const clear = useAuthStore((s) => s.clear);
@@ -39,8 +38,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener('auth:expired', handler);
   }, [clear, navigate]);
 
-  const login = (u: User, token: string, refreshToken?: string | null) => {
-    setAuth(u, token, refreshToken);
+  const login = (u: User) => {
+    setAuth(u);
     toast.success(`¡Bienvenido, ${u.username}!`);
   };
 
@@ -52,7 +51,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   return (
     <AuthContext.Provider
       value={{
-        isAuthenticated: !!accessToken && !!user,
+        isAuthenticated: !!user,
         user,
         loading: authLoading,
         login,

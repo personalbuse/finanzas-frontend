@@ -13,11 +13,8 @@ export interface User {
 
 interface AuthState {
   user: User | null;
-  accessToken: string | null;
-  refreshToken: string | null;
   isHydrated: boolean;
-  setAuth: (user: User, accessToken: string, refreshToken?: string | null) => void;
-  setAccessToken: (token: string) => void;
+  setAuth: (user: User) => void;
   clear: () => void;
   updateBalance: (newBalance: number) => void;
   setHydrated: (value: boolean) => void;
@@ -29,16 +26,12 @@ export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
       user: null,
-      accessToken: null,
-      refreshToken: null,
       isHydrated: false,
 
-      setAuth: (user, accessToken, refreshToken = null) =>
-        set({ user, accessToken, refreshToken }),
+      setAuth: (user) =>
+        set({ user }),
 
-      setAccessToken: (token) => set({ accessToken: token }),
-
-      clear: () => set({ user: null, accessToken: null, refreshToken: null }),
+      clear: () => set({ user: null }),
 
       updateBalance: (newBalance) =>
         set((state) =>
@@ -54,8 +47,6 @@ export const useAuthStore = create<AuthState>()(
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         user: state.user,
-        accessToken: state.accessToken,
-        refreshToken: state.refreshToken,
       }),
       onRehydrateStorage: () => (state) => {
         state?.setHydrated(true);
