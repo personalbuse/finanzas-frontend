@@ -71,7 +71,7 @@ export function Header() {
             <button
               onClick={toggleTheme}
               className="p-1.5 sm:p-2 rounded-lg text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-[#1a1a1a] hover:bg-slate-200 dark:hover:bg-[#262626] transition-colors"
-              title={darkMode ? t('nav.lightMode') : t('nav.darkMode')}
+              aria-label={darkMode ? t('nav.lightMode') : t('nav.darkMode')}
             >
               {darkMode ? (
                 <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -94,7 +94,7 @@ export function Header() {
             <button
               onClick={handleLogout}
               className="p-1.5 sm:px-3 sm:py-1.5 rounded-lg text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors"
-              title={t('nav.logout')}
+              aria-label={t('nav.logout')}
             >
               <LogOut className="w-4 h-4 sm:w-4 sm:h-4" />
             </button>

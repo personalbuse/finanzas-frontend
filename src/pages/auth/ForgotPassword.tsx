@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../../provider/LanguageProvider';
 import { API_BASE_URL } from '../../services/api';
 
 export function ForgotPassword() {
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
@@ -92,7 +94,7 @@ export function ForgotPassword() {
           <p className="text-sm text-slate-500 dark:text-slate-400">
             {t('forgotPassword.rememberPassword')}{' '}
             <button
-              onClick={() => window.location.href = '/login'}
+              onClick={() => navigate('/login')}
               className="font-medium text-slate-900 dark:text-white hover:underline transition-all"
             >
               {t('forgotPassword.login')}

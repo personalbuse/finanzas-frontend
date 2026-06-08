@@ -95,7 +95,7 @@ export function ResetPassword() {
             <h2 className="text-xl font-semibold text-red-600 dark:text-red-400">Token Inválido</h2>
             <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">El enlace de recuperación no es válido o ha expirado.</p>
             <button
-              onClick={() => window.location.href = '/forgot-password'}
+              onClick={() => navigate('/forgot-password')}
               className="mt-4 btn-primary"
             >
               Solicitar nuevo enlace
@@ -211,7 +211,7 @@ export function ResetPassword() {
         <div className="text-center mt-4">
           <p className="text-sm text-slate-500 dark:text-slate-400">
             <button
-              onClick={() => window.location.href = '/login'}
+              onClick={() => navigate('/login')}
               className="font-medium text-slate-900 dark:text-white hover:underline transition-all"
             >
               Volver al Login

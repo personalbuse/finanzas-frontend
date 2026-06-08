@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from '../../provider/LanguageProvider';
-import { useStore } from '../../store/useStore';
+import { useAuthStore } from '../../store/useAuthStore';
 import api from '../../services/api';
 import { toast } from 'react-toastify';
 
@@ -19,7 +19,7 @@ const STOCKS_CONFIG = {
 
 export function Stocks() {
   const { t } = useTranslation();
-  const { updateBalance } = useStore();
+  const { updateBalance } = useAuthStore();
   const [stocks, setStocks] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
@@ -90,9 +90,6 @@ export function Stocks() {
       });
       
       if (res.data) {
-        const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
-        currentUser.current_balance = res.data.remaining_balance;
-        localStorage.setItem('user', JSON.stringify(currentUser));
         updateBalance(res.data.remaining_balance);
         
         setQuantities((prev) => ({ ...prev, [symbol]: 1 }));

@@ -12,9 +12,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('darkMode');
+    const savedTheme = localStorage.getItem('simulador-theme');
     if (savedTheme) {
-      setDarkMode(JSON.parse(savedTheme));
+      setDarkMode(savedTheme === 'dark');
     } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
       setDarkMode(true);
     }
@@ -23,7 +23,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const toggleTheme = () => {
     const newMode = !darkMode;
     setDarkMode(newMode);
-    localStorage.setItem('darkMode', JSON.stringify(newMode));
+    localStorage.setItem('simulador-theme', newMode ? 'dark' : 'light');
     
     if (newMode) {
       document.documentElement.classList.add('dark');
@@ -34,7 +34,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   const setDarkModeValue = (value: boolean) => {
     setDarkMode(value);
-    localStorage.setItem('darkMode', JSON.stringify(value));
+    localStorage.setItem('simulador-theme', value ? 'dark' : 'light');
     
     if (value) {
       document.documentElement.classList.add('dark');

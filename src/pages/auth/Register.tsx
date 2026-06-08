@@ -2,15 +2,17 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../provider/AuthProvider';
 import { useTranslation } from '../../provider/LanguageProvider';
-import { useStore } from '../../store/useStore';
+import { useAuthStore } from '../../store/useAuthStore';
 import { toast } from 'react-toastify';
 import { CheckCircle, XCircle, Loader2 } from 'lucide-react';
 import { API_BASE_URL } from '../../services/api';
+import { useTourStore } from '../../store/tourStore';
 
 export function Register() {
   const { login } = useAuth();
   const { t } = useTranslation();
-  const store = useStore();
+  const store = useAuthStore();
+  const setShouldStartTour = useTourStore((s) => s.setShouldStartTour);
   const navigate = useNavigate();
   
   const [step, setStep] = useState(1);
@@ -111,13 +113,10 @@ export function Register() {
       }
 
       const userData = data.user;
-      store.login(userData, data.access_token);
-      localStorage.setItem('token', data.access_token);
-      localStorage.setItem('user', JSON.stringify(userData));
-
+      store.setAuth(userData, data.access_token);
       login(userData, data.access_token);
+      setShouldStartTour(true);
       toast.success(t('register.success') || '¡Cuenta creada exitosamente!');
-      localStorage.setItem('guided_tour', 'true');
       navigate('/dashboard');
     } catch (err: any) {
       setError(err.message || t('register.error'));
@@ -316,7 +315,7 @@ export function Register() {
               <>
                 {t('register.hasAccount')}{' '}
                 <button 
-                  onClick={() => window.location.href = '/login'}
+                  onClick={() => navigate('/login')}
                   className="font-medium text-slate-900 dark:text-white hover:underline transition-all"
                 >
                   {t('register.login')}

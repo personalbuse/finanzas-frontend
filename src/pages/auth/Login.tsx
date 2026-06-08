@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../provider/AuthProvider';
 import { useTranslation } from '../../provider/LanguageProvider';
-import { useStore } from '../../store/useStore';
+import { useAuthStore } from '../../store/useAuthStore';
 import { API_BASE_URL } from '../../services/api';
 
 export function Login() {
   const { login } = useAuth();
   const { t } = useTranslation();
-  const store = useStore();
+  const store = useAuthStore();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
@@ -41,10 +41,7 @@ export function Login() {
       const data = await response.json();
       const userData = data.user;
 
-      store.login(userData, data.access_token);
-      localStorage.setItem('token', data.access_token);
-      localStorage.setItem('user', JSON.stringify(userData));
-
+      store.setAuth(userData, data.access_token);
       login(userData, data.access_token);
       navigate('/dashboard');
     } catch (err: any) {
@@ -93,7 +90,7 @@ export function Login() {
               </label>
               <button
                 type="button"
-                onClick={() => window.location.href = '/forgot-password'}
+                onClick={() => navigate('/forgot-password')}
                 className="text-[10px] text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
               >
                 {t('login.forgotPassword')}
@@ -121,7 +118,7 @@ export function Login() {
           <p className="text-sm text-slate-500 dark:text-slate-400">
             {t('login.noAccount')}{' '}
             <button 
-              onClick={() => window.location.href = '/register'}
+              onClick={() => navigate('/register')}
               className="font-medium text-slate-900 dark:text-white hover:underline transition-all"
             >
               {t('login.register')}

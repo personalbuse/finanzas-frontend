@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from '../../provider/LanguageProvider';
-import { useStore } from '../../store/useStore';
+import { useAuthStore } from '../../store/useAuthStore';
 import api from '../../services/api';
 import { toast } from 'react-toastify';
 import { ChevronUp, ChevronDown, TrendingUp, TrendingDown } from 'lucide-react';
@@ -10,7 +10,7 @@ type SortDirection = 'asc' | 'desc';
 
 export function Portfolio() {
   const { t } = useTranslation();
-  const { updateBalance } = useStore();
+  const { updateBalance } = useAuthStore();
   const [portfolio, setPortfolio] = useState<any>({
     total_cost: 0,
     total_value: 0,

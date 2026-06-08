@@ -1,51 +1,65 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useStore } from '../store/useStore';
+import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useAuthStore, type User } from '../store/useAuthStore';
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  user: any;
-  token: string | null;
-  login: (user: any, token: string) => void;
-  logout: () => void;
+  user: User | null;
   loading: boolean;
+  login: (user: User, accessToken: string, refreshToken?: string | null) => void;
+  logout: () => void;
+  hydrated: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [loading, setLoading] = useState(true);
-  const { user, token, login: storeLogin, logout: storeLogout, loadFromStorage, clearStorage } = useStore();
+  const navigate = useNavigate();
+  const user = useAuthStore((s) => s.user);
+  const accessToken = useAuthStore((s) => s.accessToken);
+  const hydrated = useAuthStore((s) => s.isHydrated);
+  const setAuth = useAuthStore((s) => s.setAuth);
+  const clear = useAuthStore((s) => s.clear);
+  const [authLoading, setAuthLoading] = useState(true);
 
   useEffect(() => {
-    loadFromStorage();
-    setLoading(false);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    if (hydrated) {
+      setAuthLoading(false);
+    }
+  }, [hydrated]);
 
-  const login = (user: any, token: string) => {
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(user));
-    storeLogin(user, token);
-    toast.success('¡Bienvenido de vuelta!');
+  useEffect(() => {
+    const handler = () => {
+      clear();
+      toast.info('Tu sesión ha expirado. Inicia sesión nuevamente.');
+      navigate('/login', { replace: true });
+    };
+    window.addEventListener('auth:expired', handler);
+    return () => window.removeEventListener('auth:expired', handler);
+  }, [clear, navigate]);
+
+  const login = (u: User, token: string, refreshToken?: string | null) => {
+    setAuth(u, token, refreshToken);
+    toast.success(`¡Bienvenido, ${u.username}!`);
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    storeLogout();
-    clearStorage();
-    window.location.href = '/login';
+    clear();
+    navigate('/login', { replace: true });
   };
 
   return (
-    <AuthContext.Provider value={{
-      isAuthenticated: !!token,
-      user,
-      token,
-      login,
-      logout,
-      loading
-    }}>
+    <AuthContext.Provider
+      value={{
+        isAuthenticated: !!accessToken && !!user,
+        user,
+        loading: authLoading,
+        login,
+        logout,
+        hydrated,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -19,9 +19,19 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          recharts: ['recharts'],
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-charts': ['recharts'],
+          'vendor-state': ['zustand'],
+          'vendor-i18n': ['i18next', 'react-i18next', 'i18next-browser-languagedetector', 'i18next-http-backend'],
+          'vendor-ui': ['lucide-react', 'react-toastify'],
         },
       },
     },
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/test/setup.ts',
+    css: true,
   },
 })

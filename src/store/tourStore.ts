@@ -1,34 +1,53 @@
 import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
 interface TourState {
   isActive: boolean;
   currentStep: number;
+  shouldStartTour: boolean;
+  tourDone: boolean;
   startTour: () => void;
   nextStep: () => void;
   goToStep: (step: number) => void;
   endTour: () => void;
+  setShouldStartTour: (value: boolean) => void;
 }
 
-export const useTourStore = create<TourState>()((set) => ({
-  isActive: false,
-  currentStep: 0,
+export const useTourStore = create<TourState>()(
+  persist(
+    (set) => ({
+      isActive: false,
+      currentStep: 0,
+      shouldStartTour: false,
+      tourDone: false,
 
-  startTour: () => {
-    localStorage.removeItem('guided_tour');
-    set({ isActive: true, currentStep: 0 });
-  },
+      startTour: () => {
+        set({ shouldStartTour: false, isActive: true, currentStep: 0 });
+      },
 
-  nextStep: () => {
-    set((state) => ({ currentStep: state.currentStep + 1 }));
-  },
+      nextStep: () => {
+        set((state) => ({ currentStep: state.currentStep + 1 }));
+      },
 
-  goToStep: (step: number) => {
-    set({ currentStep: step });
-  },
+      goToStep: (step: number) => {
+        set({ currentStep: step });
+      },
 
-  endTour: () => {
-    localStorage.setItem('guided_tour_done', 'true');
-    localStorage.setItem('onboarding_shown', 'true');
-    set({ isActive: false, currentStep: 0 });
-  },
-}));
+      endTour: () => {
+        set({ tourDone: true, isActive: false, currentStep: 0 });
+      },
+
+      setShouldStartTour: (value: boolean) => {
+        set({ shouldStartTour: value });
+      },
+    }),
+    {
+      name: 'simulador-tour-v1',
+      storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({
+        shouldStartTour: state.shouldStartTour,
+        tourDone: state.tourDone,
+      }),
+    },
+  ),
+);

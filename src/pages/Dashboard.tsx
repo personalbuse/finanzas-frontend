@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../provider/LanguageProvider';
-import { useStore } from '../store/useStore';
+import { useAuthStore } from '../store/useAuthStore';
 import api from '../services/api';
 import { ExchangeRateChart } from '../components/charts/ExchangeRatesChart';
 import { useTourStore } from '../store/tourStore';
@@ -55,14 +55,13 @@ const getMockExchangeRates = (isFallback: boolean = false) => {
 export function Dashboard() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { user } = useStore();
+  const { user } = useAuthStore();
   const [portfolio, setPortfolio] = useState<any>(null);
   const [transactions, setTransactions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [courseProgress, setCourseProgress] = useState({ completed_courses: 0, bonus_earned: 0 });
   const [exchangeRates, setExchangeRates] = useState<any>(null);
   const [exchangeRatesFallback, setExchangeRatesFallback] = useState(false);
-  const [storedUser, setStoredUser] = useState<any>(null);
   const [news, setNews] = useState<any[]>([]);
   const [newsLoading, setNewsLoading] = useState(true);
 
@@ -80,10 +79,6 @@ export function Dashboard() {
   };
 
   useEffect(() => {
-    const userFromStorage = localStorage.getItem('user');
-    if (userFromStorage) {
-      setStoredUser(JSON.parse(userFromStorage));
-    }
     fetchData();
     checkOnboarding();
     fetchCourseProgress();
@@ -92,10 +87,9 @@ export function Dashboard() {
   const startTour = useTourStore((state) => state.startTour);
 
   const checkOnboarding = () => {
-    const hasSeenTour = localStorage.getItem('guided_tour_done');
-    const shouldStartTour = localStorage.getItem('guided_tour');
-
-    if (shouldStartTour && !hasSeenTour) {
+    const tourFlag = useTourStore.getState().shouldStartTour;
+    const tourDone = useTourStore.getState().tourDone;
+    if (tourFlag && !tourDone) {
       startTour();
     }
   };
@@ -145,7 +139,7 @@ export function Dashboard() {
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount || 0);
   };
 
-  const currentUser = user || storedUser;
+  const currentUser = user!;
 
   const pieChartData = portfolio?.stocks?.slice(0, 5).map((stock: any, index: number) => ({
     name: stock.symbol,

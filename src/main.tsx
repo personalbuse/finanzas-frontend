@@ -9,14 +9,14 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   </React.StrictMode>,
 )
 
-if ('serviceWorker' in navigator) {
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js').then(
       (registration) => {
-        console.log('SW registered:', registration.scope);
+        console.info('SW registered:', registration.scope);
       },
       (error) => {
-        console.log('SW registration failed:', error);
+        console.error('SW registration failed:', error);
       }
     );
   });

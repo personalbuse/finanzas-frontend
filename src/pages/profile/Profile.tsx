@@ -1,16 +1,16 @@
-import { useStore } from '../../store/useStore';
+import { useAuthStore } from '../../store/useAuthStore';
 import { useTranslation } from '../../provider/LanguageProvider';
 import { useTheme } from '../../provider/ThemeProvider';
 import { useAuth } from '../../provider/AuthProvider';
 import { LogOut } from 'lucide-react';
 
 export function Profile() {
-  const { user } = useStore();
+  const { user } = useAuthStore();
   const { t } = useTranslation();
   const { darkMode, toggleTheme } = useTheme();
   const { logout } = useAuth();
 
-  const currentUser = user || JSON.parse(localStorage.getItem('user') || '{}');
+  const currentUser = user!;
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in">
