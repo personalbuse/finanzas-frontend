@@ -1,79 +1,42 @@
-import { useState, type ReactNode } from 'react';
-import { Modal } from './Modal';
+import { memo } from 'react';
+import Modal from './Modal';
 
-export interface ConfirmDialogProps {
+interface ConfirmDialogProps {
   open: boolean;
-  onClose: () => void;
-  onConfirm: () => void | Promise<void>;
   title: string;
-  message: ReactNode;
-  confirmText?: string;
-  cancelText?: string;
-  variant?: 'danger' | 'primary';
-  loading?: boolean;
+  message: string;
+  confirmLabel?: string;
+  cancelLabel?: string;
+  variant?: 'danger' | 'default';
+  onConfirm: () => void;
+  onCancel: () => void;
 }
 
-const variantMap = {
-  danger:
-    'bg-red-600 hover:bg-red-700 focus-visible:ring-red-500 text-white',
-  primary:
-    'bg-slate-900 hover:bg-slate-800 focus-visible:ring-slate-700 dark:bg-white dark:hover:bg-slate-200 dark:text-slate-900',
-};
-
-export function ConfirmDialog({
-  open,
-  onClose,
-  onConfirm,
-  title,
-  message,
-  confirmText = 'Confirmar',
-  cancelText = 'Cancelar',
-  variant = 'primary',
-  loading = false,
-}: ConfirmDialogProps) {
-  const [pending, setPending] = useState(false);
-
-  const handleConfirm = async () => {
-    if (pending) return;
-    setPending(true);
-    try {
-      await onConfirm();
-      onClose();
-    } finally {
-      setPending(false);
-    }
-  };
-
+function ConfirmDialogBase({ open, title, message, confirmLabel = 'Confirmar', cancelLabel = 'Cancelar', variant = 'danger', onConfirm, onCancel }: ConfirmDialogProps) {
   return (
-    <Modal
-      open={open}
-      onClose={onClose}
-      title={title}
-      size="sm"
-      footer={
-        <>
-          <button
-            type="button"
-            onClick={onClose}
-            disabled={pending || loading}
-            className="px-3 py-2 text-sm font-medium rounded-lg border border-slate-300 dark:border-[#1a1a1a] text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-[#1a1a1a] disabled:opacity-50"
-          >
-            {cancelText}
-          </button>
-          <button
-            type="button"
-            onClick={handleConfirm}
-            disabled={pending || loading}
-            className={`px-3 py-2 text-sm font-medium rounded-lg focus:outline-none focus-visible:ring-2 disabled:opacity-50 ${variantMap[variant]}`}
-          >
-            {pending || loading ? 'Procesando…' : confirmText}
-          </button>
-        </>
-      }
-    >
-      <div className="text-sm">{message}</div>
+    <Modal open={open} onClose={onCancel} title={title} maxWidth="max-w-sm">
+      <p className="text-sm text-slate-500 dark:text-slate-400 mb-5">{message}</p>
+      <div className="flex gap-2">
+        <button
+          onClick={onCancel}
+          className="flex-1 px-3 py-2 text-sm rounded-lg bg-slate-100 dark:bg-[#1a1a1a] text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition-all"
+        >
+          {cancelLabel}
+        </button>
+        <button
+          onClick={onConfirm}
+          className={`flex-1 px-3 py-2 text-sm rounded-lg text-white transition-all ${
+            variant === 'danger'
+              ? 'bg-red-500 hover:bg-red-600'
+              : 'bg-slate-900 dark:bg-white dark:text-slate-900 hover:bg-slate-800'
+          }`}
+        >
+          {confirmLabel}
+        </button>
+      </div>
     </Modal>
   );
 }
 
+export const ConfirmDialog = memo(ConfirmDialogBase);
 export default ConfirmDialog;

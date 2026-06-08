@@ -1,101 +1,44 @@
-/**
- * Formatting utilities used across the app. Centralized to avoid duplication.
- */
+export function formatCurrency(amount: number): string {
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount || 0);
+}
 
-const CURRENCY_FORMATTERS = new Map<string, Intl.NumberFormat>();
+export function formatPercentage(value: number): string {
+  return `${value > 0 ? '+' : ''}${(value || 0).toFixed(2)}%`;
+}
 
-function getCurrencyFormatter(currency: string, locale: string): Intl.NumberFormat {
-  const key = `${currency}:${locale}`;
-  let fmt = CURRENCY_FORMATTERS.get(key);
-  if (!fmt) {
-    fmt = new Intl.NumberFormat(locale, {
-      style: 'currency',
-      currency,
-      maximumFractionDigits: 2,
-    });
-    CURRENCY_FORMATTERS.set(key, fmt);
+export function formatDate(dateStr: string): string {
+  return new Date(dateStr).toLocaleDateString();
+}
+
+export function formatDateTime(dateStr: string): string {
+  return new Date(dateStr).toLocaleString();
+}
+
+export function formatTimeAgo(dateStr: string): string {
+  const now = Date.now();
+  const diff = now - new Date(dateStr).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 60) return `hace ${mins} min`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `hace ${hrs} h`;
+  const days = Math.floor(hrs / 24);
+  return `hace ${days} días`;
+}
+
+export function formatValue(value: number | null | undefined, currency: string): string {
+  if (value === null || value === undefined) return '-';
+  if (currency === 'JPY' || currency === 'KRW') {
+    return new Intl.NumberFormat('ja-JP').format(Math.round(value));
   }
-  return fmt;
+  return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
 }
 
-export function formatCurrency(
-  value: number | string,
-  currency: string = 'USD',
-  locale: string = 'es-CO',
-): string {
-  const num = typeof value === 'string' ? Number(value) : value;
-  if (Number.isNaN(num) || !Number.isFinite(num)) return '—';
-  return getCurrencyFormatter(currency, locale).format(num);
-}
-
-const PERCENT_FORMATTER = new Intl.NumberFormat('es-CO', {
-  style: 'percent',
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-});
-
-export function formatPercentage(value: number, options?: { sign?: boolean }): string {
-  if (Number.isNaN(value) || !Number.isFinite(value)) return '—';
-  const formatted = PERCENT_FORMATTER.format(value);
-  if (options?.sign && value > 0) return `+${formatted}`;
-  return formatted;
-}
-
-const TIME_AGO_THRESHOLDS: Array<[number, Intl.RelativeTimeFormatUnit]> = [
-  [60, 'second'],
-  [3600, 'minute'],
-  [86400, 'hour'],
-  [86400 * 7, 'day'],
-  [86400 * 30, 'week'],
-  [86400 * 365, 'month'],
-  [Infinity, 'year'],
-];
-
-const RTF = new Intl.RelativeTimeFormat('es', { numeric: 'auto' });
-
-export function formatTimeAgo(date: Date | string | number): string {
-  const d = typeof date === 'string' || typeof date === 'number' ? new Date(date) : date;
-  const diff = (d.getTime() - Date.now()) / 1000;
-  const abs = Math.abs(diff);
-  for (let i = 0; i < TIME_AGO_THRESHOLDS.length; i += 1) {
-    const [limit, unit] = TIME_AGO_THRESHOLDS[i];
-    if (abs < limit) {
-      const divisor = i === 0 ? 1 : TIME_AGO_THRESHOLDS[i - 1][0];
-      return RTF.format(Math.round(diff / divisor), unit);
-    }
-  }
-  return d.toLocaleDateString('es-CO');
-}
-
-const DATE_FORMATTER = new Intl.DateTimeFormat('es-CO', {
-  year: 'numeric',
-  month: 'short',
-  day: 'numeric',
-});
-
-export function formatDate(date: Date | string | number): string {
-  const d = typeof date === 'string' || typeof date === 'number' ? new Date(date) : date;
-  return DATE_FORMATTER.format(d);
-}
-
-const DATETIME_FORMATTER = new Intl.DateTimeFormat('es-CO', {
-  year: 'numeric',
-  month: 'short',
-  day: 'numeric',
-  hour: '2-digit',
-  minute: '2-digit',
-});
-
-export function formatDateTime(date: Date | string | number): string {
-  const d = typeof date === 'string' || typeof date === 'number' ? new Date(date) : date;
-  return DATETIME_FORMATTER.format(d);
-}
-
-export function safeNumber(value: unknown, fallback = 0): number {
-  if (typeof value === 'number' && Number.isFinite(value)) return value;
-  if (typeof value === 'string') {
-    const n = Number(value);
-    if (Number.isFinite(n)) return n;
-  }
-  return fallback;
+export function formatPrice(price: number, currency: string): string {
+  const locales: Record<string, string> = {
+    COP: 'es-CO', BRL: 'pt-BR', CLP: 'es-CL',
+    JPY: 'ja-JP', CNY: 'zh-CN', GBP: 'en-GB', EUR: 'de-DE',
+  };
+  return new Intl.NumberFormat(locales[currency] || 'en-US', {
+    style: 'currency', currency,
+  }).format(price);
 }

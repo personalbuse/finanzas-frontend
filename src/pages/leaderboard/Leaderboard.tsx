@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import api from '../../services/api';
 import { Trophy, TrendingUp, TrendingDown } from 'lucide-react';
+import { toast } from 'react-toastify';
+import { formatCurrency } from '../../utils/format';
 
 export function Leaderboard() {
   const { t } = useTranslation();
@@ -20,16 +22,13 @@ export function Leaderboard() {
         setMyRank(myRankRes.data);
       } catch (error) {
         console.error('Error fetching leaderboard data:', error);
+        toast.error(t('common.error'));
       } finally {
         setLoading(false);
       }
     };
     fetchData();
   }, []);
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount || 0);
-  };
 
   const getMedal = (rank: number) => {
     switch (rank) {
@@ -114,7 +113,7 @@ export function Leaderboard() {
                           {user.username.charAt(0).toUpperCase()}
                         </div>
                         <span className="font-bold text-slate-900 dark:text-white">
-                          {user.username}
+                          {user?.username ?? '?'}
                         </span>
                       </div>
                     </td>

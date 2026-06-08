@@ -1,101 +1,60 @@
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useCallback, memo, type ReactNode } from 'react';
 import { X } from 'lucide-react';
-import { createPortal } from 'react-dom';
 
-export interface ModalProps {
+interface ModalProps {
   open: boolean;
   onClose: () => void;
   title: string;
   children: ReactNode;
-  footer?: ReactNode;
-  size?: 'sm' | 'md' | 'lg' | 'xl';
-  closeOnEscape?: boolean;
-  closeOnBackdrop?: boolean;
+  maxWidth?: string;
+  titleId?: string;
 }
 
-const sizeMap: Record<NonNullable<ModalProps['size']>, string> = {
-  sm: 'max-w-sm',
-  md: 'max-w-md',
-  lg: 'max-w-lg',
-  xl: 'max-w-2xl',
-};
-
-export function Modal({
-  open,
-  onClose,
-  title,
-  children,
-  footer,
-  size = 'md',
-  closeOnEscape = true,
-  closeOnBackdrop = true,
-}: ModalProps) {
-  const modalRef = useRef<HTMLDivElement>(null);
-  const titleId = useRef(`modal-title-${Math.random().toString(36).slice(2, 9)}`).current;
+function ModalBase({ open, onClose, title, children, maxWidth = 'max-w-lg', titleId }: ModalProps) {
+  const handleEscape = useCallback((e: KeyboardEvent) => {
+    if (e.key === 'Escape') onClose();
+  }, [onClose]);
 
   useEffect(() => {
-    if (!open) return;
-    const previousFocus = document.activeElement as HTMLElement | null;
-
-    const handleEscape = (e: KeyboardEvent) => {
-      if (closeOnEscape && e.key === 'Escape') {
-        onClose();
-      }
-    };
-    document.addEventListener('keydown', handleEscape);
-    document.body.style.overflow = 'hidden';
-
-    setTimeout(() => {
-      modalRef.current?.focus();
-    }, 0);
-
+    if (open) {
+      document.addEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'hidden';
+    }
     return () => {
       document.removeEventListener('keydown', handleEscape);
       document.body.style.overflow = '';
-      previousFocus?.focus();
     };
-  }, [open, closeOnEscape, onClose]);
+  }, [open, handleEscape]);
 
   if (!open) return null;
 
-  return createPortal(
+  const id = titleId || 'modal-title';
+
+  return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
-      onClick={closeOnBackdrop ? onClose : undefined}
-      aria-hidden="true"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={id}
     >
       <div
-        ref={modalRef}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={titleId}
-        tabIndex={-1}
+        className={`bg-white dark:bg-[#0d0d0d] border border-slate-200 dark:border-[#1a1a1a] rounded-xl w-full ${maxWidth} mx-4 max-h-[80vh] overflow-y-auto`}
         onClick={(e) => e.stopPropagation()}
-        className={`relative w-full ${sizeMap[size]} bg-white dark:bg-[#0d0d0d] border border-slate-200 dark:border-[#1a1a1a] rounded-xl shadow-2xl focus:outline-none`}
       >
-        <div className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-[#1a1a1a]">
-          <h2 id={titleId} className="text-base font-semibold text-slate-900 dark:text-slate-100">
-            {title}
-          </h2>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Cerrar modal"
-            className="p-1 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-[#1a1a1a] dark:hover:text-white transition-colors"
-          >
-            <X className="w-4 h-4" aria-hidden="true" />
+        <div className="flex items-center justify-between p-4 border-b border-slate-100 dark:border-[#1a1a1a]">
+          <h3 id={id} className="text-lg font-semibold text-slate-900 dark:text-white">{title}</h3>
+          <button onClick={onClose} className="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-[#1a1a1a] text-slate-400" aria-label="Cerrar">
+            <X className="w-4 h-4" />
           </button>
         </div>
-        <div className="p-4 text-slate-700 dark:text-slate-200">{children}</div>
-        {footer ? (
-          <div className="flex justify-end gap-2 p-4 border-t border-slate-200 dark:border-[#1a1a1a]">
-            {footer}
-          </div>
-        ) : null}
+        <div className="p-4">
+          {children}
+        </div>
       </div>
-    </div>,
-    document.body,
+    </div>
   );
 }
 
+export const Modal = memo(ModalBase);
 export default Modal;

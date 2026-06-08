@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from '../../provider/LanguageProvider';
 import api from '../../services/api';
 import { TrendingUp, TrendingDown, Globe } from 'lucide-react';
+import { formatPrice } from '../../utils/format';
 
 const REGIONS = [
   { id: 'North America', flag: '🌎' },
@@ -57,25 +58,6 @@ export function Markets() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const formatPrice = (price: number, currency: string) => {
-    if (currency === 'COP') {
-      return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(price);
-    } else if (currency === 'BRL') {
-      return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price);
-    } else if (currency === 'CLP') {
-      return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(price);
-    } else if (currency === 'JPY') {
-      return new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(price);
-    } else if (currency === 'CNY') {
-      return new Intl.NumberFormat('zh-CN', { style: 'currency', currency: 'CNY' }).format(price);
-    } else if (currency === 'GBP') {
-      return new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(price);
-    } else if (currency === 'EUR') {
-      return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(price);
-    }
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: currency }).format(price);
   };
 
   const displayStocks = selectedRegion ? regionData : stocks;

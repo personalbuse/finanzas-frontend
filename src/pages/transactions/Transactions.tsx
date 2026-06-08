@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from '../../provider/LanguageProvider';
+import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
-import { ChevronUp, ChevronDown } from 'lucide-react';
+import { formatCurrency } from '../../utils/format';
+import SortIcon from '../../components/ui/SortIcon';
 
 type SortField = 'date' | 'symbol' | 'quantity' | 'price' | 'total';
 type SortDirection = 'asc' | 'desc';
 
 export function Transactions() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [transactions, setTransactions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [sortField, setSortField] = useState<SortField>('date');
@@ -79,16 +82,9 @@ export function Transactions() {
     currentPage * itemsPerPage
   );
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
-  };
-
-  const SortIcon = ({ field }: { field: SortField }) => {
-    if (sortField !== field) return null;
-    return sortDirection === 'asc' 
-      ? <ChevronUp className="w-4 h-4 inline ml-1" />
-      : <ChevronDown className="w-4 h-4 inline ml-1" />;
-  };
+  const SortIconField = ({ field }: { field: SortField }) => (
+    <SortIcon field={field} currentField={sortField} direction={sortDirection} />
+  );
 
   if (loading) {
     return (
@@ -145,7 +141,7 @@ export function Transactions() {
                     }`}
                   >
                     {label}
-                    <SortIcon field={key as SortField} />
+                    <SortIconField field={key as SortField} />
                   </th>
                 ))}
               </tr>
@@ -161,6 +157,12 @@ export function Transactions() {
                       <h4 className="text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest text-xs">
                         {t('transactions.noTransactions')}
                       </h4>
+                      <button
+                        onClick={() => navigate('/stocks')}
+                        className="mt-4 px-4 py-2 text-sm font-medium bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-lg hover:bg-slate-800 transition-colors"
+                      >
+                        Ir a comprar
+                      </button>
                     </div>
                   </td>
                 </tr>

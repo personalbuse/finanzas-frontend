@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from '../../provider/LanguageProvider';
 import api from '../../services/api';
 import { TrendingUp, TrendingDown, BarChart2 } from 'lucide-react';
+import { formatValue } from '../../utils/format';
 
 const REGIONS = [
   { id: 'North America', name: 'Norteamérica', flag: '🇺🇸' },
@@ -54,14 +55,6 @@ export function Indices() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const formatValue = (value: number | null | undefined, currency: string) => {
-    if (value === null || value === undefined) return '-';
-    if (currency === 'JPY' || currency === 'KRW') {
-      return new Intl.NumberFormat('ja-JP').format(Math.round(value));
-    }
-    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
   };
 
   return (

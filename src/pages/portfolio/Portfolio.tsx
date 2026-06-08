@@ -3,7 +3,9 @@ import { useTranslation } from '../../provider/LanguageProvider';
 import { useAuthStore } from '../../store/useAuthStore';
 import api from '../../services/api';
 import { toast } from 'react-toastify';
-import { ChevronUp, ChevronDown, TrendingUp, TrendingDown } from 'lucide-react';
+import { TrendingUp, TrendingDown } from 'lucide-react';
+import { formatCurrency, formatPercentage } from '../../utils/format';
+import SortIcon from '../../components/ui/SortIcon';
 
 type SortField = 'symbol' | 'quantity' | 'avgCost' | 'currentPrice' | 'value' | 'profit';
 type SortDirection = 'asc' | 'desc';
@@ -108,20 +110,9 @@ export function Portfolio() {
     });
   }, [portfolio.stocks, sortField, sortDirection]);
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount || 0);
-  };
-
-  const formatPercentage = (value: number) => {
-    return `${value > 0 ? '+' : ''}${(value || 0).toFixed(2)}%`;
-  };
-
-  const SortIcon = ({ field }: { field: SortField }) => {
-    if (sortField !== field) return null;
-    return sortDirection === 'asc' 
-      ? <ChevronUp className="w-4 h-4 inline ml-1" />
-      : <ChevronDown className="w-4 h-4 inline ml-1" />;
-  };
+  const SortIconField = ({ field }: { field: SortField }) => (
+    <SortIcon field={field} currentField={sortField} direction={sortDirection} />
+  );
 
   if (loading) {
     return (
@@ -270,7 +261,7 @@ export function Portfolio() {
                     }`}
                   >
                     {label}
-                    <SortIcon field={key as SortField} />
+                    <SortIconField field={key as SortField} />
                   </th>
                 ))}
               </tr>

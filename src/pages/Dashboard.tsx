@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../provider/LanguageProvider';
 import { useAuthStore } from '../store/useAuthStore';
@@ -16,40 +16,14 @@ import {
   PieChart,
   Pie,
   Cell,
-  Legend
 } from 'recharts';
 import { TrendingUp, TrendingDown, Wallet, BarChart3 } from 'lucide-react';
 
 const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
 
-const generateMockHistory = (baseRate: number, days: number = 7) => {
-  return Array.from({ length: days }, (_, i) => {
-    const date = new Date();
-    date.setDate(date.getDate() - (days - 1 - i));
-    const variation = (Math.random() - 0.5) * 100;
-    return {
-      date: date.toISOString().split('T')[0],
-      rate: Math.round(baseRate + variation)
-    };
-  });
-};
-
-const getMockExchangeRates = (isFallback: boolean = false) => {
-  const usdBase = 3850;
-  const eurBase = 4200;
-  return {
-    is_fallback: isFallback,
-    usd_cop: {
-      rate: usdBase + (Math.random() - 0.5) * 50,
-      change_percent: Number((Math.random() * 2 - 1).toFixed(2)),
-      history: generateMockHistory(usdBase)
-    },
-    eur_cop: {
-      rate: eurBase + (Math.random() - 0.5) * 50,
-      change_percent: Number((Math.random() * 2 - 1).toFixed(2)),
-      history: generateMockHistory(eurBase)
-    }
-  };
+const MOCK_RATES = {
+  usd_cop: { rate: 3850, change_percent: 0, history: [] },
+  eur_cop: { rate: 4200, change_percent: 0, history: [] },
 };
 
 export function Dashboard() {
@@ -122,7 +96,7 @@ export function Dashboard() {
         setExchangeRates(data);
       } else {
         setExchangeRatesFallback(true);
-        setExchangeRates(getMockExchangeRates(true));
+        setExchangeRates({ ...MOCK_RATES, is_fallback: true });
       }
       if (newsRes.status === 'fulfilled') {
         setNews(newsRes.value.data.news || []);

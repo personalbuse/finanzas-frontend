@@ -53,7 +53,7 @@ export function Header() {
               <span className="font-display text-2xl font-light tracking-[0.3em] text-slate-900 dark:text-white uppercase">
                 Simulador
               </span>
-              <span className="ml-3 font-display text-sm font-light tracking-[0.25em] text-slate-400 dark:text-slate-500 uppercase hidden sm:block">
+              <span className="ml-3 font-display text-sm font-light tracking-[0.25em] text-slate-400 dark:text-slate-500 uppercase hidden xs:block">
                 Stock Market
               </span>
             </div>
