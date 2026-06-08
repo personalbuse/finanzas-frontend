@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from '../../provider/LanguageProvider';
-import api from '../../services/api';
+import api, { createCancelSource } from '../../services/api';
 import { TrendingUp, TrendingDown, BarChart2 } from 'lucide-react';
 import { formatValue } from '../../utils/format';
 
@@ -40,15 +40,18 @@ export function Indices() {
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchIndices();
+    const source = createCancelSource();
+    fetchIndices(source.signal);
+    return () => source.cancel();
   }, []);
 
-  const fetchIndices = async () => {
+  const fetchIndices = async (signal: AbortSignal) => {
     setLoading(true);
     try {
-      const res = await api.get('/indices');
+      const res = await api.get('/indices', { signal });
       setIndices(res.data.indices || []);
     } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') return;
       console.error('Error fetching indices:', error);
     } finally {
       setLoading(false);

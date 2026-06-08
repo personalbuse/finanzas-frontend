@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../provider/LanguageProvider';
 import { useAuthStore } from '../store/useAuthStore';
-import api from '../services/api';
+import api, { createCancelSource } from '../services/api';
 import { ExchangeRateChart } from '../components/charts/ExchangeRatesChart';
 import { useTourStore } from '../store/tourStore';
 import {
@@ -108,32 +108,35 @@ export function Dashboard() {
     return t('dashboard.timeAgoDay', { d: diffDays });
   };
 
-  const fetchCourseProgress = async () => {
+  const fetchCourseProgress = async (signal: AbortSignal) => {
     try {
-      const progressRes = await api.get('/course-progress');
+      const progressRes = await api.get('/course-progress', { signal });
       setCourseProgress(progressRes.data);
     } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') return;
       console.error('Error fetching course progress:', error);
     }
   };
 
   useEffect(() => {
-    fetchData();
-    fetchCourseProgress();
+    const source = createCancelSource();
+    fetchData(source.signal);
+    fetchCourseProgress(source.signal);
     const tourFlag = useTourStore.getState().shouldStartTour;
     const tourDone = useTourStore.getState().tourDone;
     if (tourFlag && !tourDone) {
       useTourStore.getState().startTour();
     }
+    return () => source.cancel();
   }, []);
 
-  const fetchData = async () => {
+  const fetchData = async (signal: AbortSignal) => {
     try {
       const [portfolioRes, transactionsRes, exchangeRes, newsRes] = await Promise.allSettled([
-        api.get('/portfolio/values'),
-        api.get('/portfolio/history'),
-        api.get(`/exchange-rates/multi`),
-        api.get('/news'),
+        api.get('/portfolio/values', { signal }),
+        api.get('/portfolio/history', { signal }),
+        api.get(`/exchange-rates/multi`, { signal }),
+        api.get('/news', { signal }),
       ]);
 
       if (portfolioRes.status === 'fulfilled') setPortfolio(portfolioRes.value.data);

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import api from '../../services/api';
+import api, { createCancelSource } from '../../services/api';
 import { Trophy, TrendingUp, TrendingDown } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { formatCurrency } from '../../utils/format';
@@ -20,16 +20,18 @@ export function Leaderboard() {
   const [myRank, setMyRank] = useState<LeaderboardUser | null>(null);
 
   useEffect(() => {
+    const source = createCancelSource();
     const fetchData = async () => {
       setLoading(true);
       try {
         const [leaderboardRes, myRankRes] = await Promise.all([
-          api.get('/leaderboard'),
-          api.get('/leaderboard/me').catch(() => ({ data: null }))
+          api.get('/leaderboard', { signal: source.signal }),
+          api.get('/leaderboard/me', { signal: source.signal }).catch(() => ({ data: null }))
         ]);
         setLeaderboard(leaderboardRes.data.leaderboard || []);
         setMyRank(myRankRes.data);
       } catch (error) {
+        if (error instanceof Error && error.name === 'AbortError') return;
         console.error('Error fetching leaderboard data:', error);
         toast.error(t('common.error'));
       } finally {
@@ -37,6 +39,7 @@ export function Leaderboard() {
       }
     };
     fetchData();
+    return () => source.cancel();
   }, [t]);
 
   const getMedal = (rank: number) => {

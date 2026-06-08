@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from '../../provider/LanguageProvider';
-import api from '../../services/api';
+import api, { createCancelSource } from '../../services/api';
 import { TrendingUp, TrendingDown, DollarSign, RefreshCw } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
@@ -55,15 +55,18 @@ export function Forex() {
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    fetchRates();
+    const source = createCancelSource();
+    fetchRates(source.signal);
+    return () => source.cancel();
   }, []);
 
-  const fetchRates = async () => {
+  const fetchRates = async (signal: AbortSignal) => {
     setLoading(true);
     try {
-      const res = await api.get('/exchange-rates/multi');
+      const res = await api.get('/exchange-rates/multi', { signal });
       setRates(res.data);
     } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') return;
       console.error('Error fetching rates:', error);
     } finally {
       setLoading(false);

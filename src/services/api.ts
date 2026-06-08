@@ -81,4 +81,9 @@ api.interceptors.response.use(
   },
 );
 
+export function createCancelSource() {
+  const controller = new AbortController();
+  return { signal: controller.signal, cancel: () => controller.abort() };
+}
+
 export default api;

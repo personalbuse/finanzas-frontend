@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from '../../provider/LanguageProvider';
 import { useAuthStore } from '../../store/useAuthStore';
-import api from '../../services/api';
+import api, { createCancelSource } from '../../services/api';
 import { toast } from 'react-toastify';
 
 interface StockData {
@@ -44,10 +44,12 @@ export function Stocks() {
   const [buying, setBuying] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchStocks();
+    const source = createCancelSource();
+    fetchStocks(source.signal);
+    return () => source.cancel();
   }, []);
 
-  const fetchStocks = async (symbols: string[] = STOCKS_CONFIG.default) => {
+  const fetchStocks = async (signal: AbortSignal, symbols: string[] = STOCKS_CONFIG.default) => {
     setLoading(true);
     
     try {
@@ -56,7 +58,7 @@ export function Stocks() {
       const res = await api.post('/stocks/batch', {
         symbols: uniqueSymbols,
         cache_ttl: STOCKS_CONFIG.cacheTTL
-      });
+      }, { signal });
       
       if (res.data && res.data.length > 0) {
         setStocks(res.data);
@@ -64,6 +66,7 @@ export function Stocks() {
         setStocks([]);
       }
     } catch (error: unknown) {
+      if (error instanceof Error && error.name === 'AbortError') return;
       console.error('Error fetching stocks:', error);
       const err = error as { response?: { data?: { detail?: string } } };
       toast.error(err.response?.data?.detail || 'Error al cargar acciones');

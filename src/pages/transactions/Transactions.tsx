@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from '../../provider/LanguageProvider';
 import { useNavigate } from 'react-router-dom';
-import api from '../../services/api';
+import api, { createCancelSource } from '../../services/api';
 import { formatCurrency } from '../../utils/format';
 import SortIcon from '../../components/ui/SortIcon';
 
@@ -29,14 +29,17 @@ export function Transactions() {
   const itemsPerPage = 10;
 
   useEffect(() => {
-    fetchTransactions();
+    const source = createCancelSource();
+    fetchTransactions(source.signal);
+    return () => source.cancel();
   }, []);
 
-  const fetchTransactions = async () => {
+  const fetchTransactions = async (signal: AbortSignal) => {
     try {
-      const res = await api.get('/portfolio/history');
+      const res = await api.get('/portfolio/history', { signal });
       setTransactions(res.data.transactions || []);
     } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') return;
       console.error('Error fetching transactions:', error);
     } finally {
       setLoading(false);

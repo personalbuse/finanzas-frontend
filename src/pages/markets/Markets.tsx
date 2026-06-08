@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from '../../provider/LanguageProvider';
-import api from '../../services/api';
+import api, { createCancelSource } from '../../services/api';
 import { TrendingUp, TrendingDown, Globe } from 'lucide-react';
 import { formatPrice } from '../../utils/format';
 
@@ -43,15 +43,18 @@ export function Markets() {
   const [regionData, setRegionData] = useState<StockData[] | null>(null);
 
   useEffect(() => {
-    fetchStocks();
+    const source = createCancelSource();
+    fetchStocks(source.signal);
+    return () => source.cancel();
   }, []);
 
-  const fetchStocks = async () => {
+  const fetchStocks = async (signal: AbortSignal) => {
     setLoading(true);
     try {
-      const res = await api.get('/stocks/international');
+      const res = await api.get('/stocks/international', { signal });
       setStocks(res.data.stocks || []);
     } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') return;
       console.error('Error fetching international stocks:', error);
     } finally {
       setLoading(false);

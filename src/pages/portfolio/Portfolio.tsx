@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from '../../provider/LanguageProvider';
 import { useAuthStore } from '../../store/useAuthStore';
-import api from '../../services/api';
+import api, { createCancelSource } from '../../services/api';
 import { toast } from 'react-toastify';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 import { formatCurrency, formatPercentage } from '../../utils/format';
@@ -55,15 +55,18 @@ export function Portfolio() {
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
 
   useEffect(() => {
-    fetchPortfolio();
+    const source = createCancelSource();
+    fetchPortfolio(source.signal);
+    return () => source.cancel();
   }, []);
 
-  const fetchPortfolio = async () => {
+  const fetchPortfolio = async (signal: AbortSignal) => {
     try {
       setError(null);
-      const res = await api.get('/portfolio/values');
+      const res = await api.get('/portfolio/values', { signal });
       setPortfolio(res.data);
     } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') return;
       console.error('Error fetching portfolio:', error);
       setError('Error al cargar el portafolio. Intenta de nuevo.');
     } finally {
