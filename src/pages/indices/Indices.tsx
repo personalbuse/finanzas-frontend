@@ -109,7 +109,7 @@ export function Indices() {
       ) : (
         <div className="bg-white dark:bg-[#0d0d0d] border border-slate-200 dark:border-[#1a1a1a] rounded-xl overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full responsive-table">
               <thead className="bg-slate-50 dark:bg-[#1a1a1a]/50">
                 <tr>
                   <th className="px-4 sm:px-6 py-4 text-left text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
@@ -129,10 +129,10 @@ export function Indices() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-700 responsive-table-card">
                 {indices.map((index) => (
                   <tr key={index.symbol} className="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
-                    <td className="px-4 sm:px-6 py-4">
+                    <td data-label="Índice" className="px-4 sm:px-6 py-4">
                       <div className="flex items-center gap-3">
                         <span className="text-2xl sm:text-3xl">
                           {REGION_FLAGS[index.region] || '🌐'}
@@ -143,16 +143,16 @@ export function Indices() {
                         </div>
                       </div>
                     </td>
-                    <td className="px-4 sm:px-6 py-4">
+                    <td data-label="País" className="px-4 sm:px-6 py-4">
                       <span className="text-slate-600 dark:text-slate-400">{index.country}</span>
                     </td>
-                    <td className="px-4 sm:px-6 py-4 text-right">
+                    <td data-label="Valor" className="px-4 sm:px-6 py-4 text-right">
                       <span className="text-lg font-bold text-slate-900 dark:text-white">
                         {formatValue(index.current_value, index.currency)}
                       </span>
                       <span className="text-xs text-slate-500 ml-1">{index.currency}</span>
                     </td>
-                    <td className="px-4 sm:px-6 py-4 text-right">
+                    <td data-label="Cambio" className="px-4 sm:px-6 py-4 text-right">
                       <div className={`flex items-center justify-end gap-1 font-medium ${
                         (index.change || 0) >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'
                       }`}>
@@ -160,7 +160,7 @@ export function Indices() {
                         {formatValue(Math.abs(index.change || 0), index.currency)}
                       </div>
                     </td>
-                    <td className="px-4 sm:px-6 py-4 text-right">
+                    <td data-label="%" className="px-4 sm:px-6 py-4 text-right">
                       <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-bold ${
                         (index.change_percent || 0) >= 0
                           ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'

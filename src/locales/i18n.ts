@@ -1,11 +1,10 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
-
-import en from "./en.json";
-import es from "./es.json";
+import HttpBackend from "i18next-http-backend";
 
 i18n
+  .use(HttpBackend)
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
@@ -14,9 +13,8 @@ i18n
     interpolation: {
       escapeValue: false,
     },
-    resources: {
-      en: { translation: en },
-      es: { translation: es },
+    backend: {
+      loadPath: "/locales/{{lng}}.json",
     },
   });
 

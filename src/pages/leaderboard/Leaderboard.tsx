@@ -3,6 +3,7 @@ import api from '../../services/api';
 import { Trophy, TrendingUp, TrendingDown } from 'lucide-react';
 
 export function Leaderboard() {
+  const { t } = useTranslation();
   const [leaderboard, setLeaderboard] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [myRank, setMyRank] = useState<any>(null);
@@ -48,10 +49,10 @@ export function Leaderboard() {
       <div className="mb-8">
         <h1 className="text-3xl font-semibold text-slate-900 dark:text-white tracking-tight flex items-center gap-3">
           <Trophy className="w-8 h-8 text-amber-500" />
-          Ranking de Inversores
+          {t('leaderboard.title')}
         </h1>
         <p className="text-slate-500 dark:text-slate-400 mt-2">
-          Los inversores con mejor rentabilidad del simulador
+          {t('leaderboard.subtitle')}
         </p>
       </div>
 
@@ -59,11 +60,11 @@ export function Leaderboard() {
         <div className="mb-6 p-4 rounded-xl bg-gradient-to-r from-emerald-500 to-blue-500 text-white">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm opacity-90">Tu posición</p>
+              <p className="text-sm opacity-90">{t('leaderboard.yourPosition')}</p>
               <p className="text-3xl font-bold">#{myRank.rank} de {myRank.total_users}</p>
             </div>
             <div className="text-right">
-              <p className="text-sm opacity-90">Tu rentabilidad</p>
+              <p className="text-sm opacity-90">{t('leaderboard.yourProfitability')}</p>
               <p className="text-2xl font-bold">{myRank.profitability >= 0 ? '+' : ''}{myRank.profitability?.toFixed(2)}%</p>
             </div>
           </div>
@@ -77,7 +78,7 @@ export function Leaderboard() {
       ) : (
         <div className="bg-white dark:bg-[#0d0d0d] border border-slate-200 dark:border-[#1a1a1a] rounded-xl overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full responsive-table">
               <thead className="bg-slate-50 dark:bg-[#1a1a1a]/50">
                 <tr>
                   <th className="px-6 py-4 text-left text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
@@ -94,7 +95,7 @@ export function Leaderboard() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-700 responsive-table-card">
                 {leaderboard.map((user, index) => (
                   <tr
                     key={user.user_id}
@@ -102,12 +103,12 @@ export function Leaderboard() {
                       index < 3 ? 'bg-amber-50/50 dark:bg-amber-900/10' : ''
                     }`}
                   >
-                    <td className="px-6 py-4">
+                    <td data-label="Posición" className="px-6 py-4">
                       <div className="flex items-center justify-center w-10">
                         {getMedal(user.rank)}
                       </div>
                     </td>
-                    <td className="px-6 py-4">
+                    <td data-label="Inversor" className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-blue-500 flex items-center justify-center text-white font-bold">
                           {user.username.charAt(0).toUpperCase()}
@@ -117,12 +118,12 @@ export function Leaderboard() {
                         </span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-right">
+                    <td data-label="Valor Total" className="px-6 py-4 text-right">
                       <span className="text-slate-600 dark:text-slate-400">
                         {formatCurrency(user.total_value)}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-right">
+                    <td data-label="Rentabilidad" className="px-6 py-4 text-right">
                       <span className={`inline-flex items-center gap-1 px-2 py-1 rounded text-sm font-bold ${
                         user.profitability >= 0
                           ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
@@ -144,7 +145,7 @@ export function Leaderboard() {
         <div className="text-center py-12">
           <Trophy className="w-16 h-16 mx-auto text-slate-300 dark:text-slate-600 mb-4" />
           <p className="text-slate-400 dark:text-slate-500">
-            No hay datos disponibles aún
+            {t('leaderboard.noData')}
           </p>
         </div>
       )}

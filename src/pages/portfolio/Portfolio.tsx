@@ -143,7 +143,7 @@ export function Portfolio() {
             onClick={fetchPortfolio}
             className="px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-lg text-sm font-medium hover:bg-slate-800 dark:hover:bg-slate-100 transition-colors"
           >
-            Reintentar
+            {t('portfolio.retry')}
           </button>
         </div>
       </div>
@@ -162,10 +162,11 @@ export function Portfolio() {
       document.body.appendChild(link);
       link.click();
       link.remove();
-      toast.success('Reporte PDF descargado');
+      window.URL.revokeObjectURL(url);
+      toast.success(t('toast.reportDownloaded'));
     } catch (error) {
       console.error('Error exporting PDF:', error);
-      toast.error('Error al generar el reporte');
+      toast.error(t('toast.reportError'));
     }
   };
 
@@ -182,7 +183,7 @@ export function Portfolio() {
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
-          Generar Reporte PDF
+          {t('portfolio.generateReport')}
         </button>
       </div>
 
@@ -249,7 +250,7 @@ export function Portfolio() {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full responsive-table">
             <thead className="bg-slate-50 dark:bg-[#1a1a1a]/50">
               <tr>
                 {[
@@ -274,7 +275,7 @@ export function Portfolio() {
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-700 responsive-table-card">
               {sortedStocks.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="px-6 py-20 text-center">
@@ -291,7 +292,7 @@ export function Portfolio() {
               ) : (
                 sortedStocks.map((stock: any) => (
                   <tr key={stock.symbol} className="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
-                    <td className="px-6 py-4">
+                    <td data-label={t('portfolio.stock')} className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-slate-900 to-slate-700 flex items-center justify-center text-white font-bold text-sm shadow-md">
                           {stock.symbol.substring(0, 2)}
@@ -299,19 +300,19 @@ export function Portfolio() {
                         <span className="font-bold text-slate-900 dark:text-white">{stock.symbol}</span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">
+                    <td data-label={t('portfolio.quantity')} className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">
                       {stock.quantity}
                     </td>
-                    <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400 font-medium">
+                    <td data-label={t('portfolio.avgCost')} className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400 font-medium">
                       {formatCurrency(stock.average_cost)}
                     </td>
-                    <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400 font-medium">
+                    <td data-label={t('portfolio.currentPrice')} className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400 font-medium">
                       {formatCurrency(stock.current_price)}
                     </td>
-                    <td className="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">
+                    <td data-label={t('portfolio.value')} className="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">
                       {formatCurrency(stock.stock_value)}
                     </td>
-                    <td className="px-6 py-4">
+                    <td data-label={t('portfolio.profit')} className="px-6 py-4">
                       <div className={`flex items-center gap-1 font-bold ${
                         stock.stock_profit >= 0 
                           ? 'text-emerald-600 dark:text-emerald-400' 
@@ -322,7 +323,7 @@ export function Portfolio() {
                         <span className="text-[10px] ml-1 opacity-70">{formatPercentage(stock.stock_profit_percent)}</span>
                       </div>
                     </td>
-                    <td className="px-6 py-4">
+                    <td data-label={t('portfolio.actions')} className="px-6 py-4">
                       <div className="flex items-center gap-2">
                         <input
                           type="number"

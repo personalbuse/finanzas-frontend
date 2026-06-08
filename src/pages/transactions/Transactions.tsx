@@ -126,7 +126,7 @@ export function Transactions() {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full responsive-table">
             <thead className="bg-slate-50 dark:bg-slate-700/50">
               <tr>
                 {[
@@ -150,7 +150,7 @@ export function Transactions() {
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-700 responsive-table-card">
               {paginatedTransactions.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-6 py-20 text-center">
@@ -167,10 +167,10 @@ export function Transactions() {
               ) : (
                 paginatedTransactions.map((tx: any) => (
                   <tr key={tx.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
-                    <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400 font-medium whitespace-nowrap">
+                    <td data-label={t('transactions.date')} className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400 font-medium whitespace-nowrap">
                       {new Date(tx.created_at).toLocaleDateString()}
                     </td>
-                    <td className="px-6 py-4">
+                    <td data-label={t('transactions.type')} className="px-6 py-4">
                       <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
                         tx.transaction_type === 'buy' 
                           ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' 
@@ -179,16 +179,16 @@ export function Transactions() {
                         {tx.transaction_type === 'buy' ? t('transactions.buy') : t('transactions.sell')}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">
+                    <td data-label={t('transactions.stock')} className="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">
                       {tx.symbol}
                     </td>
-                    <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">
+                    <td data-label={t('transactions.quantity')} className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">
                       {tx.quantity}
                     </td>
-                    <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400 font-medium">
+                    <td data-label={t('transactions.price')} className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400 font-medium">
                       {formatCurrency(tx.price_per_unit)}
                     </td>
-                    <td className="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">
+                    <td data-label={t('transactions.total')} className="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">
                       {formatCurrency(tx.total_amount)}
                     </td>
                   </tr>

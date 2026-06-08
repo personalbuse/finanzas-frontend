@@ -585,7 +585,7 @@ export function Admin() {
 
                 <div className="bg-white dark:bg-[#0d0d0d] border border-slate-200 dark:border-[#1a1a1a] rounded-xl overflow-hidden">
                   <div className="overflow-x-auto">
-                    <table className="w-full text-sm">
+                    <table className="w-full text-sm responsive-table">
                       <thead>
                         <tr className="border-b border-slate-100 dark:border-[#1a1a1a] bg-slate-50 dark:bg-[#1a1a1a]/50">
                           <th className="text-left px-4 py-3 font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest text-[10px]">ID</th>
@@ -597,7 +597,7 @@ export function Admin() {
                           <th className="text-right px-4 py-3 font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest text-[10px]">{t('admin.actions')}</th>
                         </tr>
                       </thead>
-                      <tbody>
+                      <tbody className="responsive-table-card">
                         {filteredUsers.length === 0 && (
                           <tr>
                             <td colSpan={7} className="text-center py-8 text-slate-400 text-sm">{t('admin.noUsers')}</td>
@@ -605,10 +605,10 @@ export function Admin() {
                         )}
                         {filteredUsers.map((u) => (
                           <tr key={u.id} className="border-b border-slate-100 dark:border-[#1a1a1a] hover:bg-slate-50 dark:hover:bg-[#1a1a1a]/50">
-                            <td className="px-4 py-3 text-slate-500 dark:text-slate-400 text-xs">{u.id}</td>
-                            <td className="px-4 py-3 font-medium text-slate-900 dark:text-white whitespace-nowrap">{u.username}</td>
-                            <td className="px-4 py-3 text-slate-500 dark:text-slate-400 text-xs">{u.email}</td>
-                            <td className="px-4 py-3">
+                            <td data-label="ID" className="px-4 py-3 text-slate-500 dark:text-slate-400 text-xs">{u.id}</td>
+                            <td data-label={t('admin.username')} className="px-4 py-3 font-medium text-slate-900 dark:text-white whitespace-nowrap">{u.username}</td>
+                            <td data-label="Email" className="px-4 py-3 text-slate-500 dark:text-slate-400 text-xs">{u.email}</td>
+                            <td data-label={t('admin.role')} className="px-4 py-3">
                               <select
                                 value={u.rol}
                                 onChange={(e) => handleRoleChange(u, e.target.value)}
@@ -634,10 +634,10 @@ export function Admin() {
                                 {u.is_active ? t('admin.active') : t('admin.banned')}
                               </button>
                             </td>
-                            <td className="px-4 py-3 text-right font-mono text-sm text-slate-900 dark:text-white">
+                            <td data-label={t('admin.balance')} className="px-4 py-3 text-right font-mono text-sm text-slate-900 dark:text-white">
                               ${u.current_balance.toLocaleString()}
                             </td>
-                            <td className="px-4 py-3 text-right">
+                            <td data-label={t('admin.actions')} className="px-4 py-3 text-right">
                               <div className="flex items-center justify-end gap-1">
                                 <button
                                   onClick={() => loadUserDetail(u.id)}
@@ -714,7 +714,7 @@ export function Admin() {
                   <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-4">{t('admin.recentTransactions')}</h3>
                   {transactions.length > 0 ? (
                     <div className="overflow-x-auto">
-                      <table className="w-full text-sm">
+                      <table className="w-full text-sm responsive-table">
                         <thead>
                           <tr className="border-b border-slate-100 dark:border-[#1a1a1a]">
                             <th className="text-left px-3 py-2 text-[10px] font-medium text-slate-400 uppercase tracking-widest">ID</th>
@@ -726,20 +726,20 @@ export function Admin() {
                             <th className="text-right px-3 py-2 text-[10px] font-medium text-slate-400 uppercase tracking-widest">Fecha</th>
                           </tr>
                         </thead>
-                        <tbody>
+                        <tbody className="responsive-table-card">
                           {transactions.map((tx) => (
                             <tr key={tx.id} className="border-b border-slate-100 dark:border-[#1a1a1a] hover:bg-slate-50 dark:hover:bg-[#1a1a1a]/50">
-                              <td className="px-3 py-2 text-xs text-slate-500">{tx.id}</td>
-                              <td className="px-3 py-2 text-xs text-slate-500">{tx.user_id}</td>
-                              <td className="px-3 py-2 text-xs font-medium text-slate-900 dark:text-white">{tx.symbol}</td>
-                              <td className="px-3 py-2">
+                              <td data-label="ID" className="px-3 py-2 text-xs text-slate-500">{tx.id}</td>
+                              <td data-label="Usuario" className="px-3 py-2 text-xs text-slate-500">{tx.user_id}</td>
+                              <td data-label="Símbolo" className="px-3 py-2 text-xs font-medium text-slate-900 dark:text-white">{tx.symbol}</td>
+                              <td data-label="Tipo" className="px-3 py-2">
                                 <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${
                                   tx.transaction_type === 'buy' ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400' : 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'
                                 }`}>{tx.transaction_type}</span>
                               </td>
-                              <td className="px-3 py-2 text-right text-xs text-slate-500">{tx.quantity}</td>
-                              <td className="px-3 py-2 text-right text-xs font-mono text-slate-900 dark:text-white">${tx.total_amount.toLocaleString()}</td>
-                              <td className="px-3 py-2 text-right text-[10px] text-slate-400">{new Date(tx.created_at).toLocaleDateString()}</td>
+                              <td data-label="Cantidad" className="px-3 py-2 text-right text-xs text-slate-500">{tx.quantity}</td>
+                              <td data-label="Total" className="px-3 py-2 text-right text-xs font-mono text-slate-900 dark:text-white">${tx.total_amount.toLocaleString()}</td>
+                              <td data-label="Fecha" className="px-3 py-2 text-right text-[10px] text-slate-400">{new Date(tx.created_at).toLocaleDateString()}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -809,7 +809,7 @@ export function Admin() {
                   <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-4">{t('admin.adminLogs')}</h3>
                   {logs.length > 0 ? (
                     <div className="overflow-x-auto">
-                      <table className="w-full text-sm">
+                      <table className="w-full text-sm responsive-table">
                         <thead>
                           <tr className="border-b border-slate-100 dark:border-[#1a1a1a]">
                             <th className="text-left px-3 py-2 text-[10px] font-medium text-slate-400 uppercase tracking-widest">Fecha</th>
@@ -819,12 +819,12 @@ export function Admin() {
                             <th className="text-left px-3 py-2 text-[10px] font-medium text-slate-400 uppercase tracking-widest">Detalle</th>
                           </tr>
                         </thead>
-                        <tbody>
+                        <tbody className="responsive-table-card">
                           {logs.map((log) => (
                             <tr key={log.id} className="border-b border-slate-100 dark:border-[#1a1a1a] hover:bg-slate-50 dark:hover:bg-[#1a1a1a]/50">
-                              <td className="px-3 py-2 text-[10px] text-slate-400 whitespace-nowrap">{new Date(log.created_at).toLocaleString()}</td>
-                              <td className="px-3 py-2 text-xs text-slate-500">{log.admin_username}</td>
-                              <td className="px-3 py-2">
+                              <td data-label="Fecha" className="px-3 py-2 text-[10px] text-slate-400 whitespace-nowrap">{new Date(log.created_at).toLocaleString()}</td>
+                              <td data-label="Admin" className="px-3 py-2 text-xs text-slate-500">{log.admin_username}</td>
+                              <td data-label="Acción" className="px-3 py-2">
                                 <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${
                                   log.action === 'ban' ? 'bg-red-100 dark:bg-red-900/30 text-red-600' :
                                   log.action === 'unban' ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600' :
@@ -832,8 +832,8 @@ export function Admin() {
                                   'bg-slate-100 dark:bg-[#1a1a1a] text-slate-500'
                                 }`}>{log.action}</span>
                               </td>
-                              <td className="px-3 py-2 text-xs text-slate-500">{log.target_type}#{log.target_id}</td>
-                              <td className="px-3 py-2 text-[10px] text-slate-400 max-w-[200px] truncate">{log.details ? JSON.stringify(log.details) : '-'}</td>
+                              <td data-label="Target" className="px-3 py-2 text-xs text-slate-500">{log.target_type}#{log.target_id}</td>
+                              <td data-label="Detalle" className="px-3 py-2 text-[10px] text-slate-400 max-w-[200px] truncate">{log.details ? JSON.stringify(log.details) : '-'}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -933,10 +933,10 @@ export function Admin() {
 
         {/* ─── User Detail Modal ─── */}
         {selectedUser && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setSelectedUser(null)}>
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setSelectedUser(null)} role="dialog" aria-modal="true" aria-labelledby="user-detail-title">
             <div className="bg-white dark:bg-[#0d0d0d] border border-slate-200 dark:border-[#1a1a1a] rounded-xl w-full max-w-lg mx-4 max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
               <div className="flex items-center justify-between p-4 border-b border-slate-100 dark:border-[#1a1a1a]">
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-white">{selectedUser.username}</h3>
+                <h3 id="user-detail-title" className="text-lg font-semibold text-slate-900 dark:text-white">{selectedUser.username}</h3>
                 <button onClick={() => setSelectedUser(null)} className="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-[#1a1a1a] text-slate-400">
                   <X className="w-4 h-4" />
                 </button>
@@ -985,10 +985,10 @@ export function Admin() {
 
         {/* ─── Balance Modal ─── */}
         {balanceModal.open && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setBalanceModal({ user: null as unknown as User, open: false })}>
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setBalanceModal({ user: null as unknown as User, open: false })} role="dialog" aria-modal="true" aria-labelledby="balance-title">
             <div className="bg-white dark:bg-[#0d0d0d] border border-slate-200 dark:border-[#1a1a1a] rounded-xl w-full max-w-sm mx-4" onClick={(e) => e.stopPropagation()}>
               <div className="p-4 border-b border-slate-100 dark:border-[#1a1a1a]">
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-white">{t('admin.adjustBalance')} — {balanceModal.user?.username}</h3>
+                <h3 id="balance-title" className="text-lg font-semibold text-slate-900 dark:text-white">{t('admin.adjustBalance')} — {balanceModal.user?.username}</h3>
               </div>
               <div className="p-4 space-y-4">
                 <div>
@@ -1016,9 +1016,9 @@ export function Admin() {
 
         {/* ─── Confirm Modal ─── */}
         {confirmModal.open && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setConfirmModal((prev) => ({ ...prev, open: false }))}>
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setConfirmModal((prev) => ({ ...prev, open: false }))} role="dialog" aria-modal="true" aria-labelledby="confirm-title">
             <div className="bg-white dark:bg-[#0d0d0d] border border-slate-200 dark:border-[#1a1a1a] rounded-xl w-full max-w-sm mx-4 p-5" onClick={(e) => e.stopPropagation()}>
-              <h3 className="text-base font-semibold text-slate-900 dark:text-white mb-2">{confirmModal.title}</h3>
+              <h3 id="confirm-title" className="text-base font-semibold text-slate-900 dark:text-white mb-2">{confirmModal.title}</h3>
               <p className="text-sm text-slate-500 dark:text-slate-400 mb-5">{confirmModal.message}</p>
               <div className="flex gap-2">
                 <button onClick={() => setConfirmModal((prev) => ({ ...prev, open: false }))} className="flex-1 px-3 py-2 text-sm rounded-lg bg-slate-100 dark:bg-[#1a1a1a] text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition-all">

@@ -245,7 +245,7 @@ export function Forex() {
                 </ResponsiveContainer>
               ) : (
                 <div className="h-[200px] flex items-center justify-center text-slate-400">
-                  No hay datos históricos disponibles
+                  {t('forex.noHistoricalData')}
                 </div>
               )}
             </div>
