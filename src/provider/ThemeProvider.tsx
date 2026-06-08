@@ -20,36 +20,14 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const toggleTheme = () => {
-    const newMode = !darkMode;
-    setDarkMode(newMode);
-    localStorage.setItem('simulador-theme', newMode ? 'dark' : 'light');
-    
-    if (newMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  };
-
-  const setDarkModeValue = (value: boolean) => {
+  const applyTheme = (value: boolean) => {
     setDarkMode(value);
     localStorage.setItem('simulador-theme', value ? 'dark' : 'light');
-    
-    if (value) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    document.documentElement.classList.toggle('dark', value);
   };
 
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [darkMode]);
+  const toggleTheme = () => applyTheme(!darkMode);
+  const setDarkModeValue = (value: boolean) => applyTheme(value);
 
   return (
     <ThemeContext.Provider value={{

@@ -165,7 +165,7 @@ function AppContent() {
 
             <Route path="/maintenance" element={<Maintenance />} />
 
-            <Route path="/" element={<Navigate to="/dashboard" />} />
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>

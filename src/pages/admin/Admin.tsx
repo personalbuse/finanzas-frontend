@@ -226,7 +226,7 @@ export function Admin() {
   useEffect(() => {
     setLoading(true);
     Promise.all([loadKpis(), loadUsers()]).finally(() => setLoading(false));
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [loadKpis, loadUsers]);
 
   useEffect(() => {
     setSectionLoading(true);
