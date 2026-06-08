@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import { CheckCircle, XCircle, Loader2 } from 'lucide-react';
 import { API_BASE_URL } from '../../services/api';
 import { useTourStore } from '../../store/tourStore';
+import { registerSchema } from '../../utils/validation';
 
 export function Register() {
   const { login } = useAuth();
@@ -20,6 +21,7 @@ export function Register() {
     username: '', email: '', password: '', confirmPassword: '',
   });
   const [verificationCode, setVerificationCode] = useState('');
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [passwordRequirements, setPasswordRequirements] = useState({
@@ -30,9 +32,26 @@ export function Register() {
     symbol: false,
   });
 
+  const validateField = (name: string, value: string) => {
+    const fieldSchema = registerSchema.shape[name];
+    if (fieldSchema) {
+      const result = fieldSchema.safeParse(value);
+      if (!result.success) {
+        setErrors((prev) => ({ ...prev, [name]: t(result.error.errors[0].message) }));
+      } else {
+        setErrors((prev) => {
+          const next = { ...prev };
+          delete next[name];
+          return next;
+        });
+      }
+    }
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    validateField(name, value);
     
     if (name === 'password') {
       setPasswordRequirements({
@@ -51,8 +70,15 @@ export function Register() {
     e.preventDefault();
     setError('');
 
-    if (formData.password !== formData.confirmPassword) {
-      setError(t('register.passwordMismatch'));
+    const result = registerSchema.safeParse(formData);
+    if (!result.success) {
+      const fieldErrors: Record<string, string> = {};
+      result.error.errors.forEach((err) => {
+        if (err.path[0]) {
+          fieldErrors[err.path[0] as string] = t(err.message);
+        }
+      });
+      setErrors(fieldErrors);
       return;
     }
 
@@ -179,7 +205,14 @@ export function Register() {
                 placeholder={t('form.usernamePlaceholder')}
                 value={formData.username}
                 onChange={handleChange}
+                aria-invalid={errors.username ? 'true' : 'false'}
+                aria-describedby={errors.username ? 'username-error' : undefined}
               />
+              {errors.username && (
+                <p id="username-error" className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
+                  {errors.username}
+                </p>
+              )}
             </div>
 
             <div>
@@ -192,7 +225,14 @@ export function Register() {
                 placeholder={t('form.emailPlaceholder')}
                 value={formData.email}
                 onChange={handleChange}
+                aria-invalid={errors.email ? 'true' : 'false'}
+                aria-describedby={errors.email ? 'email-error' : undefined}
               />
+              {errors.email && (
+                <p id="email-error" className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
+                  {errors.email}
+                </p>
+              )}
             </div>
 
             <div>
@@ -205,7 +245,14 @@ export function Register() {
                 placeholder={t('form.passwordPlaceholder')}
                 value={formData.password}
                 onChange={handleChange}
+                aria-invalid={errors.password ? 'true' : 'false'}
+                aria-describedby={errors.password ? 'password-error' : undefined}
               />
+              {errors.password && (
+                <p id="password-error" className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
+                  {errors.password}
+                </p>
+              )}
               {formData.password && (
                 <div className="mt-2 space-y-1 bg-slate-50 dark:bg-[#1a1a1a] p-2.5 rounded-lg">
                   <p className="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">
@@ -245,7 +292,14 @@ export function Register() {
                 placeholder={t('form.confirmPasswordPlaceholder')}
                 value={formData.confirmPassword}
                 onChange={handleChange}
+                aria-invalid={errors.confirmPassword ? 'true' : 'false'}
+                aria-describedby={errors.confirmPassword ? 'confirmPassword-error' : undefined}
               />
+              {errors.confirmPassword && (
+                <p id="confirmPassword-error" className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
+                  {errors.confirmPassword}
+                </p>
+              )}
             </div>
 
             <button

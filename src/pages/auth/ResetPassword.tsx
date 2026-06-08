@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { CheckCircle, XCircle } from 'lucide-react';
 import { API_BASE_URL } from '../../services/api';
+import { resetPasswordSchema } from '../../utils/validation';
 
 export function ResetPassword() {
   const [searchParams] = useSearchParams();
@@ -13,6 +14,7 @@ export function ResetPassword() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [passwordRequirements, setPasswordRequirements] = useState({
     length: false,
     uppercase: false,
@@ -27,6 +29,22 @@ export function ResetPassword() {
     }
   }, [token]);
 
+  const validateField = (name: string, value: string) => {
+    const fieldSchema = resetPasswordSchema.shape[name];
+    if (fieldSchema) {
+      const result = fieldSchema.safeParse(value);
+      if (!result.success) {
+        setErrors((prev) => ({ ...prev, [name]: result.error.errors[0].message }));
+      } else {
+        setErrors((prev) => {
+          const next = { ...prev };
+          delete next[name];
+          return next;
+        });
+      }
+    }
+  };
+
   const checkPassword = (value: string) => {
     setPasswordRequirements({
       length: value.length >= 12,
@@ -35,6 +53,12 @@ export function ResetPassword() {
       number: /\d/.test(value),
       symbol: /[@$!%*?&]/.test(value),
     });
+    validateField('newPassword', value);
+  };
+
+  const handleConfirmChange = (value: string) => {
+    setConfirmPassword(value);
+    validateField('confirmPassword', value);
   };
 
   const allRequirementsMet = Object.values(passwordRequirements).every(Boolean);
@@ -51,14 +75,15 @@ export function ResetPassword() {
       return;
     }
 
-    if (password !== confirmPassword) {
-      setError('Las contraseñas no coinciden');
-      setLoading(false);
-      return;
-    }
-
-    if (!allRequirementsMet) {
-      setError('La contraseña no cumple con los requisitos');
+    const result = resetPasswordSchema.safeParse({ token, newPassword: password, confirmPassword });
+    if (!result.success) {
+      const fieldErrors: Record<string, string> = {};
+      result.error.errors.forEach((err) => {
+        if (err.path[0]) {
+          fieldErrors[err.path[0] as string] = err.message;
+        }
+      });
+      setErrors(fieldErrors);
       setLoading(false);
       return;
     }
@@ -139,7 +164,7 @@ export function ResetPassword() {
               </label>
               <input
                 id="password"
-                name="password"
+                name="newPassword"
                 type="password"
                 required
                 className="input-clean mt-1"
@@ -149,7 +174,14 @@ export function ResetPassword() {
                   setPassword(e.target.value);
                   checkPassword(e.target.value);
                 }}
+                aria-invalid={errors.newPassword ? 'true' : 'false'}
+                aria-describedby={errors.newPassword ? 'newPassword-error' : undefined}
               />
+              {errors.newPassword && (
+                <p id="newPassword-error" className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
+                  {errors.newPassword}
+                </p>
+              )}
               {password && (
                 <div className="mt-2 space-y-1 bg-slate-50 dark:bg-[#1a1a1a] p-2.5 rounded-lg">
                   <p className="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">
@@ -191,10 +223,14 @@ export function ResetPassword() {
                 className="input-clean mt-1"
                 placeholder="Confirma tu nueva contraseña"
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                onChange={(e) => handleConfirmChange(e.target.value)}
+                aria-invalid={errors.confirmPassword ? 'true' : 'false'}
+                aria-describedby={errors.confirmPassword ? 'confirmPassword-error' : undefined}
               />
-              {confirmPassword && password !== confirmPassword && (
-                <p className="text-xs text-red-500 dark:text-red-400 mt-1">Las contraseñas no coinciden</p>
+              {errors.confirmPassword && (
+                <p id="confirmPassword-error" className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
+                  {errors.confirmPassword}
+                </p>
               )}
             </div>
 

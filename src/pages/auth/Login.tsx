@@ -4,6 +4,7 @@ import { useAuth } from '../../provider/AuthProvider';
 import { useTranslation } from '../../provider/LanguageProvider';
 import { useAuthStore } from '../../store/useAuthStore';
 import { API_BASE_URL } from '../../services/api';
+import { loginSchema } from '../../utils/validation';
 
 export function Login() {
   const { login } = useAuth();
@@ -11,12 +12,42 @@ export function Login() {
   const store = useAuthStore();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ username: '', password: '' });
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const validateField = (name: string, value: string) => {
+    const fieldSchema = loginSchema.shape[name];
+    if (fieldSchema) {
+      const result = fieldSchema.safeParse(value);
+      if (!result.success) {
+        setErrors((prev) => ({ ...prev, [name]: t(result.error.errors[0].message) }));
+      } else {
+        setErrors((prev) => {
+          const next = { ...prev };
+          delete next[name];
+          return next;
+        });
+      }
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    const result = loginSchema.safeParse(formData);
+    if (!result.success) {
+      const fieldErrors: Record<string, string> = {};
+      result.error.errors.forEach((err) => {
+        if (err.path[0]) {
+          fieldErrors[err.path[0] as string] = t(err.message);
+        }
+      });
+      setErrors(fieldErrors);
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -52,7 +83,9 @@ export function Login() {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    validateField(name, value);
   };
 
   return (
@@ -80,7 +113,14 @@ export function Login() {
               placeholder={t('form.usernamePlaceholder')}
               value={formData.username}
               onChange={handleChange}
+              aria-invalid={errors.username ? 'true' : 'false'}
+              aria-describedby={errors.username ? 'username-error' : undefined}
             />
+            {errors.username && (
+              <p id="username-error" className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
+                {errors.username}
+              </p>
+            )}
           </div>
           
           <div>
@@ -102,7 +142,14 @@ export function Login() {
               placeholder={t('form.passwordPlaceholder')}
               value={formData.password}
               onChange={handleChange}
+              aria-invalid={errors.password ? 'true' : 'false'}
+              aria-describedby={errors.password ? 'password-error' : undefined}
             />
+            {errors.password && (
+              <p id="password-error" className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
+                {errors.password}
+              </p>
+            )}
           </div>
 
           <button

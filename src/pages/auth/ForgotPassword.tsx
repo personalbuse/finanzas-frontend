@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../../provider/LanguageProvider';
 import { API_BASE_URL } from '../../services/api';
+import { forgotPasswordSchema } from '../../utils/validation';
 
 export function ForgotPassword() {
   const navigate = useNavigate();
@@ -10,12 +11,42 @@ export function ForgotPassword() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const validateField = (name: string, value: string) => {
+    const fieldSchema = forgotPasswordSchema.shape[name];
+    if (fieldSchema) {
+      const result = fieldSchema.safeParse(value);
+      if (!result.success) {
+        setErrors((prev) => ({ ...prev, [name]: t(result.error.errors[0].message) }));
+      } else {
+        setErrors((prev) => {
+          const next = { ...prev };
+          delete next[name];
+          return next;
+        });
+      }
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
     setMessage('');
+
+    const result = forgotPasswordSchema.safeParse({ email });
+    if (!result.success) {
+      const fieldErrors: Record<string, string> = {};
+      result.error.errors.forEach((err) => {
+        if (err.path[0]) {
+          fieldErrors[err.path[0] as string] = t(err.message);
+        }
+      });
+      setErrors(fieldErrors);
+      setLoading(false);
+      return;
+    }
 
     try {
       const response = await fetch(`${API_BASE_URL}/forgot-password`, {
@@ -76,8 +107,15 @@ export function ForgotPassword() {
                 className="input-clean mt-1"
                 placeholder={t('form.emailPlaceholder')}
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => { setEmail(e.target.value); validateField('email', e.target.value); }}
+                aria-invalid={errors.email ? 'true' : 'false'}
+                aria-describedby={errors.email ? 'email-error' : undefined}
               />
+              {errors.email && (
+                <p id="email-error" className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
+                  {errors.email}
+                </p>
+              )}
             </div>
 
             <button

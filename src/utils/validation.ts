@@ -1,0 +1,58 @@
+import { z } from 'zod';
+
+export const usernameSchema = z
+  .string()
+  .min(3, 'validation.usernameMin')
+  .max(50, 'validation.usernameMax')
+  .regex(/^[a-z0-9_.-]+$/, 'validation.usernamePattern');
+
+export const emailSchema = z
+  .string()
+  .email('validation.emailInvalid');
+
+export const passwordSchema = z
+  .string()
+  .min(12, 'validation.passwordMin')
+  .max(128, 'validation.passwordMax')
+  .regex(/[A-Z]/, 'validation.passwordUpper')
+  .regex(/[a-z]/, 'validation.passwordLower')
+  .regex(/[0-9]/, 'validation.passwordNumber')
+  .regex(/[^A-Za-z0-9]/, 'validation.passwordSpecial');
+
+export const loginSchema = z.object({
+  username: usernameSchema,
+  password: z.string().min(1, 'validation.required'),
+});
+
+export const registerSchema = z.object({
+  username: usernameSchema,
+  email: emailSchema,
+  password: passwordSchema,
+});
+
+export const resetPasswordSchema = z.object({
+  token: z.string().min(1, 'validation.required'),
+  newPassword: passwordSchema,
+  confirmPassword: z.string(),
+}).refine((data) => data.newPassword === data.confirmPassword, {
+  message: 'validation.passwordsMismatch',
+  path: ['confirmPassword'],
+});
+
+export const forgotPasswordSchema = z.object({
+  email: emailSchema,
+});
+
+export const buyStockSchema = z.object({
+  symbol: z.string().min(1, 'validation.required').toUpperCase(),
+  quantity: z.number().int().positive('validation.quantityPositive'),
+});
+
+export const sellStockSchema = z.object({
+  symbol: z.string().min(1, 'validation.required').toUpperCase(),
+  quantity: z.number().int().positive('validation.quantityPositive'),
+});
+
+export const completeModuleSchema = z.object({
+  moduleId: z.enum(['m1', 'm2', 'm3', 'm4', 'm5', 'm6']),
+});
