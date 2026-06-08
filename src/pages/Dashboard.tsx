@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../provider/LanguageProvider';
 import { useAuthStore } from '../store/useAuthStore';
@@ -108,22 +108,6 @@ export function Dashboard() {
     return t('dashboard.timeAgoDay', { d: diffDays });
   };
 
-  useEffect(() => {
-    fetchData();
-    checkOnboarding();
-    fetchCourseProgress();
-  }, []);
-
-  const startTour = useTourStore((state) => state.startTour);
-
-  const checkOnboarding = () => {
-    const tourFlag = useTourStore.getState().shouldStartTour;
-    const tourDone = useTourStore.getState().tourDone;
-    if (tourFlag && !tourDone) {
-      startTour();
-    }
-  };
-
   const fetchCourseProgress = async () => {
     try {
       const progressRes = await api.get('/course-progress');
@@ -132,6 +116,16 @@ export function Dashboard() {
       console.error('Error fetching course progress:', error);
     }
   };
+
+  useEffect(() => {
+    fetchData();
+    fetchCourseProgress();
+    const tourFlag = useTourStore.getState().shouldStartTour;
+    const tourDone = useTourStore.getState().tourDone;
+    if (tourFlag && !tourDone) {
+      useTourStore.getState().startTour();
+    }
+  }, []);
 
   const fetchData = async () => {
     try {

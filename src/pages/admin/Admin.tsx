@@ -247,7 +247,7 @@ export function Admin() {
         loadConfigs().finally(() => setSectionLoading(false));
         break;
     }
-  }, [activeSection]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [activeSection, loadEvolution, loadTopStocks, loadDistribution, loadTransactions, loadTableStats, loadLogs, loadSuspicious, loadConfigs]);
 
   const filteredUsers = users.filter(
     (u) =>

@@ -28,6 +28,23 @@ export function LessonDetail() {
   const isValidModule = !!id && (VALID_MODULES as readonly string[]).includes(id);
   const moduleId = isValidModule ? (id as ModuleId) : null;
 
+  // Hooks must be called before any early return (rules-of-hooks)
+  const theoryText = isValidModule ? t(`learn.modules.${moduleId}.theory` as const) : '';
+  const theorySections = useMemo(
+    () => (isValidModule ? parseTheorySections(theoryText) : []),
+    [theoryText, isValidModule],
+  );
+
+  // Reset quiz state when module changes
+  useEffect(() => {
+    if (isValidModule) {
+      setStep('theory');
+      setSelectedOption(null);
+      setShowResult(false);
+      setIsCorrect(false);
+    }
+  }, [moduleId, isValidModule]);
+
   if (!isValidModule || !moduleId) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -72,20 +89,6 @@ export function LessonDetail() {
     else if (step === 'quiz') setStep('simulation');
     else completeLesson();
   };
-
-  const theoryText = t(`learn.modules.${moduleId}.theory`);
-  const theorySections = useMemo(
-    () => parseTheorySections(theoryText),
-    [theoryText],
-  );
-
-  // Reset quiz state when module changes
-  useEffect(() => {
-    setStep('theory');
-    setSelectedOption(null);
-    setShowResult(false);
-    setIsCorrect(false);
-  }, [moduleId]);
 
   const getStepLabel = () => {
     switch (step) {

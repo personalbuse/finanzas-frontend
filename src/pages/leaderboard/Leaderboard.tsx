@@ -37,7 +37,7 @@ export function Leaderboard() {
       }
     };
     fetchData();
-  }, []);
+  }, [t]);
 
   const getMedal = (rank: number) => {
     switch (rank) {
