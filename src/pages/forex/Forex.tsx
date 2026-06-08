@@ -173,10 +173,10 @@ export function Forex() {
                         </span>
                       </td>
                       <td className="hidden md:table-cell px-4 py-3 text-right text-slate-500 dark:text-slate-400">
-                        {pair.history.length > 0 ? formatRate(Math.min(...pair.history.map((h: any) => h.rate)), pair.to) : '-'}
+                        {pair.history.length > 0 ? formatRate(pair.history.reduce((m: number, h: any) => h.rate < m ? h.rate : m, Infinity), pair.to) : '-'}
                       </td>
                       <td className="hidden md:table-cell px-4 py-3 text-right text-slate-500 dark:text-slate-400">
-                        {pair.history.length > 0 ? formatRate(Math.max(...pair.history.map((h: any) => h.rate)), pair.to) : '-'}
+                        {pair.history.length > 0 ? formatRate(pair.history.reduce((m: number, h: any) => h.rate > m ? h.rate : m, -Infinity), pair.to) : '-'}
                       </td>
                     </tr>
                   ))}

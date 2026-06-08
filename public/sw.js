@@ -30,6 +30,7 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   if (isExternal(event.request.url)) return;
+  if (event.request.url.includes('/api/')) return;
 
   event.respondWith(
     caches.open(CACHE_NAME).then((cache) => {

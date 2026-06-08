@@ -51,7 +51,13 @@ api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     const status = error.response?.status;
-    const originalRequest = error.config as (typeof error.config & { _retry?: boolean }) | undefined;
+    const originalRequest = error.config as (typeof error.config & { _retry?: boolean; _retryCount?: number }) | undefined;
+
+    if (status !== 401 && originalRequest && (originalRequest._retryCount ?? 0) < 2) {
+      originalRequest._retryCount = (originalRequest._retryCount ?? 0) + 1;
+      await new Promise((r) => setTimeout(r, 1000 * originalRequest._retryCount!));
+      return api(originalRequest);
+    }
 
     if (status === 401 && originalRequest && !originalRequest._retry) {
       if (isRefreshing) {
