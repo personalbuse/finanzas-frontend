@@ -56,3 +56,25 @@ export const sellStockSchema = z.object({
 export const completeModuleSchema = z.object({
   moduleId: z.enum(['m1', 'm2', 'm3', 'm4', 'm5', 'm6']),
 });
+
+export const editProfileSchema = z.object({
+  username: z.string().min(3, 'validation.usernameMin').max(50, 'validation.usernameMax').optional().or(z.literal('')),
+  email: z.string().email('validation.emailInvalid').optional().or(z.literal('')),
+  current_password: z.string().optional().or(z.literal('')),
+  new_password: z.string().optional().or(z.literal('')),
+}).refine(
+  (data) => {
+    if (data.new_password && !data.current_password) return false;
+    return true;
+  },
+  { message: 'validation.currentPasswordRequired', path: ['current_password'] },
+).refine(
+  (data) => {
+    if (data.new_password) {
+      const result = passwordSchema.safeParse(data.new_password);
+      return result.success;
+    }
+    return true;
+  },
+  { message: 'validation.passwordInvalid', path: ['new_password'] },
+);

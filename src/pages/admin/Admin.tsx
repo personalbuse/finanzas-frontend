@@ -2,8 +2,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from '../../provider/LanguageProvider';
 import { useAuth } from '../../provider/AuthProvider';
 import { toast } from 'react-toastify';
+import { VirtualizedTable, type Column } from '../../components/ui/VirtualizedTable';
 import {
-  BarChart3, Users, Database, Shield, Settings,
+  BarChart3, Users, Database, Shield, Settings, Menu,
   Search, Ban, UserCheck, DollarSign, Eye, X, RefreshCw,
   Activity, TrendingUp, AlertTriangle, Server, Wifi
 } from 'lucide-react';
@@ -131,6 +132,7 @@ export function Admin() {
   const [balanceModal, setBalanceModal] = useState<{ user: User; open: boolean }>({ user: null as unknown as User, open: false });
   const [balanceValue, setBalanceValue] = useState('');
   const [sectionLoading, setSectionLoading] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [confirmModal, setConfirmModal] = useState<{ open: boolean; title: string; message: string; onConfirm: () => void }>({
     open: false, title: '', message: '', onConfirm: () => {},
   });
@@ -248,6 +250,15 @@ export function Admin() {
         break;
     }
   }, [activeSection, loadEvolution, loadTopStocks, loadDistribution, loadTransactions, loadTableStats, loadLogs, loadSuspicious, loadConfigs]);
+
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMobileMenuOpen(false);
+    };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [mobileMenuOpen]);
 
   const filteredUsers = users.filter(
     (u) =>
@@ -385,7 +396,7 @@ export function Admin() {
     : [];
 
   return (
-    <div className="flex min-h-[calc(100vh-4rem)] animate-fade-in">
+    <div className="flex min-h-[calc(100vh-4rem)] animate-fade-in relative">
       {/* Sidebar */}
       <aside className="w-56 shrink-0 bg-white dark:bg-[#0d0d0d] border-r border-slate-200 dark:border-[#1a1a1a] hidden lg:block">
         <nav className="p-3 space-y-1 sticky top-20">
@@ -409,29 +420,71 @@ export function Admin() {
         </nav>
       </aside>
 
-      {/* Mobile tabs */}
-      <div className="lg:hidden flex space-x-1 mb-4 border-b border-slate-200 dark:border-[#1a1a1a] overflow-x-auto w-full px-4 pt-4">
-        {sidebarItems.map((item) => {
-          const Icon = item.icon;
-          return (
-            <button
-              key={item.key}
-              onClick={() => setActiveSection(item.key)}
-              className={`flex items-center gap-2 px-3 py-2 text-xs font-medium whitespace-nowrap border-b-2 transition-all ${
-                activeSection === item.key
-                  ? 'border-slate-900 dark:border-white text-slate-900 dark:text-white'
-                  : 'border-transparent text-slate-400 hover:text-slate-600 dark:hover:text-slate-300'
-              }`}
-            >
-              <Icon className="w-3.5 h-3.5" />
-              {item.label}
-            </button>
-          );
-        })}
+      {/* Mobile hamburger */}
+      <div className="lg:hidden fixed top-4 left-4 z-50">
+        <button
+          onClick={() => setMobileMenuOpen(true)}
+          className="p-2.5 rounded-lg bg-white dark:bg-[#0d0d0d] border border-slate-200 dark:border-[#1a1a1a] shadow-sm hover:bg-slate-50 dark:hover:bg-[#1a1a1a] transition-colors"
+          aria-label="Abrir menú de navegación"
+        >
+          <Menu className="w-5 h-5 text-slate-600 dark:text-slate-400" />
+        </button>
       </div>
 
+      {/* Mobile drawer overlay */}
+      {mobileMenuOpen && (
+        <div
+          className="lg:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
+          onClick={() => setMobileMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Mobile drawer */}
+      <aside
+        className={`lg:hidden fixed top-0 left-0 z-50 h-full w-64 bg-white dark:bg-[#0d0d0d] border-r border-slate-200 dark:border-[#1a1a1a] shadow-xl transform transition-transform duration-300 ease-in-out ${
+          mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Navegación de administración"
+      >
+        <div className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-[#1a1a1a]">
+          <span className="text-sm font-semibold text-slate-900 dark:text-white">{t('admin.title')}</span>
+          <button
+            onClick={() => setMobileMenuOpen(false)}
+            className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-[#1a1a1a] transition-colors"
+            aria-label="Cerrar menú"
+          >
+            <X className="w-4 h-4 text-slate-500" />
+          </button>
+        </div>
+        <nav className="p-3 space-y-1">
+          {sidebarItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <button
+                key={item.key}
+                onClick={() => {
+                  setActiveSection(item.key);
+                  setMobileMenuOpen(false);
+                }}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                  activeSection === item.key
+                    ? 'bg-slate-100 dark:bg-[#1a1a1a] text-slate-900 dark:text-white'
+                    : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#1a1a1a]/50'
+                }`}
+              >
+                <Icon className="w-4 h-4 shrink-0" />
+                {item.label}
+              </button>
+            );
+          })}
+        </nav>
+      </aside>
+
       {/* Content */}
-      <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 overflow-hidden">
+      <main className="flex-1 px-4 sm:px-6 lg:px-8 pt-16 lg:pt-6 pb-6 overflow-hidden">
         <h1 className="text-2xl sm:text-3xl font-semibold text-slate-900 dark:text-white tracking-tight mb-6">
           {t('admin.title')}
         </h1>
@@ -583,90 +636,80 @@ export function Admin() {
                   <span className="text-xs text-slate-400">{usersTotal} {t('admin.totalUsers').toLowerCase()}</span>
                 </div>
 
-                <div className="bg-white dark:bg-[#0d0d0d] border border-slate-200 dark:border-[#1a1a1a] rounded-xl overflow-hidden">
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-sm responsive-table">
-                      <thead>
-                        <tr className="border-b border-slate-100 dark:border-[#1a1a1a] bg-slate-50 dark:bg-[#1a1a1a]/50">
-                          <th className="text-left px-4 py-3 font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest text-[10px]">ID</th>
-                          <th className="text-left px-4 py-3 font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest text-[10px]">{t('admin.username')}</th>
-                          <th className="text-left px-4 py-3 font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest text-[10px]">Email</th>
-                          <th className="text-left px-4 py-3 font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest text-[10px]">{t('admin.role')}</th>
-                          <th className="text-left px-4 py-3 font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest text-[10px]">{t('admin.status')}</th>
-                          <th className="text-right px-4 py-3 font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest text-[10px]">{t('admin.balance')}</th>
-                          <th className="text-right px-4 py-3 font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest text-[10px]">{t('admin.actions')}</th>
-                        </tr>
-                      </thead>
-                      <tbody className="responsive-table-card">
-                        {filteredUsers.length === 0 && (
-                          <tr>
-                            <td colSpan={7} className="text-center py-8 text-slate-400 text-sm">{t('admin.noUsers')}</td>
-                          </tr>
-                        )}
-                        {filteredUsers.map((u) => (
-                          <tr key={u.id} className="border-b border-slate-100 dark:border-[#1a1a1a] hover:bg-slate-50 dark:hover:bg-[#1a1a1a]/50">
-                            <td data-label="ID" className="px-4 py-3 text-slate-500 dark:text-slate-400 text-xs">{u.id}</td>
-                            <td data-label={t('admin.username')} className="px-4 py-3 font-medium text-slate-900 dark:text-white whitespace-nowrap">{u.username}</td>
-                            <td data-label="Email" className="px-4 py-3 text-slate-500 dark:text-slate-400 text-xs">{u.email}</td>
-                            <td data-label={t('admin.role')} className="px-4 py-3">
-                              <select
-                                value={u.rol}
-                                onChange={(e) => handleRoleChange(u, e.target.value)}
-                                className={`text-[10px] font-medium rounded-full px-2 py-0.5 border-0 appearance-none cursor-pointer ${
-                                  u.rol === 'admin'
-                                    ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400'
-                                    : 'bg-slate-100 dark:bg-[#1a1a1a] text-slate-500 dark:text-slate-400'
-                                }`}
-                              >
-                                <option value="inversor">inversor</option>
-                                <option value="admin">admin</option>
-                              </select>
-                            </td>
-                            <td className="px-4 py-3">
-                              <button
-                                onClick={() => handleBan(u)}
-                                className={`px-2 py-0.5 rounded-full text-[10px] font-medium cursor-pointer transition-all hover:opacity-80 ${
-                                  u.is_active
-                                    ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400'
-                                    : 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'
-                                }`}
-                              >
-                                {u.is_active ? t('admin.active') : t('admin.banned')}
-                              </button>
-                            </td>
-                            <td data-label={t('admin.balance')} className="px-4 py-3 text-right font-mono text-sm text-slate-900 dark:text-white">
-                              ${u.current_balance.toLocaleString()}
-                            </td>
-                            <td data-label={t('admin.actions')} className="px-4 py-3 text-right">
-                              <div className="flex items-center justify-end gap-1">
-                                <button
-                                  onClick={() => loadUserDetail(u.id)}
-                                  className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-[#1a1a1a] text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-all"
-                                  title={t('admin.viewDetail')}
-                                >
-                                  <Eye className="w-3.5 h-3.5" />
-                                </button>
-                                <button
-                                  onClick={() => { setBalanceModal({ user: u, open: true }); setBalanceValue(String(u.current_balance)); }}
-                                  className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-[#1a1a1a] text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-all"
-                                  title={t('admin.adjustBalance')}
-                                >
-                                  <DollarSign className="w-3.5 h-3.5" />
-                                </button>
-                                <button
-                                  onClick={() => handleBan(u)}
-                                  className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-[#1a1a1a] text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-all"
-                                  title={u.is_active ? t('admin.banUser') : t('admin.unbanUser')}
-                                >
-                                  {u.is_active ? <Ban className="w-3.5 h-3.5" /> : <UserCheck className="w-3.5 h-3.5" />}
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                <div className="bg-white dark:bg-[#0d0d0d] border border-slate-200 dark:border-[#1a1a1a] rounded-xl overflow-hidden p-1">
+                  <VirtualizedTable
+                    data={filteredUsers}
+                    emptyMessage={t('admin.noUsers')}
+                    rowHeight={52}
+                    maxHeight={600}
+                    columns={[
+                      { key: 'id', label: 'ID', width: 60, render: (u: User) => <span className="text-slate-500 dark:text-slate-400 text-xs">{u.id}</span> },
+                      { key: 'username', label: t('admin.username'), width: 150, render: (u: User) => <span className="font-medium text-slate-900 dark:text-white">{u.username}</span> },
+                      { key: 'email', label: 'Email', width: 220, render: (u: User) => <span className="text-slate-500 dark:text-slate-400 text-xs truncate block">{u.email}</span> },
+                      {
+                        key: 'rol', label: t('admin.role'), width: 100, render: (u: User) => (
+                          <select
+                            value={u.rol}
+                            onChange={(e) => handleRoleChange(u, e.target.value)}
+                            className={`text-[10px] font-medium rounded-full px-2 py-0.5 border-0 appearance-none cursor-pointer ${
+                              u.rol === 'admin'
+                                ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400'
+                                : 'bg-slate-100 dark:bg-[#1a1a1a] text-slate-500 dark:text-slate-400'
+                            }`}
+                          >
+                            <option value="inversor">inversor</option>
+                            <option value="admin">admin</option>
+                          </select>
+                        )
+                      },
+                      {
+                        key: 'status', label: t('admin.status'), width: 80, render: (u: User) => (
+                          <button
+                            onClick={() => handleBan(u)}
+                            className={`px-2 py-0.5 rounded-full text-[10px] font-medium cursor-pointer transition-all hover:opacity-80 ${
+                              u.is_active
+                                ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400'
+                                : 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'
+                            }`}
+                          >
+                            {u.is_active ? t('admin.active') : t('admin.banned')}
+                          </button>
+                        )
+                      },
+                      {
+                        key: 'balance', label: t('admin.balance'), width: 120, render: (u: User) => (
+                          <span className="font-mono text-sm text-slate-900 dark:text-white">${u.current_balance.toLocaleString()}</span>
+                        )
+                      },
+                      {
+                        key: 'actions', label: t('admin.actions'), width: 120, render: (u: User) => (
+                          <div className="flex items-center gap-1">
+                            <button
+                              onClick={() => loadUserDetail(u.id)}
+                              className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-[#1a1a1a] text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-all"
+                              title={t('admin.viewDetail')}
+                            >
+                              <Eye className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              onClick={() => { setBalanceModal({ user: u, open: true }); setBalanceValue(String(u.current_balance)); }}
+                              className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-[#1a1a1a] text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-all"
+                              title={t('admin.adjustBalance')}
+                            >
+                              <DollarSign className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              onClick={() => handleBan(u)}
+                              className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-[#1a1a1a] text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-all"
+                              title={u.is_active ? t('admin.banUser') : t('admin.unbanUser')}
+                            >
+                              {u.is_active ? <Ban className="w-3.5 h-3.5" /> : <UserCheck className="w-3.5 h-3.5" />}
+                            </button>
+                          </div>
+                        )
+                      },
+                    ]}
+                  />
                 </div>
 
                 {usersTotal > 25 && (

@@ -15,6 +15,7 @@ interface AuthState {
   user: User | null;
   isHydrated: boolean;
   setAuth: (user: User) => void;
+  updateUser: (updates: Partial<User>) => void;
   clear: () => void;
   updateBalance: (newBalance: number) => void;
   setHydrated: (value: boolean) => void;
@@ -30,6 +31,13 @@ export const useAuthStore = create<AuthState>()(
 
       setAuth: (user) =>
         set({ user }),
+
+      updateUser: (updates) =>
+        set((state) =>
+          state.user
+            ? { user: { ...state.user, ...updates } }
+            : state,
+        ),
 
       clear: () => set({ user: null }),
 

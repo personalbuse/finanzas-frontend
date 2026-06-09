@@ -21,6 +21,7 @@ const Stocks = lazy(() => import('./pages/stocks/Stocks').then(m => ({ default: 
 const Portfolio = lazy(() => import('./pages/portfolio/Portfolio').then(m => ({ default: m.Portfolio })));
 const Transactions = lazy(() => import('./pages/transactions/Transactions').then(m => ({ default: m.Transactions })));
 const Profile = lazy(() => import('./pages/profile/Profile').then(m => ({ default: m.Profile })));
+const EditProfile = lazy(() => import('./pages/profile/EditProfile').then(m => ({ default: m.EditProfile })));
 const Learn = lazy(() => import('./pages/learn/Learn').then(m => ({ default: m.Learn })));
 const LessonDetail = lazy(() => import('./pages/learn/LessonDetail').then(m => ({ default: m.LessonDetail })));
 const Admin = lazy(() => import('./pages/admin/Admin').then(m => ({ default: m.Admin })));
@@ -150,6 +151,14 @@ function AppContent() {
               element={
                 <PrivateRoute>
                   <Profile />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/profile/edit"
+              element={
+                <PrivateRoute>
+                  <EditProfile />
                 </PrivateRoute>
               }
             />

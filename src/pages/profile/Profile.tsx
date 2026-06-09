@@ -1,8 +1,9 @@
+import { Link } from 'react-router-dom';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useTranslation } from '../../provider/LanguageProvider';
 import { useTheme } from '../../provider/ThemeProvider';
 import { useAuth } from '../../provider/AuthProvider';
-import { LogOut } from 'lucide-react';
+import { LogOut, Settings } from 'lucide-react';
 
 export function Profile() {
   const { user } = useAuthStore();
@@ -18,14 +19,24 @@ export function Profile() {
 
       <div className="space-y-5 sm:space-y-6">
         <div className="bg-white dark:bg-[#0d0d0d] border border-slate-200 dark:border-[#1a1a1a] rounded-xl p-4 sm:p-6">
-          <div className="flex items-center space-x-3 sm:space-x-5 mb-4 sm:mb-6">
-            <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-lg sm:rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center text-white text-xl sm:text-2xl font-medium font-display">
-              {currentUser.username?.charAt(0).toUpperCase()}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3 sm:space-x-5 mb-4 sm:mb-6">
+              <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-lg sm:rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center text-white text-xl sm:text-2xl font-medium font-display">
+                {currentUser.username?.charAt(0).toUpperCase()}
+              </div>
+              <div>
+                <h2 className="text-lg sm:text-xl font-semibold text-slate-900 dark:text-white tracking-tight">{currentUser.username}</h2>
+                <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm">{currentUser.email}</p>
+              </div>
             </div>
-            <div>
-              <h2 className="text-lg sm:text-xl font-semibold text-slate-900 dark:text-white tracking-tight">{currentUser.username}</h2>
-              <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm">{currentUser.email}</p>
-            </div>
+            <Link
+              to="/profile/edit"
+              className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 border border-slate-200 dark:border-[#262626] rounded-lg hover:border-emerald-300 dark:hover:border-emerald-700 transition-all"
+              aria-label={t('profile.editProfile')}
+            >
+              <Settings className="w-4 h-4" />
+              {t('profile.edit')}
+            </Link>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-slate-100 dark:border-[#1a1a1a]">
