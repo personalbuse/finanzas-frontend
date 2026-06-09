@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import { CheckCircle, XCircle, Loader2 } from 'lucide-react';
 import { API_BASE_URL } from '../../services/api';
 import { useTourStore } from '../../store/tourStore';
+import { z } from 'zod';
 import { registerSchema } from '../../utils/validation';
 
 export function Register() {
@@ -33,11 +34,11 @@ export function Register() {
   });
 
   const validateField = (name: string, value: string) => {
-    const fieldSchema = registerSchema.shape[name];
+    const fieldSchema = (registerSchema.shape as Record<string, z.ZodTypeAny>)[name];
     if (fieldSchema) {
       const result = fieldSchema.safeParse(value);
       if (!result.success) {
-        setErrors((prev) => ({ ...prev, [name]: t(result.error.errors[0].message) }));
+        setErrors((prev) => ({ ...prev, [name]: t(result.error.issues[0].message) }));
       } else {
         setErrors((prev) => {
           const next = { ...prev };
@@ -73,7 +74,7 @@ export function Register() {
     const result = registerSchema.safeParse(formData);
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
-      result.error.errors.forEach((err) => {
+      result.error.issues.forEach((err) => {
         if (err.path[0]) {
           fieldErrors[err.path[0] as string] = t(err.message);
         }

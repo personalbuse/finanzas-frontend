@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { CheckCircle, XCircle } from 'lucide-react';
 import { API_BASE_URL } from '../../services/api';
+import { z } from 'zod';
 import { resetPasswordSchema } from '../../utils/validation';
 
 export function ResetPassword() {
@@ -30,11 +31,11 @@ export function ResetPassword() {
   }, [token]);
 
   const validateField = (name: string, value: string) => {
-    const fieldSchema = resetPasswordSchema.shape[name];
+    const fieldSchema = (resetPasswordSchema.shape as Record<string, z.ZodTypeAny>)[name];
     if (fieldSchema) {
       const result = fieldSchema.safeParse(value);
       if (!result.success) {
-        setErrors((prev) => ({ ...prev, [name]: result.error.errors[0].message }));
+        setErrors((prev) => ({ ...prev, [name]: result.error.issues[0].message }));
       } else {
         setErrors((prev) => {
           const next = { ...prev };
@@ -78,7 +79,7 @@ export function ResetPassword() {
     const result = resetPasswordSchema.safeParse({ token, newPassword: password, confirmPassword });
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
-      result.error.errors.forEach((err) => {
+      result.error.issues.forEach((err) => {
         if (err.path[0]) {
           fieldErrors[err.path[0] as string] = err.message;
         }

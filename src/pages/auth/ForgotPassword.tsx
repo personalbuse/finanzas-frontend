@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../../provider/LanguageProvider';
 import { API_BASE_URL } from '../../services/api';
+import { z } from 'zod';
 import { forgotPasswordSchema } from '../../utils/validation';
 
 export function ForgotPassword() {
@@ -14,11 +15,11 @@ export function ForgotPassword() {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validateField = (name: string, value: string) => {
-    const fieldSchema = forgotPasswordSchema.shape[name];
+    const fieldSchema = (forgotPasswordSchema.shape as Record<string, z.ZodTypeAny>)[name];
     if (fieldSchema) {
       const result = fieldSchema.safeParse(value);
       if (!result.success) {
-        setErrors((prev) => ({ ...prev, [name]: t(result.error.errors[0].message) }));
+        setErrors((prev) => ({ ...prev, [name]: t(result.error.issues[0].message) }));
       } else {
         setErrors((prev) => {
           const next = { ...prev };
@@ -38,7 +39,7 @@ export function ForgotPassword() {
     const result = forgotPasswordSchema.safeParse({ email });
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
-      result.error.errors.forEach((err) => {
+      result.error.issues.forEach((err) => {
         if (err.path[0]) {
           fieldErrors[err.path[0] as string] = t(err.message);
         }

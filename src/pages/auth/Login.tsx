@@ -4,6 +4,7 @@ import { useAuth } from '../../provider/AuthProvider';
 import { useTranslation } from '../../provider/LanguageProvider';
 import { useAuthStore } from '../../store/useAuthStore';
 import { API_BASE_URL } from '../../services/api';
+import { z } from 'zod';
 import { loginSchema } from '../../utils/validation';
 
 export function Login() {
@@ -17,11 +18,11 @@ export function Login() {
   const [loading, setLoading] = useState(false);
 
   const validateField = (name: string, value: string) => {
-    const fieldSchema = loginSchema.shape[name];
+    const fieldSchema = (loginSchema.shape as Record<string, z.ZodTypeAny>)[name];
     if (fieldSchema) {
       const result = fieldSchema.safeParse(value);
       if (!result.success) {
-        setErrors((prev) => ({ ...prev, [name]: t(result.error.errors[0].message) }));
+        setErrors((prev) => ({ ...prev, [name]: t(result.error.issues[0].message) }));
       } else {
         setErrors((prev) => {
           const next = { ...prev };
@@ -39,7 +40,7 @@ export function Login() {
     const result = loginSchema.safeParse(formData);
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
-      result.error.errors.forEach((err) => {
+      result.error.issues.forEach((err) => {
         if (err.path[0]) {
           fieldErrors[err.path[0] as string] = t(err.message);
         }
