@@ -11,6 +11,6 @@ describe('formatCurrency', () => {
   });
 
   it('handles negative values', () => {
-    expect(formatCurrency(-500)).toContain('-500.00');
+    expect(formatCurrency(-500)).toContain('-$500.00');
   });
 });
