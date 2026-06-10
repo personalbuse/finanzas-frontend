@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from '../../provider/LanguageProvider';
 import { useAuth } from '../../provider/AuthProvider';
 import { toast } from 'react-toastify';
-import { VirtualizedTable, type Column } from '../../components/ui/VirtualizedTable';
+import { VirtualizedTable } from '../../components/ui/VirtualizedTable';
 import {
   BarChart3, Users, Database, Shield, Settings, Menu,
   Search, Ban, UserCheck, DollarSign, Eye, X, RefreshCw,
