@@ -15,7 +15,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" media="print" onload="this.media='all'" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" id="font-css" media="print" />
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" /></noscript>
     <meta name="description" content="Aprende a invertir en bolsa sin riesgo. Simulador financiero educativo - Simula trading con $10,000 virtuales y domina los mercados financieros globales." />
     <meta property="og:title" content="Amigo Financiero - FIUP | Simulador de Inversiones" />
@@ -34,6 +34,11 @@
           var isDark = stored ? stored === 'dark' : prefersDark;
           if (isDark) document.documentElement.classList.add('dark');
         } catch (e) {}
+        var fc = document.getElementById('font-css');
+        if (fc) {
+          fc.onload = function () { fc.media = 'all'; };
+          if (fc.sheet) fc.media = 'all';
+        }
       })();
     </script>
   </head>
