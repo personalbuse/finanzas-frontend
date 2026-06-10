@@ -40,5 +40,8 @@ bundle.js
 # Build outputs
 build/
 
+# pnpm
+pnpm-workspace.yaml
+
 # TypeScript
 *.tsbuildinfo
