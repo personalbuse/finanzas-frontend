@@ -87,7 +87,7 @@ export function ExchangeRateChart({ data, currentRate, changePercent, fromCurren
               }}
               labelStyle={{ color: darkMode ? '#a1a1aa' : '#64748b', marginBottom: '4px' }}
               formatter={(value: number) => [formatRate(value), 'Tasa']}
-              labelFormatter={(label) => formatDate(label)}
+              labelFormatter={(label: string) => formatDate(label)}
             />
             <Line 
               type="monotone" 
