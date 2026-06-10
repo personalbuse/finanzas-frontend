@@ -16,6 +16,7 @@ import {
   PieChart,
   Pie,
   Cell,
+  Legend,
 } from 'recharts';
 import { TrendingUp, TrendingDown, Wallet, BarChart3 } from 'lucide-react';
 
