@@ -6,6 +6,8 @@ const EXTERNAL_DOMAINS = [
   'google-analytics.com',
   'googletagmanager.com',
   'facebook.net',
+  'fonts.googleapis.com',
+  'fonts.gstatic.com',
 ];
 
 function isExternal(url) {

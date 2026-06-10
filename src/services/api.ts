@@ -1,5 +1,4 @@
 import axios, { type AxiosError } from 'axios';
-import { useAuthStore } from '../store/useAuthStore';
 
 export const API_BASE_URL = import.meta.env.VITE_API_URL || '/api/v1';
 
@@ -31,7 +30,6 @@ async function attemptRefresh(): Promise<boolean> {
     );
     return response.status === 200;
   } catch {
-    useAuthStore.getState().clear();
     return false;
   }
 }

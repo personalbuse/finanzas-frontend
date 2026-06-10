@@ -109,7 +109,7 @@ export function Login() {
               {t('form.username')}
             </label>
             <input
-              id="username" name="username" type="text" required
+              id="username" name="username" type="text" required autoComplete="username"
               className="input-clean mt-1"
               placeholder={t('form.usernamePlaceholder')}
               value={formData.username}
@@ -138,7 +138,7 @@ export function Login() {
               </button>
             </div>
             <input
-              id="password" name="password" type="password" required
+              id="password" name="password" type="password" required autoComplete="current-password"
               className="input-clean mt-1"
               placeholder={t('form.passwordPlaceholder')}
               value={formData.password}
