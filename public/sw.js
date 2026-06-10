@@ -41,7 +41,11 @@ self.addEventListener('fetch', (event) => {
   if (isNavigationRequest(event.request)) {
     event.respondWith(
       fetch(event.request).catch(() =>
-        caches.open(CACHE_NAME).then((cache) => cache.match(event.request))
+        caches.open(CACHE_NAME).then((cache) =>
+          cache.match(event.request).then((cached) =>
+            cached || new Response('Offline', { status: 503 })
+          )
+        )
       )
     );
     return;
