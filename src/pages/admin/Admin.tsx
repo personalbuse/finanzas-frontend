@@ -144,41 +144,50 @@ export function Admin() {
     return res.data;
   };
 
+  const handleAdminError = useCallback((err: unknown, context: string) => {
+    const msg = err instanceof Error ? err.message : 'Error desconocido';
+    if (msg.includes('403') || msg.includes('Acceso solo para administradores')) {
+      toast.error('No tienes permisos de administrador. Tu cuenta necesita rol "admin".');
+    } else {
+      console.warn(`[Admin ${context}]`, msg);
+    }
+  }, []);
+
   const loadKpis = useCallback(async () => {
     try {
       const data = await adminApi('/admin/kpis');
       setKpis(data);
-    } catch { /* ignore */ }
-  }, []);
+    } catch (err) { handleAdminError(err, 'kpis'); }
+  }, [handleAdminError]);
 
   const loadUsers = useCallback(async (skip = 0) => {
     try {
       const data = await adminApi(`/admin/users?skip=${skip}&limit=25`);
-      setUsers(data.users);
-      setUsersTotal(data.total);
-    } catch { /* ignore */ }
-  }, []);
+      setUsers(data.users ?? []);
+      setUsersTotal(data.total ?? 0);
+    } catch (err) { handleAdminError(err, 'users'); }
+  }, [handleAdminError]);
 
   const loadEvolution = useCallback(async () => {
     try {
       const data = await adminApi('/admin/kpis/evolution?days=365');
       setEvolution(data);
-    } catch { /* ignore */ }
-  }, []);
+    } catch (err) { handleAdminError(err, 'evolution'); }
+  }, [handleAdminError]);
 
   const loadTopStocks = useCallback(async () => {
     try {
       const data = await adminApi('/admin/kpis/top-stocks?limit=10');
-      setTopStocks(data.top_stocks);
-    } catch { /* ignore */ }
-  }, []);
+      setTopStocks(data.top_stocks ?? []);
+    } catch (err) { handleAdminError(err, 'top-stocks'); }
+  }, [handleAdminError]);
 
   const loadDistribution = useCallback(async () => {
     try {
       const data = await adminApi('/admin/kpis/distribution');
       setDistribution(data);
-    } catch { /* ignore */ }
-  }, []);
+    } catch (err) { handleAdminError(err, 'distribution'); }
+  }, [handleAdminError]);
 
   const loadTransactions = useCallback(async (skip = 0) => {
     try {
@@ -186,38 +195,38 @@ export function Admin() {
         ? `/admin/transactions?skip=${skip}&limit=25&${txFilter}`
         : `/admin/transactions?skip=${skip}&limit=25`;
       const data = await adminApi(url);
-      setTransactions(data.transactions);
-      setTxTotal(data.total);
-    } catch { /* ignore */ }
-  }, [txFilter]);
+      setTransactions(data.transactions ?? []);
+      setTxTotal(data.total ?? 0);
+    } catch (err) { handleAdminError(err, 'transactions'); }
+  }, [txFilter, handleAdminError]);
 
   const loadLogs = useCallback(async (skip = 0) => {
     try {
       const data = await adminApi(`/admin/logs?skip=${skip}&limit=25`);
-      setLogs(data.logs);
-    } catch { /* ignore */ }
-  }, []);
+      setLogs(data.logs ?? []);
+    } catch (err) { handleAdminError(err, 'logs'); }
+  }, [handleAdminError]);
 
   const loadConfigs = useCallback(async () => {
     try {
       const data = await adminApi('/admin/config');
-      setConfigs(data.configs);
-    } catch { /* ignore */ }
-  }, []);
+      setConfigs(data.configs ?? []);
+    } catch (err) { handleAdminError(err, 'config'); }
+  }, [handleAdminError]);
 
   const loadTableStats = useCallback(async () => {
     try {
       const data = await adminApi('/admin/stats/tables');
-      setTableStats(data.tables);
-    } catch { /* ignore */ }
-  }, []);
+      setTableStats(data.tables ?? []);
+    } catch (err) { handleAdminError(err, 'table-stats'); }
+  }, [handleAdminError]);
 
   const loadSuspicious = useCallback(async () => {
     try {
       const data = await adminApi('/admin/suspicious-transactions?limit=20');
       setSuspicious(data);
-    } catch { /* ignore */ }
-  }, []);
+    } catch (err) { handleAdminError(err, 'suspicious'); }
+  }, [handleAdminError]);
 
   useEffect(() => {
     setLoading(true);
