@@ -37,6 +37,7 @@ self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   if (isExternal(event.request.url)) return;
   if (event.request.url.includes('/api/')) return;
+  if (event.request.url.includes('/locales/')) return;
 
   if (isNavigationRequest(event.request)) {
     event.respondWith(
