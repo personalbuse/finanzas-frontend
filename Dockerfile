@@ -42,6 +42,10 @@ RUN rm /etc/nginx/conf.d/default.conf && \
         add_header Cache-Control "no-cache";\n\
     }\n\
 \n\
+    location = /index.html {\n\
+        add_header Cache-Control "no-cache, no-store, must-revalidate";\n\
+    }\n\
+\n\
     location / {\n\
         try_files $uri $uri/ /index.html;\n\
     }\n\
