@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from '../../provider/LanguageProvider';
-import { useAuth } from '../../provider/AuthProvider';
+import api from '../../services/api';
 import { toast } from 'react-toastify';
 import { VirtualizedTable } from '../../components/ui/VirtualizedTable';
 import {
@@ -110,7 +110,6 @@ const CHART_DEFAULT_HEIGHT = 260;
 
 export function Admin() {
   const { t } = useTranslation();
-  const { token } = useAuth();
   const [activeSection, setActiveSection] = useState<Section>('kpis');
   const [users, setUsers] = useState<User[]>([]);
   const [usersTotal, setUsersTotal] = useState(0);
@@ -137,93 +136,88 @@ export function Admin() {
     open: false, title: '', message: '', onConfirm: () => {},
   });
 
-  const api = async (path: string, options?: RequestInit) => {
-    const res = await fetch(`/api/v1${path}`, {
-      ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        ...options?.headers,
-      },
+  const adminApi = async (path: string, options?: { method?: string; body?: unknown }) => {
+    const res = await api(path, {
+      method: options?.method || 'GET',
+      data: options?.body,
     });
-    if (!res.ok) throw new Error(await res.text());
-    return res.json();
+    return res.data;
   };
 
   const loadKpis = useCallback(async () => {
     try {
-      const data = await api('/admin/kpis');
+      const data = await adminApi('/admin/kpis');
       setKpis(data);
     } catch { /* ignore */ }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   const loadUsers = useCallback(async (skip = 0) => {
     try {
-      const data = await api(`/admin/users?skip=${skip}&limit=25`);
+      const data = await adminApi(`/admin/users?skip=${skip}&limit=25`);
       setUsers(data.users);
       setUsersTotal(data.total);
     } catch { /* ignore */ }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   const loadEvolution = useCallback(async () => {
     try {
-      const data = await api('/admin/kpis/evolution?days=365');
+      const data = await adminApi('/admin/kpis/evolution?days=365');
       setEvolution(data);
     } catch { /* ignore */ }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   const loadTopStocks = useCallback(async () => {
     try {
-      const data = await api('/admin/kpis/top-stocks?limit=10');
+      const data = await adminApi('/admin/kpis/top-stocks?limit=10');
       setTopStocks(data.top_stocks);
     } catch { /* ignore */ }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   const loadDistribution = useCallback(async () => {
     try {
-      const data = await api('/admin/kpis/distribution');
+      const data = await adminApi('/admin/kpis/distribution');
       setDistribution(data);
     } catch { /* ignore */ }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   const loadTransactions = useCallback(async (skip = 0) => {
     try {
       const url = txFilter
         ? `/admin/transactions?skip=${skip}&limit=25&${txFilter}`
         : `/admin/transactions?skip=${skip}&limit=25`;
-      const data = await api(url);
+      const data = await adminApi(url);
       setTransactions(data.transactions);
       setTxTotal(data.total);
     } catch { /* ignore */ }
-  }, [txFilter]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [txFilter]);
 
   const loadLogs = useCallback(async (skip = 0) => {
     try {
-      const data = await api(`/admin/logs?skip=${skip}&limit=25`);
+      const data = await adminApi(`/admin/logs?skip=${skip}&limit=25`);
       setLogs(data.logs);
     } catch { /* ignore */ }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   const loadConfigs = useCallback(async () => {
     try {
-      const data = await api('/admin/config');
+      const data = await adminApi('/admin/config');
       setConfigs(data.configs);
     } catch { /* ignore */ }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   const loadTableStats = useCallback(async () => {
     try {
-      const data = await api('/admin/stats/tables');
+      const data = await adminApi('/admin/stats/tables');
       setTableStats(data.tables);
     } catch { /* ignore */ }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   const loadSuspicious = useCallback(async () => {
     try {
-      const data = await api('/admin/suspicious-transactions?limit=20');
+      const data = await adminApi('/admin/suspicious-transactions?limit=20');
       setSuspicious(data);
     } catch { /* ignore */ }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     setLoading(true);
@@ -275,7 +269,7 @@ export function Admin() {
       onConfirm: async () => {
         setConfirmModal((prev) => ({ ...prev, open: false }));
         try {
-          const res = await api(`/admin/users/${user.id}/ban`, { method: 'PATCH' });
+          const res = await adminApi(`/admin/users/${user.id}/ban`, { method: 'PATCH' });
           setUsers(users.map((u) => (u.id === user.id ? { ...u, is_active: res.is_active } : u)));
           toast.success(res.message);
         } catch (e: unknown) {
@@ -287,7 +281,7 @@ export function Admin() {
 
   const handleRoleChange = async (user: User, newRole: string) => {
     try {
-      const res = await api(`/admin/users/${user.id}/role`, {
+      const res = await adminApi(`/admin/users/${user.id}/role`, {
         method: 'PATCH',
         body: JSON.stringify({ new_role: newRole }),
       });
@@ -306,7 +300,7 @@ export function Admin() {
       return;
     }
     try {
-      const res = await api(`/admin/users/${balanceModal.user.id}/balance`, {
+      const res = await adminApi(`/admin/users/${balanceModal.user.id}/balance`, {
         method: 'PATCH',
         body: JSON.stringify({ new_balance: val }),
       });
@@ -321,7 +315,7 @@ export function Admin() {
 
   const loadUserDetail = async (userId: number) => {
     try {
-      const data = await api(`/admin/users/${userId}`);
+      const data = await adminApi(`/admin/users/${userId}`);
       setSelectedUser(data);
     } catch (e: unknown) {
       toast.error(e instanceof Error ? e.message : 'Error');
@@ -330,7 +324,7 @@ export function Admin() {
 
   const updateConfig = async (key: string, value: string) => {
     try {
-      const res = await api(`/admin/config/${key}`, {
+      const res = await adminApi(`/admin/config/${key}`, {
         method: 'PUT',
         body: JSON.stringify({ value }),
       });
@@ -343,7 +337,7 @@ export function Admin() {
 
   const toggleMaintenance = async () => {
     try {
-      const res = await api('/admin/maintenance', { method: 'POST' });
+      const res = await adminApi('/admin/maintenance', { method: 'POST' });
       setConfigs(configs.map((c) => (c.key === 'maintenance_mode' ? { ...c, value: String(res.maintenance_mode) } : c)));
       toast.success(res.maintenance_mode ? 'Modo mantenimiento activado' : 'Modo mantenimiento desactivado');
     } catch (e: unknown) {
@@ -353,7 +347,7 @@ export function Admin() {
 
   const refreshData = async (type: string, endpoint: string) => {
     try {
-      await api(endpoint, { method: 'POST' });
+      await adminApi(endpoint, { method: 'POST' });
       toast.success(`Datos de ${type} actualizados`);
     } catch (e: unknown) {
       toast.error(e instanceof Error ? e.message : 'Error');
@@ -368,7 +362,7 @@ export function Admin() {
       onConfirm: async () => {
         setConfirmModal((prev) => ({ ...prev, open: false }));
         try {
-          await api('/admin/cache/clear', { method: 'POST' });
+          await adminApi('/admin/cache/clear', { method: 'POST' });
           toast.success('Caché limpiada');
         } catch (e: unknown) {
           toast.error(e instanceof Error ? e.message : 'Error');

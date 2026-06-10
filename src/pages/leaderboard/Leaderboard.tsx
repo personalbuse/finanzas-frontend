@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from '../../provider/LanguageProvider';
 import api, { createCancelSource } from '../../services/api';
 import { Trophy, TrendingUp, TrendingDown } from 'lucide-react';
 import { toast } from 'react-toastify';
