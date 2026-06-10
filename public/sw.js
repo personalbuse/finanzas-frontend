@@ -1,5 +1,4 @@
-const CACHE_NAME = 'finsimup-v3';
-const STRATEGY = 'stale-while-revalidate';
+const CACHE_NAME = 'finsimup-v4';
 
 const EXTERNAL_DOMAINS = [
   'cloudflareinsights.com',
@@ -8,13 +7,19 @@ const EXTERNAL_DOMAINS = [
   'facebook.net',
   'fonts.googleapis.com',
   'fonts.gstatic.com',
+  'static2.finnhub.io',
 ];
 
 function isExternal(url) {
   return EXTERNAL_DOMAINS.some(d => url.indexOf(d) !== -1);
 }
 
-self.addEventListener('install', (event) => {
+function isNavigationRequest(request) {
+  return request.mode === 'navigate' ||
+    (request.method === 'GET' && request.headers.get('Accept')?.includes('text/html'));
+}
+
+self.addEventListener('install', () => {
   self.skipWaiting();
 });
 
@@ -24,15 +29,23 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         names.filter((n) => n !== CACHE_NAME).map((n) => caches.delete(n))
       );
-    })
+    }).then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   if (isExternal(event.request.url)) return;
   if (event.request.url.includes('/api/')) return;
+
+  if (isNavigationRequest(event.request)) {
+    event.respondWith(
+      fetch(event.request).catch(() =>
+        caches.open(CACHE_NAME).then((cache) => cache.match(event.request))
+      )
+    );
+    return;
+  }
 
   event.respondWith(
     caches.open(CACHE_NAME).then((cache) => {
