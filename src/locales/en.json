@@ -427,7 +427,7 @@
   "learning": {
     "moduleCompleted": "Module completed!",
     "bonusEarned": "+$1,000 added to your balance",
-    "courseProgress": "You completed {count} modules. +${bonus} in bonuses.",
+    "courseProgress": "You completed {{count}} modules. +${{bonus}} in bonuses.",
     "courseCompleted": "Congratulations! You completed all modules.",
     "reviewCourse": "Review course",
     "goToInvest": "Go to invest",

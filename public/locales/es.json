@@ -263,6 +263,14 @@
     "privacy": "Privacidad y Seguridad",
     "privacyDesc": "Gestiona tu sesión y seguridad de cuenta",
     "edit": "Editar",
+    "editProfile": "Editar Perfil",
+    "saveChanges": "Guardar Cambios",
+    "currentPassword": "Contraseña Actual",
+    "newPassword": "Nueva Contraseña",
+    "passwordChanged": "Contraseña cambiada exitosamente",
+    "profileUpdated": "Perfil actualizado exitosamente",
+    "cancel": "Cancelar",
+    "leaveBlankIfUnchanged": "Dejar en blanco si no deseas cambiar",
     "tip": "Consejo: Diversificar tu cartera en diferentes sectores ayuda a gestionar el riesgo y aumentar la estabilidad a largo plazo.",
     "darkMode": "Modo Oscuro",
     "darkModeDesc": "Cambiar entre tema claro y oscuro"
@@ -419,7 +427,7 @@
   "learning": {
     "moduleCompleted": "¡Módulo completado!",
     "bonusEarned": "+$1,000 agregados a tu balance",
-    "courseProgress": "Has completado {count} módulos. +${bonus} en bonuses.",
+    "courseProgress": "Has completado {{count}} módulos. +${{bonus}} en bonuses.",
     "courseCompleted": "¡Felicitaciones! Has completado todos los módulos.",
     "reviewCourse": "Repasar curso",
     "goToInvest": "Ir a invertir",
