@@ -70,7 +70,7 @@ api.interceptors.response.use(
       } catch (refreshErr) {
         isRefreshing = false;
         window.dispatchEvent(new CustomEvent('auth:expired'));
-        return Promise.reject(refreshErr);
+        return Promise.reject(refreshErr instanceof Error ? refreshErr : new Error(String(refreshErr)));
       }
     }
 

@@ -4,7 +4,7 @@ import { useAuth } from '../../provider/AuthProvider';
 import { useTranslation } from '../../provider/LanguageProvider';
 import { useAuthStore } from '../../store/useAuthStore';
 import { API_BASE_URL } from '../../services/api';
-import { z } from 'zod';
+import type { z } from 'zod';
 import { loginSchema } from '../../utils/validation';
 
 export function Login() {

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../../provider/LanguageProvider';
 import { API_BASE_URL } from '../../services/api';
-import { z } from 'zod';
+import type { z } from 'zod';
 import { forgotPasswordSchema } from '../../utils/validation';
 
 export function ForgotPassword() {

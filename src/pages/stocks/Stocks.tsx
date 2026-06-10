@@ -104,7 +104,7 @@ export function Stocks() {
     
     try {
       const res = await api.post('/portfolio/buy', {
-        symbol: symbol,
+        symbol,
         quantity: qty
       });
       

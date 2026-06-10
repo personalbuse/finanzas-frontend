@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import { CheckCircle, XCircle, Loader2 } from 'lucide-react';
 import { API_BASE_URL } from '../../services/api';
 import { useTourStore } from '../../store/tourStore';
-import { z } from 'zod';
+import type { z } from 'zod';
 import { registerSchema } from '../../utils/validation';
 
 export function Register() {

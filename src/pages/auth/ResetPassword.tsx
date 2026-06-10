@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { CheckCircle, XCircle } from 'lucide-react';
 import { API_BASE_URL } from '../../services/api';
-import { z } from 'zod';
+import type { z } from 'zod';
 import { resetPasswordSchema } from '../../utils/validation';
 
 export function ResetPassword() {
