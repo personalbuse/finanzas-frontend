@@ -4,9 +4,10 @@ import { useAuth } from '../../provider/AuthProvider';
 
 interface PrivateRouteProps {
   children: React.ReactNode;
+  requireAdmin?: boolean;
 }
 
-export function PrivateRoute({ children }: PrivateRouteProps) {
+export function PrivateRoute({ children, requireAdmin }: PrivateRouteProps) {
   const { isAuthenticated, loading, user } = useAuth();
   const [maintenanceMode, setMaintenanceMode] = useState(false);
   const [checkingMaintenance, setCheckingMaintenance] = useState(true);
@@ -41,6 +42,10 @@ export function PrivateRoute({ children }: PrivateRouteProps) {
 
   if (maintenanceMode && user?.rol !== 'admin') {
     return <Navigate to="/maintenance" />;
+  }
+
+  if (requireAdmin && user?.rol !== 'admin') {
+    return <Navigate to="/dashboard" replace />;
   }
 
   return <>{children}</>;
