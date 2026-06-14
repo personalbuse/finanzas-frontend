@@ -53,6 +53,7 @@ export function VirtualizedTable<T>({
         itemSize={rowHeight}
         width="100%"
         itemData={{ data, columns }}
+        rowProps={{}}
       >
         {({ index, style, data: renderData }) => {
           const row = renderData.data[index];
