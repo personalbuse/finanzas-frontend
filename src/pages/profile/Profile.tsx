@@ -3,7 +3,7 @@ import { useAuthStore } from '../../store/useAuthStore';
 import { useTranslation } from '../../provider/LanguageProvider';
 import { useTheme } from '../../provider/ThemeProvider';
 import { useAuth } from '../../provider/AuthProvider';
-import { LogOut, Settings } from 'lucide-react';
+import { LogOut, Settings, Shield } from 'lucide-react';
 
 export function Profile() {
   const { user } = useAuthStore();
@@ -85,6 +85,24 @@ export function Profile() {
               </div>
             </div>
 
+            <Link
+              to="/settings/2fa"
+              className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-[#1a1a1a]/50 border border-slate-100 dark:border-[#262626] group hover:border-slate-200 dark:hover:border-[#333] transition-all"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                  <Shield className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-slate-900 dark:text-white">{t('profile.privacy')}</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">{t('profile.privacyDesc')}</p>
+                </div>
+              </div>
+              <div className="px-3 py-1.5 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-xs font-medium text-blue-600 dark:text-blue-400">
+                2FA
+              </div>
+            </Link>
+
             <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-[#1a1a1a]/50 border border-slate-100 dark:border-[#262626] group hover:border-slate-200 dark:hover:border-[#333] transition-all">
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-xl bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
@@ -93,8 +111,8 @@ export function Profile() {
                   </svg>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-slate-900 dark:text-white">{t('profile.privacy')}</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">{t('profile.privacyDesc')}</p>
+                  <p className="text-sm font-bold text-slate-900 dark:text-white">{t('common.security')}</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">{t('twofa.title')}</p>
                 </div>
               </div>
               <button 

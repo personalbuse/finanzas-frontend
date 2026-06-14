@@ -31,6 +31,7 @@ const Markets = lazy(() => import('./pages/markets/Markets').then(m => ({ defaul
 const Indices = lazy(() => import('./pages/indices/Indices').then(m => ({ default: m.Indices })));
 const Forex = lazy(() => import('./pages/forex/Forex').then(m => ({ default: m.Forex })));
 const Leaderboard = lazy(() => import('./pages/leaderboard/Leaderboard').then(m => ({ default: m.Leaderboard })));
+const TwoFA = lazy(() => import('./pages/settings/TwoFA').then(m => ({ default: m.TwoFA })));
 
 function LoadingSpinner() {
   return (
@@ -159,6 +160,14 @@ function AppContent() {
               element={
                 <PrivateRoute>
                   <EditProfile />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/settings/2fa"
+              element={
+                <PrivateRoute>
+                  <TwoFA />
                 </PrivateRoute>
               }
             />

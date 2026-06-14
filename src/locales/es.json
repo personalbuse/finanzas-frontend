@@ -114,7 +114,24 @@
     "noAccount": "¿No tienes cuenta?",
     "register": "Regístrate aquí",
     "forgotPassword": "¿Olvidaste tu contraseña?",
-    "welcomeMessage": "¡Bienvenido/a"
+    "welcomeMessage": "¡Bienvenido/a",
+    "totpTitle": "Verificación en Dos Pasos",
+    "totpSubtitle": "Ingresa el código de 6 dígitos de tu app autenticadora",
+    "totpLabel": "Código de autenticación",
+    "totpRequired": "Ingresa el código de 6 dígitos",
+    "totpError": "Código inválido. Intenta de nuevo.",
+    "totpExpired": "La sesión expiró. Ingresa tus credenciales de nuevo.",
+    "verifyButton": "Verificar",
+    "verifying": "Verificando...",
+    "useBackupCode": "Usar un código de respaldo",
+    "backToLogin": "Volver al inicio de sesión",
+    "backupTitle": "Código de Respaldo",
+    "backupSubtitle": "Ingresa uno de tus códigos de respaldo guardados",
+    "backupLabel": "Código de respaldo",
+    "backupRequired": "Ingresa un código de respaldo",
+    "backupError": "Código de respaldo inválido o ya utilizado",
+    "backupExpired": "La sesión expiró. Ingresa tus credenciales de nuevo.",
+    "backToTotp": "Usar app autenticadora"
   },
   "register": {
     "title": "Crear Cuenta",
@@ -371,6 +388,29 @@
       }
     }
   },
+  "twofa": {
+    "title": "Autenticación en Dos Pasos (2FA)",
+    "subtitle": "Aumenta la seguridad de tu cuenta con un código adicional de tu app autenticadora",
+    "notEnabled": "Aún no has activado la verificación en dos pasos. Al activarla, necesitarás un código de tu app autenticadora (Microsoft Authenticator, Google Authenticator, Authy) además de tu contraseña para iniciar sesión.",
+    "enableButton": "Activar 2FA",
+    "scanQr": "Escanea este código QR con tu app autenticadora",
+    "orManual": "O ingresa manualmente esta clave secreta",
+    "enterCode": "Código de verificación",
+    "verifyAndEnable": "Verificar y Activar",
+    "saveBackupWarning": "⚠️ Guarda estos códigos de respaldo en un lugar seguro. Cada código solo puede usarse una vez. Si pierdes tu app autenticadora y estos códigos, perderás el acceso a tu cuenta.",
+    "confirmSaved": "He guardado mis códigos de respaldo de forma segura",
+    "finishSetup": "Finalizar Configuración",
+    "active": "✅ 2FA Activado",
+    "activeDescription": "Tu cuenta está protegida con autenticación en dos pasos",
+    "adminRequired": "Como administrador, el 2FA es obligatorio para acceder al sistema",
+    "disableButton": "Desactivar 2FA",
+    "disableWarning": "Para desactivar 2FA, ingresa tu contraseña actual y un código de tu app autenticadora",
+    "confirmDisable": "Desactivar",
+    "enabledSuccess": "2FA activado exitosamente",
+    "disabledSuccess": "2FA desactivado exitosamente",
+    "codeRequired": "Ingresa el código de 6 dígitos",
+    "invalidCode": "Código inválido. Intenta de nuevo"
+  },
   "errors": {
     "usernameRequired": "El nombre de usuario es requerido",
     "passwordRequired": "La contraseña debe tener al menos 6 caracteres",
@@ -396,7 +436,8 @@
     "filter": "Filtrar",
     "sort": "Ordenar",
     "ascending": "Ascendente",
-    "descending": "Descendente"
+    "descending": "Descendente",
+    "security": "Seguridad"
   },
   "toast": {
     "loginSuccess": "¡Bienvenido/a de nuevo!",

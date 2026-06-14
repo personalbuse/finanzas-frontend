@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../provider/AuthProvider';
 import { useTranslation } from '../../provider/LanguageProvider';
 import { useAuthStore } from '../../store/useAuthStore';
-import { API_BASE_URL } from '../../services/api';
+import { API_BASE_URL, loginVerify2FA, loginBackup2FA } from '../../services/api';
 import type { z } from 'zod';
 import { loginSchema } from '../../utils/validation';
+
+type LoginMode = 'credentials' | 'totp' | 'backup';
 
 export function Login() {
   const { login } = useAuth();
@@ -16,6 +18,10 @@ export function Login() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [mode, setMode] = useState<LoginMode>('credentials');
+  const [tempToken, setTempToken] = useState('');
+  const [totpCode, setTotpCode] = useState('');
+  const [backupCode, setBackupCode] = useState('');
 
   const validateField = (name: string, value: string) => {
     const fieldSchema = (loginSchema.shape as Record<string, z.ZodTypeAny>)[name];
@@ -33,7 +39,7 @@ export function Login() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleCredentialsSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -61,8 +67,9 @@ export function Login() {
         }),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const data = await response.json();
         let errorDetail = data.detail;
         if (Array.isArray(errorDetail)) {
           errorDetail = errorDetail.map(e => e.msg).join(', ');
@@ -70,9 +77,13 @@ export function Login() {
         throw new Error(errorDetail || t('login.invalidCredentials'));
       }
 
-      const data = await response.json();
-      const userData = data.user;
+      if (data.requires_2fa) {
+        setTempToken(data.temp_token);
+        setMode('totp');
+        return;
+      }
 
+      const userData = data.user;
       store.setAuth(userData);
       login(userData);
       navigate('/dashboard');
@@ -83,11 +94,191 @@ export function Login() {
     }
   };
 
+  const handleTOTPSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    if (totpCode.length < 6) {
+      setError(t('login.totpRequired'));
+      return;
+    }
+    setLoading(true);
+    try {
+      const data = await loginVerify2FA(tempToken, totpCode);
+      store.setAuth(data.user);
+      login(data.user);
+      navigate('/dashboard');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : t('login.totpError');
+      if (msg.includes('expir')) {
+        setMode('credentials');
+        setTempToken('');
+        setError(t('login.totpExpired'));
+      } else {
+        setError(msg);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleBackupSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    if (!backupCode.trim()) {
+      setError(t('login.backupRequired'));
+      return;
+    }
+    setLoading(true);
+    try {
+      const data = await loginBackup2FA(tempToken, backupCode.trim());
+      store.setAuth(data.user);
+      login(data.user);
+      navigate('/dashboard');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : t('login.backupError');
+      if (msg.includes('expir')) {
+        setMode('credentials');
+        setTempToken('');
+        setError(t('login.backupExpired'));
+      } else {
+        setError(msg);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    validateField(name, value);
+    if (mode === 'credentials') validateField(name, value);
   };
+
+  const resetToCredentials = useCallback(() => {
+    setMode('credentials');
+    setTempToken('');
+    setTotpCode('');
+    setBackupCode('');
+    setError('');
+  }, []);
+
+  if (mode === 'totp') {
+    return (
+      <div className="min-h-[80vh] flex items-center justify-center py-8 px-4 animate-fade-in">
+        <div className="max-w-md w-full space-y-5 bg-white dark:bg-[#0d0d0d] p-6 sm:p-8 rounded-xl border border-slate-200 dark:border-[#1a1a1a]">
+          <div className="text-center">
+            <h2 className="text-3xl font-semibold text-slate-900 dark:text-white tracking-tight">{t('login.totpTitle')}</h2>
+            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">{t('login.totpSubtitle')}</p>
+          </div>
+
+          {error && (
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-lg text-sm font-medium animate-fade-in">
+              {error}
+            </div>
+          )}
+
+          <form className="mt-6 space-y-5" onSubmit={handleTOTPSubmit}>
+            <div>
+              <label htmlFor="totp-code" className="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">
+                {t('login.totpLabel')}
+              </label>
+              <input
+                id="totp-code" name="totp-code" type="text" inputMode="numeric" autoComplete="one-time-code"
+                className="input-clean mt-1 text-center text-2xl tracking-[0.5em]"
+                placeholder="______"
+                maxLength={6}
+                value={totpCode}
+                onChange={(e) => setTotpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                autoFocus
+                aria-label={t('login.totpLabel')}
+              />
+            </div>
+
+            <button type="submit" disabled={loading} className="btn-primary w-full mt-2">
+              {loading ? t('login.verifying') : t('login.verifyButton')}
+            </button>
+          </form>
+
+          <div className="text-center space-y-2">
+            <button
+              type="button"
+              onClick={() => setMode('backup')}
+              className="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 underline"
+            >
+              {t('login.useBackupCode')}
+            </button>
+            <br />
+            <button
+              type="button"
+              onClick={resetToCredentials}
+              className="text-sm text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+            >
+              {t('login.backToLogin')}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (mode === 'backup') {
+    return (
+      <div className="min-h-[80vh] flex items-center justify-center py-8 px-4 animate-fade-in">
+        <div className="max-w-md w-full space-y-5 bg-white dark:bg-[#0d0d0d] p-6 sm:p-8 rounded-xl border border-slate-200 dark:border-[#1a1a1a]">
+          <div className="text-center">
+            <h2 className="text-3xl font-semibold text-slate-900 dark:text-white tracking-tight">{t('login.backupTitle')}</h2>
+            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">{t('login.backupSubtitle')}</p>
+          </div>
+
+          {error && (
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-lg text-sm font-medium animate-fade-in">
+              {error}
+            </div>
+          )}
+
+          <form className="mt-6 space-y-5" onSubmit={handleBackupSubmit}>
+            <div>
+              <label htmlFor="backup-code" className="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">
+                {t('login.backupLabel')}
+              </label>
+              <input
+                id="backup-code" name="backup-code" type="text"
+                className="input-clean mt-1 text-center"
+                placeholder="XXXX-XXXX"
+                maxLength={20}
+                value={backupCode}
+                onChange={(e) => setBackupCode(e.target.value.toUpperCase())}
+                autoFocus
+                aria-label={t('login.backupLabel')}
+              />
+            </div>
+
+            <button type="submit" disabled={loading} className="btn-primary w-full mt-2">
+              {loading ? t('login.verifying') : t('login.verifyButton')}
+            </button>
+          </form>
+
+          <div className="text-center">
+            <button
+              type="button"
+              onClick={() => setMode('totp')}
+              className="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 underline"
+            >
+              {t('login.backToTotp')}
+            </button>
+            <br />
+            <button
+              type="button"
+              onClick={resetToCredentials}
+              className="text-sm text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+            >
+              {t('login.backToLogin')}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center py-8 px-4 animate-fade-in">
@@ -103,7 +294,7 @@ export function Login() {
           </div>
         )}
         
-        <form className="mt-6 space-y-5" onSubmit={handleSubmit}>
+        <form className="mt-6 space-y-5" onSubmit={handleCredentialsSubmit}>
           <div>
             <label htmlFor="username" className="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">
               {t('form.username')}

@@ -114,7 +114,24 @@
     "noAccount": "Don't have an account?",
     "register": "Register here",
     "forgotPassword": "Forgot password?",
-    "welcomeMessage": "Welcome back"
+    "welcomeMessage": "Welcome back",
+    "totpTitle": "Two-Factor Verification",
+    "totpSubtitle": "Enter the 6-digit code from your authenticator app",
+    "totpLabel": "Authentication code",
+    "totpRequired": "Please enter the 6-digit code",
+    "totpError": "Invalid code. Please try again.",
+    "totpExpired": "Session expired. Please sign in again.",
+    "verifyButton": "Verify",
+    "verifying": "Verifying...",
+    "useBackupCode": "Use a backup code",
+    "backToLogin": "Back to login",
+    "backupTitle": "Backup Code",
+    "backupSubtitle": "Enter one of your saved backup codes",
+    "backupLabel": "Backup code",
+    "backupRequired": "Please enter a backup code",
+    "backupError": "Invalid or already used backup code",
+    "backupExpired": "Session expired. Please sign in again.",
+    "backToTotp": "Use authenticator app"
   },
   "register": {
     "title": "Create Account",
@@ -371,6 +388,29 @@
       }
     }
   },
+  "twofa": {
+    "title": "Two-Factor Authentication (2FA)",
+    "subtitle": "Add an extra layer of security to your account with a code from your authenticator app",
+    "notEnabled": "You haven't enabled two-factor authentication yet. Once enabled, you'll need a code from your authenticator app (Microsoft Authenticator, Google Authenticator, Authy) in addition to your password to sign in.",
+    "enableButton": "Enable 2FA",
+    "scanQr": "Scan this QR code with your authenticator app",
+    "orManual": "Or enter this secret key manually",
+    "enterCode": "Verification code",
+    "verifyAndEnable": "Verify and Enable",
+    "saveBackupWarning": "⚠️ Save these backup codes in a secure place. Each code can only be used once. If you lose your authenticator app and these codes, you'll lose access to your account.",
+    "confirmSaved": "I have saved my backup codes securely",
+    "finishSetup": "Finish Setup",
+    "active": "✅ 2FA Enabled",
+    "activeDescription": "Your account is protected with two-factor authentication",
+    "adminRequired": "As an admin, 2FA is required to access the system",
+    "disableButton": "Disable 2FA",
+    "disableWarning": "To disable 2FA, enter your current password and a code from your authenticator app",
+    "confirmDisable": "Disable",
+    "enabledSuccess": "2FA enabled successfully",
+    "disabledSuccess": "2FA disabled successfully",
+    "codeRequired": "Please enter the 6-digit code",
+    "invalidCode": "Invalid code. Please try again."
+  },
   "errors": {
     "usernameRequired": "Username is required",
     "passwordRequired": "Password must be at least 6 characters",
@@ -396,7 +436,8 @@
     "filter": "Filter",
     "sort": "Sort",
     "ascending": "Ascending",
-    "descending": "Descending"
+    "descending": "Descending",
+    "security": "Security"
   },
   "toast": {
     "loginSuccess": "Welcome back!",

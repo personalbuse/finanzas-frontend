@@ -84,4 +84,38 @@ export function createCancelSource() {
   return { signal: controller.signal, cancel: () => controller.abort() };
 }
 
+export async function setup2FA(): Promise<{ secret: string; qr_code: string; provisioning_uri: string }> {
+  const response = await api.post('/2fa/setup');
+  return response.data;
+}
+
+export async function verify2FA(code: string): Promise<{ enabled: boolean; backup_codes: string[] }> {
+  const response = await api.post('/2fa/verify', { code });
+  return response.data;
+}
+
+export async function disable2FA(password: string, code: string): Promise<{ message: string }> {
+  const response = await api.post('/2fa/disable', { password, code });
+  return response.data;
+}
+
+export async function get2FAStatus(): Promise<{ enabled: boolean; setup_at: string | null }> {
+  const response = await api.get('/2fa/status');
+  return response.data;
+}
+
+export async function loginVerify2FA(temp_token: string, code: string): Promise<{
+  access_token: string; refresh_token: string; token_type: string; user: any;
+}> {
+  const response = await api.post('/2fa/login-verify', { temp_token, code });
+  return response.data;
+}
+
+export async function loginBackup2FA(temp_token: string, backup_code: string): Promise<{
+  access_token: string; refresh_token: string; token_type: string; user: any;
+}> {
+  const response = await api.post('/2fa/login-backup', { temp_token, backup_code });
+  return response.data;
+}
+
 export default api;
