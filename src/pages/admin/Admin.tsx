@@ -161,11 +161,17 @@ export function Admin() {
   }, [handleAdminError]);
 
   const loadUsers = useCallback(async (skip = 0) => {
+    console.log('[DEBUG Admin] loadUsers called with skip:', skip);
     try {
       const data = await adminApi(`/admin/users?skip=${skip}&limit=25`);
+      console.log('[DEBUG Admin] loadUsers response:', { usersCount: data?.users?.length, total: data?.total, dataKeys: Object.keys(data || {}) });
+      console.log('[DEBUG Admin] users[0] sample:', data?.users?.[0] ? JSON.stringify(data?.users?.[0]) : 'empty');
       setUsers(data.users ?? []);
       setUsersTotal(data.total ?? 0);
-    } catch (err) { handleAdminError(err, 'users'); }
+    } catch (err) {
+      console.warn('[DEBUG Admin] loadUsers error:', err);
+      handleAdminError(err, 'users');
+    }
   }, [handleAdminError]);
 
   const loadEvolution = useCallback(async () => {
@@ -623,7 +629,9 @@ export function Admin() {
             )}
 
             {/* ───────── USERS ───────── */}
-            {activeSection === 'users' && (
+            {activeSection === 'users' && (() => {
+              console.log('[DEBUG Admin] Rendering USERS section', { usersCount: users.length, filteredCount: filteredUsers.length, searchQuery, usersTotal });
+              return (
               <div className="space-y-4">
                 <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
                   <div className="relative w-full sm:w-72">
@@ -733,7 +741,8 @@ export function Admin() {
                   </div>
                 )}
               </div>
-            )}
+              );
+            })()}
 
             {/* ───────── DATA ───────── */}
             {activeSection === 'data' && (

@@ -100,6 +100,7 @@ export function Stocks() {
 
   const handleBuy = async (symbol: string) => {
     const qty = quantities[symbol] || 1;
+    console.log('[DEBUG Stocks] handleBuy:', { symbol, qty, quantities });
     setBuying(symbol);
     
     try {
@@ -117,7 +118,11 @@ export function Stocks() {
         await fetchStocks();
       }
     } catch (error: unknown) {
-      console.error('Buy error:', error);
+      console.error('[DEBUG Stocks] handleBuy error:', error);
+      if (error && typeof error === 'object' && 'response' in error) {
+        const errResp = (error as any).response;
+        console.error('[DEBUG Stocks] Response details:', { status: errResp?.status, data: errResp?.data });
+      }
       const buyError = error as BuyError;
       toast.error(`Error: ${buyError.response?.data?.detail || t('stocks.buyError')}`);
     } finally {

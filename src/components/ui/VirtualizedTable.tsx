@@ -1,4 +1,4 @@
-import { type ReactNode } from 'react';
+import { type CSSProperties, type ReactNode } from 'react';
 import { List } from 'react-window';
 
 export interface Column<T> {
@@ -17,12 +17,25 @@ interface VirtualizedTableProps<T> {
 }
 
 export function VirtualizedTable<T>({
-  columns,
-  data,
+  columns: initialColumns,
+  data: initialData,
   rowHeight = 52,
   maxHeight = 600,
   emptyMessage = 'No data',
 }: VirtualizedTableProps<T>) {
+  // Debug logging
+  const data = Array.isArray(initialData) ? initialData : (() => {
+    console.error('[DEBUG VirtualizedTable] data is not an array!', typeof initialData, initialData);
+    return [] as unknown as T[];
+  })();
+  const columns = Array.isArray(initialColumns) ? initialColumns : (() => {
+    console.error('[DEBUG VirtualizedTable] columns is not an array!', typeof initialColumns, initialColumns);
+    return [] as unknown as Column<T>[];
+  })();
+
+  console.log('[DEBUG VirtualizedTable] Props:', { dataLength: data.length, columnsCount: columns.length, rowHeight, maxHeight, emptyMessage });
+  console.log(`[DEBUG VirtualizedTable] Rendering List: height=${Math.min(data.length * rowHeight, maxHeight)}px, itemCount=${data.length}`);
+
   if (data.length === 0) {
     return (
       <div className="text-center py-8 text-sm text-slate-400">
@@ -53,10 +66,10 @@ export function VirtualizedTable<T>({
         itemSize={rowHeight}
         width="100%"
         itemData={{ data, columns }}
-        rowProps={{}}
       >
-        {({ index, style, data: renderData }) => {
+        {({ index, style, data: renderData }: { index: number; style: CSSProperties; data: { data: T[]; columns: Column<T>[] } }) => {
           const row = renderData.data[index];
+          if (!row) return null;
           return (
             <div
               style={style}
