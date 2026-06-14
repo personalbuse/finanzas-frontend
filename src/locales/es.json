@@ -409,6 +409,7 @@
     "enabledSuccess": "2FA activado exitosamente",
     "disabledSuccess": "2FA desactivado exitosamente",
     "codeRequired": "Ingresa el código de 6 dígitos",
+    "disableRequired": "Ingresa tu contraseña y el código de 6 dígitos",
     "invalidCode": "Código inválido. Intenta de nuevo"
   },
   "errors": {

@@ -409,6 +409,7 @@
     "enabledSuccess": "2FA enabled successfully",
     "disabledSuccess": "2FA disabled successfully",
     "codeRequired": "Please enter the 6-digit code",
+    "disableRequired": "Enter your password and the 6-digit code",
     "invalidCode": "Invalid code. Please try again."
   },
   "errors": {
