@@ -196,7 +196,7 @@ export function Dashboard() {
                 </p>
               ) : (
                 <p className="text-sm text-emerald-400 font-medium">
-                  {t('learning.courseProgress', { count: courseProgress.completed_courses || 0, bonus: courseProgress.bonus_earned || 0 })}
+                  {t('learning.courseProgress', { modules: courseProgress.completed_courses || 0, bonusEarned: courseProgress.bonus_earned || 0 })}
                 </p>
               )}
             </div>

@@ -564,7 +564,7 @@ export function Admin() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   <div className="bg-white dark:bg-[#0d0d0d] border border-slate-200 dark:border-[#1a1a1a] rounded-xl p-4 sm:p-5">
                     <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-4">{t('admin.txDistribution')}</h3>
-                    {distribution && Object.keys(distribution.transaction_types).length > 0 ? (
+                    {distribution?.transaction_types && Object.keys(distribution.transaction_types).length > 0 ? (
                       <div className="flex items-center gap-4">
                         <ResponsiveContainer width="60%" height={220}>
                           <PieChart>
