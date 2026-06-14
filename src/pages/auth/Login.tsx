@@ -77,6 +77,13 @@ export function Login() {
         throw new Error(errorDetail || t('login.invalidCredentials'));
       }
 
+      if (data.requires_2fa_setup) {
+        store.setAuth(data.user);
+        login(data.user);
+        navigate('/settings/2fa');
+        return;
+      }
+
       if (data.requires_2fa) {
         setTempToken(data.temp_token);
         setMode('totp');
