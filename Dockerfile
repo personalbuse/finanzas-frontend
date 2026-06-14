@@ -46,6 +46,11 @@ RUN rm /etc/nginx/conf.d/default.conf && \
         add_header Cache-Control "no-cache, no-store, must-revalidate";\n\
     }\n\
 \n\
+    location /locales/ {\n\
+        expires -1;\n\
+        add_header Cache-Control "no-cache, no-store, must-revalidate";\n\
+    }\n\
+\n\
     location / {\n\
         try_files $uri $uri/ /index.html;\n\
     }\n\
