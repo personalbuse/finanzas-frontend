@@ -1,5 +1,6 @@
 import { useEffect, useCallback, memo, type ReactNode } from 'react';
 import { X } from 'lucide-react';
+import { useTranslation } from '../../provider/LanguageProvider';
 
 interface ModalProps {
   open: boolean;
@@ -11,6 +12,7 @@ interface ModalProps {
 }
 
 function ModalBase({ open, onClose, title, children, maxWidth = 'max-w-lg', titleId }: ModalProps) {
+  const { t } = useTranslation();
   const handleEscape = useCallback((e: KeyboardEvent) => {
     if (e.key === 'Escape') onClose();
   }, [onClose]);
@@ -44,7 +46,7 @@ function ModalBase({ open, onClose, title, children, maxWidth = 'max-w-lg', titl
       >
         <div className="flex items-center justify-between p-4 border-b border-slate-100 dark:border-[#1a1a1a]">
           <h3 id={id} className="text-lg font-semibold text-slate-900 dark:text-white">{title}</h3>
-          <button onClick={onClose} className="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-[#1a1a1a] text-slate-400" aria-label="Cerrar">
+          <button onClick={onClose} className="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-[#1a1a1a] text-slate-400" aria-label={t('common.close')}>
             <X className="w-4 h-4" />
           </button>
         </div>

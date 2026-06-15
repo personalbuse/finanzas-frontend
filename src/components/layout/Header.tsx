@@ -47,14 +47,14 @@ export function Header() {
           <Link
             to="/dashboard"
             className="group"
-            aria-label="Ir al inicio"
+            aria-label={t('nav.dashboard')}
           >
             <div className="flex items-baseline">
               <span className="font-display text-2xl font-light tracking-[0.3em] text-slate-900 dark:text-white uppercase">
-                Simulador
+                {t('app.title')}
               </span>
               <span className="ml-3 font-display text-sm font-light tracking-[0.25em] text-slate-400 dark:text-slate-500 uppercase hidden xs:block">
-                Stock Market
+                {t('app.subtitle')}
               </span>
             </div>
           </Link>
@@ -110,7 +110,7 @@ export function Header() {
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
               className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-[#1a1a1a] hover:bg-slate-200 dark:hover:bg-[#262626] transition-colors"
-              aria-label={mobileOpen ? 'Cerrar menú' : 'Abrir menú'}
+              aria-label={mobileOpen ? t('common.close') : t('nav.menu')}
               aria-expanded={mobileOpen}
             >
               {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -149,7 +149,7 @@ export function Header() {
         }`}
         role="dialog"
         aria-modal="true"
-        aria-label="Menú de navegación"
+        aria-label={t('nav.menu')}
       >
         <nav className="p-4 space-y-1">
           {navItems.map((item) => (

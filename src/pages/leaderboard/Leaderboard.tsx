@@ -94,16 +94,16 @@ export function Leaderboard() {
               <thead className="bg-slate-50 dark:bg-[#1a1a1a]/50">
                 <tr>
                   <th className="px-6 py-4 text-left text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-                    Posición
+                    {t('leaderboard.position')}
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-                    Inversor
+                    {t('leaderboard.investor')}
                   </th>
                   <th className="px-6 py-4 text-right text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-                    Valor Total
+                    {t('leaderboard.totalValue')}
                   </th>
                   <th className="px-6 py-4 text-right text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-                    Rentabilidad
+                    {t('leaderboard.profitability')}
                   </th>
                 </tr>
               </thead>
@@ -115,12 +115,12 @@ export function Leaderboard() {
                       index < 3 ? 'bg-amber-50/50 dark:bg-amber-900/10' : ''
                     }`}
                   >
-                    <td data-label="Posición" className="px-6 py-4">
+                    <td data-label={t('leaderboard.position')} className="px-6 py-4">
                       <div className="flex items-center justify-center w-10">
                         {getMedal(user.rank)}
                       </div>
                     </td>
-                    <td data-label="Inversor" className="px-6 py-4">
+                    <td data-label={t('leaderboard.investor')} className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-blue-500 flex items-center justify-center text-white font-bold">
                           {user.username.charAt(0).toUpperCase()}
@@ -130,12 +130,12 @@ export function Leaderboard() {
                         </span>
                       </div>
                     </td>
-                    <td data-label="Valor Total" className="px-6 py-4 text-right">
+                    <td data-label={t('leaderboard.totalValue')} className="px-6 py-4 text-right">
                       <span className="text-slate-600 dark:text-slate-400">
                         {formatCurrency(user.total_value)}
                       </span>
                     </td>
-                    <td data-label="Rentabilidad" className="px-6 py-4 text-right">
+                    <td data-label={t('leaderboard.profitability')} className="px-6 py-4 text-right">
                       <span className={`inline-flex items-center gap-1 px-2 py-1 rounded text-sm font-bold ${
                         user.profitability >= 0
                           ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'

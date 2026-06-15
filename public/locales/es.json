@@ -25,10 +25,13 @@
     "markets": "Mercados",
     "indices": "Índices",
     "forex": "Divisas",
-    "leaderboard": "Ranking"
+    "leaderboard": "Ranking",
+    "menu": "Menú de navegación"
   },
   "footer": {
-    "description": "Simulador de Inversiones - Proyecto Educativo para Finanzas Internacionales, Universidad de Pamplona"
+    "description": "Simulador de Inversiones - Proyecto Educativo para Finanzas Internacionales, Universidad de Pamplona",
+    "university": "Universidad de Pamplona",
+    "department": "Finanzas Internacionales"
   },
   "admin": {
     "title": "Panel de Administración",
@@ -89,7 +92,43 @@
     "stocks": "Stocks",
     "rates": "Tasas",
     "indices": "Índices",
-    "confirm": "Confirmar"
+    "confirm": "Confirmar",
+    "noPermission": "No tienes permisos de administrador. Tu cuenta necesita rol \"admin\".",
+    "maintenanceActivated": "Modo mantenimiento activado",
+    "maintenanceDeactivated": "Modo mantenimiento desactivado",
+    "dataUpdated": "Datos de {{type}} actualizados",
+    "cacheCleared": "Caché limpiada",
+    "cacheClearTitle": "Limpiar Caché",
+    "cacheClearMessage": "¿Limpiar toda la caché del sistema? Los datos se volverán a cargar desde las APIs.",
+    "noChartsData": "Sin datos aún",
+    "transactions": "Transacciones",
+    "volume": "Volumen",
+    "id": "ID",
+    "email": "Email",
+    "noLogs": "Sin registros aún",
+    "txTotal": "{{count}} transacciones en total",
+    "noTransactions": "Sin transacciones",
+    "admin": "Admin",
+    "action": "Acción",
+    "target": "Target",
+    "detail": "Detalle",
+    "statusText": "Estado actual",
+    "statusActive": "Activado",
+    "statusDisabled": "Desactivado",
+    "apiFinnhub": "Finnhub API",
+    "apiExchangeRate": "ExchangeRate API",
+    "apiPostgreSQL": "PostgreSQL",
+    "apiRedis": "Redis",
+    "openMenu": "Abrir menú de navegación",
+    "navigation": "Navegación de administración",
+    "enterValidValue": "Ingresa un valor válido",
+    "banUserConfirmTitle": "Banear usuario",
+    "activateUserConfirmTitle": "Activar usuario",
+    "confirmUserAction": "¿Seguro que quieres {{action}} a \"{{username}}\"?",
+    "actionBan": "banear",
+    "actionActivate": "activar",
+    "inversor": "inversor",
+    "sortByRole": "Rol"
   },
   "maintenance": {
     "title": "Sistema en Mantenimiento",
@@ -156,7 +195,13 @@
     "verifySubtitle": "Ingresa el código que te enviamos",
     "verifying": "Verificando...",
     "verifyButton": "Crear Cuenta",
-    "resendCode": "¿No recibiste el código? Solicitar otro"
+    "resendCode": "¿No recibiste el código? Solicitar otro",
+    "codeResent": "Nuevo código enviado a tu correo",
+    "resendError": "Error al reenviar código",
+    "codeSent": "Te enviamos un código de verificación a",
+    "codeLabel": "Código de verificación",
+    "codeHint": "Ingresa los 6 dígitos que te enviamos por correo",
+    "backToRegister": "← Volver al registro"
   },
   "forgotPassword": {
     "title": "Recuperar Contraseña",
@@ -166,6 +211,30 @@
     "rememberPassword": "¿Recordaste tu contraseña?",
     "login": "Inicia sesión aquí"
   },
+  "resetPassword": {
+    "title": "Nueva Contraseña",
+    "subtitle": "Ingresa tu nueva contraseña",
+    "invalidToken": "Token inválido o faltante",
+    "invalidTokenTitle": "Token Inválido",
+    "tokenExpired": "El enlace de recuperación no es válido o ha expirado.",
+    "requestNewLink": "Solicitar nuevo enlace",
+    "passwordLabel": "Nueva Contraseña",
+    "passwordPlaceholder": "Ingresa tu nueva contraseña",
+    "confirmLabel": "Confirmar Contraseña",
+    "confirmPlaceholder": "Confirma tu nueva contraseña",
+    "passwordRequirements": "La contraseña debe tener:",
+    "minLength": "Mínimo 12 caracteres",
+    "uppercase": "Una mayúscula (A-Z)",
+    "lowercase": "Una minúscula (a-z)",
+    "number": "Un número (0-9)",
+    "symbol": "Un símbolo (@$!%*?&)",
+    "button": "Cambiar Contraseña",
+    "loading": "Procesando...",
+    "redirecting": "Serás redirigido al login en 3 segundos...",
+    "error": "Error al restablecer la contraseña",
+    "requestError": "Error al procesar la solicitud",
+    "backToLogin": "Volver al Login"
+  },
   "form": {
     "username": "Nombre de usuario",
     "email": "Correo electrónico",
@@ -174,7 +243,13 @@
     "usernamePlaceholder": "Ingresa tu nombre de usuario",
     "emailPlaceholder": "Ingresa tu correo electrónico",
     "passwordPlaceholder": "Ingresa tu contraseña",
-    "confirmPasswordPlaceholder": "Confirma tu contraseña"
+    "confirmPasswordPlaceholder": "Confirma tu contraseña",
+    "passwordRequirements": "La contraseña debe tener:",
+    "minLength": "Mínimo 12 caracteres",
+    "uppercase": "Una mayúscula (A-Z)",
+    "lowercase": "Una minúscula (a-z)",
+    "number": "Un número (0-9)",
+    "symbol": "Un símbolo (@$!%*?&)"
   },
   "dashboard": {
     "title": "Panel de Control",
@@ -262,7 +337,8 @@
     "sell": "VENTA",
     "recentActivity": "Actividad Reciente",
     "refresh": "Actualizar",
-    "symbol": "Símbolo"
+    "symbol": "Símbolo",
+    "goBuy": "Ir a comprar"
   },
   "profile": {
     "title": "Perfil",
@@ -313,6 +389,10 @@
     "goToMarket": "Ir al Mercado",
     "quote": "El inversor individual debe actuar consistentemente como inversor y no como especulador.",
     "quoteAuthor": "— Benjamin Graham, El Inversor Inteligente",
+    "moduleNotFound": "Módulo no encontrado",
+    "quiz": {
+      "ariaLabel": "Selecciona la respuesta correcta"
+    },
     "modules": {
       "m1": {
         "title": "Fundamentos del Mercado",
@@ -420,6 +500,23 @@
     "networkError": "Error de red. Por favor verifica tu conexión.",
     "serverError": "Error del servidor. Por favor intenta más tarde."
   },
+  "validation": {
+    "usernameMin": "El nombre de usuario debe tener al menos 3 caracteres",
+    "usernameMax": "El nombre de usuario debe tener máximo 50 caracteres",
+    "usernamePattern": "Solo letras minúsculas, números, puntos, guiones y guiones bajos",
+    "emailInvalid": "Por favor ingresa un correo electrónico válido",
+    "passwordMin": "La contraseña debe tener al menos 12 caracteres",
+    "passwordMax": "La contraseña debe tener máximo 128 caracteres",
+    "passwordUpper": "Debe contener al menos una mayúscula",
+    "passwordLower": "Debe contener al menos una minúscula",
+    "passwordNumber": "Debe contener al menos un número",
+    "passwordSpecial": "Debe contener al menos un símbolo (@$!%*?&)",
+    "required": "Este campo es requerido",
+    "passwordsMismatch": "Las contraseñas no coinciden",
+    "quantityPositive": "La cantidad debe ser un número positivo",
+    "currentPasswordRequired": "Debes ingresar tu contraseña actual",
+    "passwordInvalid": "La contraseña no cumple con los requisitos"
+  },
   "common": {
     "loading": "Cargando...",
     "error": "Ocurrió un error",
@@ -438,7 +535,44 @@
     "sort": "Ordenar",
     "ascending": "Ascendente",
     "descending": "Descendente",
-    "security": "Seguridad"
+    "security": "Seguridad",
+    "page": "Página",
+    "of": "de"
+  },
+  "tour": {
+    "stepLabel": "Paso {{current}}/{{total}}",
+    "close": "Cerrar tour",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "finish": "Finalizar",
+    "step1": {
+      "title": "Bienvenido al Simulador",
+      "description": "Has recibido $10,000 virtuales para comenzar tu viaje de inversión."
+    },
+    "step2": {
+      "title": "Aprende los Fundamentos",
+      "description": "Completa el curso de aprendizaje para entender los conceptos básicos de inversión."
+    },
+    "step3": {
+      "title": "Explora el Mercado Forex",
+      "description": "Descubre las tasas de cambio y el mercado de divisas global."
+    },
+    "step4": {
+      "title": "Compra tus Primeras Acciones",
+      "description": "Navega por las acciones disponibles y realiza tu primera compra."
+    },
+    "step5": {
+      "title": "Gestiona tu Portafolio",
+      "description": "Revisa tus inversiones, ganancias y pérdidas en tu portafolio."
+    },
+    "step6": {
+      "title": "Sigue tu Progreso",
+      "description": "Monitorea tu rendimiento en el dashboard."
+    },
+    "step7": {
+      "title": "¡Listo para Invertir!",
+      "description": "Ahora tienes todas las herramientas para invertir inteligentemente."
+    }
   },
   "toast": {
     "loginSuccess": "¡Bienvenido/a de nuevo!",
@@ -474,7 +608,8 @@
     "reviewCourse": "Repasar curso",
     "goToInvest": "Ir a invertir",
     "finishLesson": "Terminar Lección",
-    "testKnowledge": "Probar Mis Aprendizajes"
+    "testKnowledge": "Probar Mis Aprendizajes",
+    "errorCompleting": "Error al completar el módulo"
   },
   "markets": {
     "title": "Mercados Globales",
@@ -485,23 +620,42 @@
       "NorthAmerica": "Norteamérica",
       "SouthAmerica": "Sudamérica",
       "Europe": "Europa",
-      "Asia": "Asia"
+      "Asia": "Asia",
+      "Global": "Global",
+      "Oceania": "Oceanía"
     }
   },
   "indices": {
     "title": "Índices Mundiales",
-    "subtitle": "Sigue los principales índices de las bolsas globales"
+    "subtitle": "Sigue los principales índices de las bolsas globales",
+    "all": "Todos",
+    "index": "Índice",
+    "country": "País",
+    "value": "Valor",
+    "change": "Cambio",
+    "percent": "%"
   },
   "leaderboard": {
     "title": "Ranking de Inversores",
     "subtitle": "Los inversores con mejor rentabilidad del simulador",
     "yourPosition": "Tu posición",
     "yourProfitability": "Tu rentabilidad",
-    "noData": "No hay datos disponibles aún"
+    "noData": "No hay datos disponibles aún",
+    "position": "Posición",
+    "investor": "Inversor",
+    "totalValue": "Valor Total",
+    "profitability": "Rentabilidad"
   },
   "forex": {
     "title": "Mercado de Divisas (Forex)",
     "subtitle": "Consulta las tasas de cambio de las principales monedas",
-    "noHistoricalData": "No hay datos históricos disponibles"
+    "noHistoricalData": "No hay datos históricos disponibles",
+    "pair": "Par",
+    "price": "Precio",
+    "change24h": "Cambio 24h",
+    "min": "Mín",
+    "max": "Máx",
+    "refresh": "Actualizar",
+    "guide": "Guía de Monedas"
   }
 }

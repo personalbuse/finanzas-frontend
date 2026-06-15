@@ -68,7 +68,7 @@ export function Portfolio() {
     } catch (error) {
       if (error instanceof Error && error.name === 'AbortError') return;
       console.error('Error fetching portfolio:', error);
-      setError('Error al cargar el portafolio. Intenta de nuevo.');
+      setError(t('common.error'));
     } finally {
       setLoading(false);
     }

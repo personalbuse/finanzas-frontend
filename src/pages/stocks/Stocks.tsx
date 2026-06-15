@@ -69,7 +69,7 @@ export function Stocks() {
       if (error instanceof Error && error.name === 'AbortError') return;
       console.error('Error fetching stocks:', error);
       const err = error as { response?: { data?: { detail?: string } } };
-      toast.error(err.response?.data?.detail || 'Error al cargar acciones');
+      toast.error(err.response?.data?.detail || t('common.error'));
       setStocks([]);
     } finally {
       setLoading(false);
@@ -91,7 +91,7 @@ export function Stocks() {
       setStocks(res.data ? [res.data] : []);
     } catch (error) {
       console.error('Error searching stock:', error);
-      toast.error('Accion no encontrada. Verifica el simbolo e intenta de nuevo.');
+      toast.error(t('stocks.notFound'));
       setStocks([]);
     } finally {
       setLoading(false);

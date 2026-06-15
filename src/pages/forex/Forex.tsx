@@ -130,10 +130,10 @@ export function Forex() {
         <div>
           <h1 className="text-3xl font-semibold text-slate-900 dark:text-white tracking-tight flex items-center gap-3">
             <DollarSign className="w-8 h-8" />
-            {t('forex.title', 'Mercado de Divisas (Forex)')}
+            {t('forex.title')}
           </h1>
           <p className="text-slate-500 dark:text-slate-400 mt-2">
-            {t('forex.subtitle', 'Tasas de cambio actualizadas diariamente')}
+            {t('forex.subtitle')}
           </p>
         </div>
         <button
@@ -142,7 +142,7 @@ export function Forex() {
           className="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-[#1a1a1a] rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-[#262626] transition-colors"
         >
           <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
-          <span className="text-sm font-medium">Actualizar</span>
+          <span className="text-sm font-medium">{t('forex.refresh')}</span>
         </button>
       </div>
 
@@ -158,19 +158,19 @@ export function Forex() {
                 <thead className="bg-slate-50 dark:bg-[#1a1a1a]/50">
                   <tr>
                     <th className="px-4 py-3 text-left text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-                      Par
+                      {t('forex.pair')}
                     </th>
                     <th className="px-4 py-3 text-right text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-                      Precio
+                      {t('forex.price')}
                     </th>
                     <th className="px-4 py-3 text-right text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-                      Cambio 24h
+                      {t('forex.change24h')}
                     </th>
                     <th className="hidden md:table-cell px-4 py-3 text-right text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-                      Mín
+                      {t('forex.min')}
                     </th>
                     <th className="hidden md:table-cell px-4 py-3 text-right text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-                      Máx
+                      {t('forex.max')}
                     </th>
                   </tr>
                 </thead>
@@ -284,7 +284,7 @@ export function Forex() {
 
       <div className="mt-8">
         <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
-          Guía de Monedas
+          {t('forex.guide')}
         </h3>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
           {Object.entries(CURRENCIES).map(([code, { name, flag }]) => (

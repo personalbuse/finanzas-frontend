@@ -1,5 +1,6 @@
 import { Loader2 } from 'lucide-react';
 import { memo } from 'react';
+import { useTranslation } from '../../provider/LanguageProvider';
 
 export interface SpinnerProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
@@ -21,19 +22,20 @@ function SpinnerBase({
   fullPage = false,
   className = '',
 }: SpinnerProps) {
+  const { t } = useTranslation();
   const content = (
     <div
       role="status"
       aria-live="polite"
       aria-busy="true"
-      aria-label={label ?? 'Cargando'}
+      aria-label={label ?? t('common.loading')}
       className={`flex items-center justify-center gap-2 ${className}`}
     >
       <Loader2 className={`${sizeMap[size]} animate-spin text-slate-700 dark:text-slate-200`} />
       {label ? (
         <span className="text-sm text-slate-600 dark:text-slate-300">{label}</span>
       ) : (
-        <span className="sr-only">Cargando</span>
+        <span className="sr-only">{t('common.loading')}</span>
       )}
     </div>
   );

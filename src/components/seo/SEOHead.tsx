@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import i18n from '../../locales/i18n';
 
 interface SEOHeadProps {
   title?: string;
@@ -8,8 +9,8 @@ interface SEOHeadProps {
   type?: string;
 }
 
-const DEFAULT_SITE_NAME = 'Simulador de Inversiones';
-const DEFAULT_DESCRIPTION = 'Aprende a invertir en bolsa sin riesgo. Simula trading con $10,000 virtuales y domina los mercados financieros.';
+const DEFAULT_SITE_NAME = i18n.t('app.title');
+const DEFAULT_DESCRIPTION = i18n.t('app.subtitle');
 const DEFAULT_URL = '';
 const DEFAULT_IMAGE = '/og-image.png';
 

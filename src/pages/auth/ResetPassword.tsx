@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from '../../provider/LanguageProvider';
 import { CheckCircle, XCircle } from 'lucide-react';
 import { API_BASE_URL } from '../../services/api';
 import type { z } from 'zod';
 import { resetPasswordSchema } from '../../utils/validation';
 
 export function ResetPassword() {
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const token = searchParams.get('token');
@@ -26,16 +28,16 @@ export function ResetPassword() {
 
   useEffect(() => {
     if (!token) {
-      setError('Token inválido o faltante');
+      setError(t('resetPassword.invalidToken'));
     }
-  }, [token]);
+  }, [token, t]);
 
   const validateField = (name: string, value: string) => {
     const fieldSchema = (resetPasswordSchema.shape as Record<string, z.ZodTypeAny>)[name];
     if (fieldSchema) {
       const result = fieldSchema.safeParse(value);
       if (!result.success) {
-        setErrors((prev) => ({ ...prev, [name]: result.error.issues[0].message }));
+        setErrors((prev) => ({ ...prev, [name]: t(result.error.issues[0].message) }));
       } else {
         setErrors((prev) => {
           const next = { ...prev };
@@ -71,7 +73,7 @@ export function ResetPassword() {
     setMessage('');
 
     if (!token) {
-      setError('Token inválido');
+      setError(t('resetPassword.invalidToken'));
       setLoading(false);
       return;
     }
@@ -81,7 +83,7 @@ export function ResetPassword() {
       const fieldErrors: Record<string, string> = {};
       result.error.issues.forEach((err) => {
         if (err.path[0]) {
-          fieldErrors[err.path[0] as string] = err.message;
+          fieldErrors[err.path[0] as string] = t(err.message);
         }
       });
       setErrors(fieldErrors);
@@ -99,7 +101,7 @@ export function ResetPassword() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.detail || 'Error al restablecer contraseña');
+        throw new Error(data.detail || t('resetPassword.error'));
       }
 
       setMessage(data.message);
@@ -107,7 +109,7 @@ export function ResetPassword() {
         navigate('/login');
       }, 3000);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Error al procesar la solicitud');
+      setError(err instanceof Error ? err.message : t('resetPassword.requestError'));
     } finally {
       setLoading(false);
     }
@@ -118,13 +120,13 @@ export function ResetPassword() {
       <div className="min-h-[80vh] flex items-center justify-center py-8 px-4">
         <div className="max-w-md w-full space-y-5 bg-white dark:bg-[#0d0d0d] p-6 sm:p-8 rounded-xl border border-red-200 dark:border-red-900">
           <div className="text-center">
-            <h2 className="text-xl font-semibold text-red-600 dark:text-red-400">Token Inválido</h2>
-            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">El enlace de recuperación no es válido o ha expirado.</p>
+            <h2 className="text-xl font-semibold text-red-600 dark:text-red-400">{t('resetPassword.invalidTokenTitle')}</h2>
+            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">{t('resetPassword.tokenExpired')}</p>
             <button
               onClick={() => navigate('/forgot-password')}
               className="mt-4 btn-primary"
             >
-              Solicitar nuevo enlace
+              {t('resetPassword.requestNewLink')}
             </button>
           </div>
         </div>
@@ -137,10 +139,10 @@ export function ResetPassword() {
       <div className="max-w-md w-full space-y-5 bg-white dark:bg-[#0d0d0d] p-6 sm:p-8 rounded-xl border border-slate-200 dark:border-[#1a1a1a]">
         <div className="text-center">
           <h2 className="text-3xl font-semibold text-slate-900 dark:text-white tracking-tight">
-            Nueva Contraseña
+            {t('resetPassword.title')}
           </h2>
           <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-            Ingresa tu nueva contraseña
+            {t('resetPassword.subtitle')}
           </p>
         </div>
 
@@ -153,7 +155,7 @@ export function ResetPassword() {
         {message && (
           <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400 px-4 py-3 rounded-lg text-sm font-medium animate-fade-in">
             {message}
-            <p className="text-xs mt-1 opacity-70">Serás redirigido al login en 3 segundos...</p>
+            <p className="text-xs mt-1 opacity-70">{t('resetPassword.redirecting')}</p>
           </div>
         )}
 
@@ -161,7 +163,7 @@ export function ResetPassword() {
           <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="password" className="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">
-                Nueva Contraseña
+                {t('resetPassword.passwordLabel')}
               </label>
               <input
                 id="password"
@@ -169,7 +171,7 @@ export function ResetPassword() {
                 type="password"
                 required
                 className="input-clean mt-1"
-                placeholder="Ingresa tu nueva contraseña"
+                placeholder={t('resetPassword.passwordPlaceholder')}
                 value={password}
                 onChange={(e) => {
                   setPassword(e.target.value);
@@ -186,27 +188,27 @@ export function ResetPassword() {
               {password && (
                 <div className="mt-2 space-y-1 bg-slate-50 dark:bg-[#1a1a1a] p-2.5 rounded-lg">
                   <p className="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">
-                    La contraseña debe tener:
+                    {t('resetPassword.passwordRequirements')}
                   </p>
                   <div className={`flex items-center gap-2 text-xs ${passwordRequirements.length ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}`}>
                     {passwordRequirements.length ? <CheckCircle className="w-3.5 h-3.5" /> : <XCircle className="w-3.5 h-3.5" />}
-                    <span>Mínimo 12 caracteres</span>
+                    <span>{t('resetPassword.minLength')}</span>
                   </div>
                   <div className={`flex items-center gap-2 text-xs ${passwordRequirements.uppercase ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}`}>
                     {passwordRequirements.uppercase ? <CheckCircle className="w-3.5 h-3.5" /> : <XCircle className="w-3.5 h-3.5" />}
-                    <span>Una mayúscula (A-Z)</span>
+                    <span>{t('resetPassword.uppercase')}</span>
                   </div>
                   <div className={`flex items-center gap-2 text-xs ${passwordRequirements.lowercase ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}`}>
                     {passwordRequirements.lowercase ? <CheckCircle className="w-3.5 h-3.5" /> : <XCircle className="w-3.5 h-3.5" />}
-                    <span>Una minúscula (a-z)</span>
+                    <span>{t('resetPassword.lowercase')}</span>
                   </div>
                   <div className={`flex items-center gap-2 text-xs ${passwordRequirements.number ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}`}>
                     {passwordRequirements.number ? <CheckCircle className="w-3.5 h-3.5" /> : <XCircle className="w-3.5 h-3.5" />}
-                    <span>Un número (0-9)</span>
+                    <span>{t('resetPassword.number')}</span>
                   </div>
                   <div className={`flex items-center gap-2 text-xs ${passwordRequirements.symbol ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}`}>
                     {passwordRequirements.symbol ? <CheckCircle className="w-3.5 h-3.5" /> : <XCircle className="w-3.5 h-3.5" />}
-                    <span>Un símbolo (@$!%*?&)</span>
+                    <span>{t('resetPassword.symbol')}</span>
                   </div>
                 </div>
               )}
@@ -214,7 +216,7 @@ export function ResetPassword() {
 
             <div>
               <label htmlFor="confirmPassword" className="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">
-                Confirmar Contraseña
+                {t('resetPassword.confirmLabel')}
               </label>
               <input
                 id="confirmPassword"
@@ -222,7 +224,7 @@ export function ResetPassword() {
                 type="password"
                 required
                 className="input-clean mt-1"
-                placeholder="Confirma tu nueva contraseña"
+                placeholder={t('resetPassword.confirmPlaceholder')}
                 value={confirmPassword}
                 onChange={(e) => handleConfirmChange(e.target.value)}
                 aria-invalid={errors.confirmPassword ? 'true' : 'false'}
@@ -240,7 +242,7 @@ export function ResetPassword() {
               disabled={loading || !allRequirementsMet || password !== confirmPassword}
               className={`btn-primary w-full mt-2 ${(!allRequirementsMet || password !== confirmPassword) ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
-              {loading ? 'Procesando...' : 'Cambiar Contraseña'}
+              {loading ? t('resetPassword.loading') : t('resetPassword.button')}
             </button>
           </form>
         )}
@@ -251,7 +253,7 @@ export function ResetPassword() {
               onClick={() => navigate('/login')}
               className="font-medium text-slate-900 dark:text-white hover:underline transition-all"
             >
-              Volver al Login
+              {t('resetPassword.backToLogin')}
             </button>
           </p>
         </div>

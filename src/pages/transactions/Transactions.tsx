@@ -120,7 +120,7 @@ export function Transactions() {
           </h3>
           <div className="flex items-center gap-4">
             <span className="text-sm text-slate-500 dark:text-slate-400">
-              {sortedTransactions.length} {t('transactions.totalCount').toLowerCase()}
+              {sortedTransactions.length} {t('transactions.totalCount')}
             </span>
             <button 
               onClick={fetchTransactions} 
@@ -174,7 +174,7 @@ export function Transactions() {
                         onClick={() => navigate('/stocks')}
                         className="mt-4 px-4 py-2 text-sm font-medium bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-lg hover:bg-slate-800 transition-colors"
                       >
-                        Ir a comprar
+                        {t('transactions.goBuy')}
                       </button>
                     </div>
                   </td>

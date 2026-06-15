@@ -165,12 +165,12 @@ export function Register() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.detail || 'Error al reenviar código');
+        throw new Error(data.detail || t('register.resendError'));
       }
 
-      toast.success('Nuevo código enviado a tu correo');
+      toast.success(t('register.codeResent'));
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Error al reenviar código');
+      setError(err instanceof Error ? err.message : t('register.resendError'));
     } finally {
       setLoading(false);
     }
@@ -261,23 +261,23 @@ export function Register() {
                   </p>
                   <div className={`flex items-center gap-2 text-xs ${passwordRequirements.length ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}`}>
                     {passwordRequirements.length ? <CheckCircle className="w-3.5 h-3.5" /> : <XCircle className="w-3.5 h-3.5" />}
-                    <span>Mínimo 12 caracteres</span>
+                    <span>{t('form.minLength')}</span>
                   </div>
                   <div className={`flex items-center gap-2 text-xs ${passwordRequirements.uppercase ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}`}>
                     {passwordRequirements.uppercase ? <CheckCircle className="w-3.5 h-3.5" /> : <XCircle className="w-3.5 h-3.5" />}
-                    <span>Una mayúscula (A-Z)</span>
+                    <span>{t('form.uppercase')}</span>
                   </div>
                   <div className={`flex items-center gap-2 text-xs ${passwordRequirements.lowercase ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}`}>
                     {passwordRequirements.lowercase ? <CheckCircle className="w-3.5 h-3.5" /> : <XCircle className="w-3.5 h-3.5" />}
-                    <span>Una minúscula (a-z)</span>
+                    <span>{t('form.lowercase')}</span>
                   </div>
                   <div className={`flex items-center gap-2 text-xs ${passwordRequirements.number ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}`}>
                     {passwordRequirements.number ? <CheckCircle className="w-3.5 h-3.5" /> : <XCircle className="w-3.5 h-3.5" />}
-                    <span>Un número (0-9)</span>
+                    <span>{t('form.number')}</span>
                   </div>
                   <div className={`flex items-center gap-2 text-xs ${passwordRequirements.symbol ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}`}>
                     {passwordRequirements.symbol ? <CheckCircle className="w-3.5 h-3.5" /> : <XCircle className="w-3.5 h-3.5" />}
-                    <span>Un símbolo (@$!%*?&)</span>
+                    <span>{t('form.symbol')}</span>
                   </div>
                 </div>
               )}
@@ -318,14 +318,14 @@ export function Register() {
           <form className="mt-6 space-y-4" onSubmit={handleVerifyCode}>
             <div className="text-center mb-3">
               <p className="text-sm text-slate-600 dark:text-slate-400">
-                Te enviamos un código de verificación a<br />
+                {t('register.codeSent')}<br />
                 <span className="font-medium text-slate-900 dark:text-white">{formData.email}</span>
               </p>
             </div>
 
             <div>
               <label htmlFor="verificationCode" className="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">
-                Código de verificación
+                {t('register.codeLabel')}
               </label>
               <input
                 id="verificationCode"
@@ -338,7 +338,7 @@ export function Register() {
                 onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
               />
               <p className="text-xs text-slate-400 dark:text-slate-500 mt-2 text-center">
-                Ingresa los 6 dígitos que te enviamos por correo
+                {t('register.codeHint')}
               </p>
             </div>
 
@@ -381,7 +381,7 @@ export function Register() {
                 onClick={() => { setStep(1); setError(''); }}
                 className="font-medium text-slate-900 dark:text-white hover:underline transition-all"
               >
-                ← Volver al registro
+                {t('register.backToRegister')}
               </button>
             )}
           </p>

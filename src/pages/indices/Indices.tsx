@@ -16,12 +16,12 @@ interface IndexData {
 }
 
 const REGIONS = [
-  { id: 'North America', name: 'Norteamérica', flag: '🇺🇸' },
-  { id: 'South America', name: 'Sudamérica', flag: '🇧🇷' },
-  { id: 'Europe', name: 'Europa', flag: '🇪🇺' },
-  { id: 'Asia', name: 'Asia', flag: '🌏' },
-  { id: 'Global', name: 'Global', flag: '🌍' },
-  { id: 'Oceania', name: 'Oceania', flag: '🌊' },
+  { id: 'North America', flag: '🇺🇸' },
+  { id: 'South America', flag: '🇧🇷' },
+  { id: 'Europe', flag: '🇪🇺' },
+  { id: 'Asia', flag: '🌏' },
+  { id: 'Global', flag: '🌍' },
+  { id: 'Oceania', flag: '🌊' },
 ];
 
 const REGION_FLAGS: Record<string, string> = {
@@ -76,10 +76,10 @@ export function Indices() {
       <div className="mb-8">
         <h1 className="text-3xl font-semibold text-slate-900 dark:text-white tracking-tight flex items-center gap-3">
           <BarChart2 className="w-8 h-8" />
-          {t('indices.title', 'Índices Mundiales')}
+          {t('indices.title')}
         </h1>
         <p className="text-slate-500 dark:text-slate-400 mt-2">
-          {t('indices.subtitle', 'Sigue los principales índices de las bolsas globales')}
+          {t('indices.subtitle')}
         </p>
       </div>
 
@@ -92,7 +92,7 @@ export function Indices() {
               : 'bg-slate-100 dark:bg-[#1a1a1a] text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-[#262626]'
           }`}
         >
-          Todos
+          {t('indices.all')}
         </button>
         {REGIONS.map((region) => (
           <button
@@ -104,7 +104,7 @@ export function Indices() {
                 : 'bg-slate-100 dark:bg-[#1a1a1a] text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-[#262626]'
             }`}
           >
-            <span>{region.flag}</span> {region.name}
+            <span>{region.flag}</span> {t(`markets.region.${region.id}`, region.id)}
           </button>
         ))}
       </div>
@@ -120,26 +120,26 @@ export function Indices() {
               <thead className="bg-slate-50 dark:bg-[#1a1a1a]/50">
                 <tr>
                   <th className="px-4 sm:px-6 py-4 text-left text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-                    Índice
+                    {t('indices.index')}
                   </th>
                   <th className="px-4 sm:px-6 py-4 text-left text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-                    País
+                    {t('indices.country')}
                   </th>
                   <th className="px-4 sm:px-6 py-4 text-right text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-                    Valor
+                    {t('indices.value')}
                   </th>
                   <th className="px-4 sm:px-6 py-4 text-right text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-                    Cambio
+                    {t('indices.change')}
                   </th>
                   <th className="px-4 sm:px-6 py-4 text-right text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-                    %
+                    {t('indices.percent')}
                   </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-700 responsive-table-card">
                 {indices.map((index) => (
                   <tr key={index.symbol} className="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
-                    <td data-label="Índice" className="px-4 sm:px-6 py-4">
+                    <td data-label={t('indices.index')} className="px-4 sm:px-6 py-4">
                       <div className="flex items-center gap-3">
                         <span className="text-2xl sm:text-3xl">
                           {REGION_FLAGS[index.region] || '🌐'}
@@ -150,16 +150,16 @@ export function Indices() {
                         </div>
                       </div>
                     </td>
-                    <td data-label="País" className="px-4 sm:px-6 py-4">
+                    <td data-label={t('indices.country')} className="px-4 sm:px-6 py-4">
                       <span className="text-slate-600 dark:text-slate-400">{index.country}</span>
                     </td>
-                    <td data-label="Valor" className="px-4 sm:px-6 py-4 text-right">
+                    <td data-label={t('indices.value')} className="px-4 sm:px-6 py-4 text-right">
                       <span className="text-lg font-bold text-slate-900 dark:text-white">
                         {formatValue(index.current_value, index.currency)}
                       </span>
                       <span className="text-xs text-slate-500 ml-1">{index.currency}</span>
                     </td>
-                    <td data-label="Cambio" className="px-4 sm:px-6 py-4 text-right">
+                    <td data-label={t('indices.change')} className="px-4 sm:px-6 py-4 text-right">
                       <div className={`flex items-center justify-end gap-1 font-medium ${
                         (index.change || 0) >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'
                       }`}>
@@ -167,7 +167,7 @@ export function Indices() {
                         {formatValue(Math.abs(index.change || 0), index.currency)}
                       </div>
                     </td>
-                    <td data-label="%" className="px-4 sm:px-6 py-4 text-right">
+                    <td data-label={t('indices.percent')} className="px-4 sm:px-6 py-4 text-right">
                       <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-bold ${
                         (index.change_percent || 0) >= 0
                           ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'

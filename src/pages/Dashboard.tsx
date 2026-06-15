@@ -220,7 +220,7 @@ export function Dashboard() {
 
       <div className="mb-8">
         <h1 className="text-2xl font-medium text-slate-900 dark:text-white tracking-tight">
-          Hola, {currentUser.username || 'Usuario'}
+          {t('dashboard.welcome')}, {currentUser.username || 'Usuario'}
         </h1>
       </div>
 

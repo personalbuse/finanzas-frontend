@@ -25,10 +25,13 @@
     "markets": "Markets",
     "indices": "Indices",
     "forex": "Forex",
-    "leaderboard": "Ranking"
+    "leaderboard": "Ranking",
+    "menu": "Navigation menu"
   },
   "footer": {
-    "description": "Investment Simulator - Educational Project for International Finance, Universidad de Pamplona"
+    "description": "Investment Simulator - Educational Project for International Finance, Universidad de Pamplona",
+    "university": "Universidad de Pamplona",
+    "department": "International Finance"
   },
   "admin": {
     "title": "Admin Panel",
@@ -89,7 +92,42 @@
     "stocks": "Stocks",
     "rates": "Rates",
     "indices": "Indices",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "noPermission": "You don't have admin permissions. Your account needs the \"admin\" role.",
+    "maintenanceActivated": "Maintenance mode activated",
+    "maintenanceDeactivated": "Maintenance mode deactivated",
+    "dataUpdated": "{{type}} data updated",
+    "cacheCleared": "Cache cleared",
+    "cacheClearTitle": "Clear Cache",
+    "cacheClearMessage": "Clear the entire system cache? Data will be reloaded from the APIs.",
+    "noChartsData": "No data yet",
+    "transactions": "Transactions",
+    "volume": "Volume",
+    "id": "ID",
+    "email": "Email",
+    "noLogs": "No records yet",
+    "txTotal": "{{count}} total transactions",
+    "noTransactions": "No transactions",
+    "admin": "Admin",
+    "action": "Action",
+    "target": "Target",
+    "detail": "Detail",
+    "statusActive": "Enabled",
+    "statusDisabled": "Disabled",
+    "apiFinnhub": "Finnhub API",
+    "apiExchangeRate": "ExchangeRate API",
+    "apiPostgreSQL": "PostgreSQL",
+    "apiRedis": "Redis",
+    "openMenu": "Open navigation menu",
+    "navigation": "Admin navigation",
+    "enterValidValue": "Enter a valid value",
+    "banUserConfirmTitle": "Ban user",
+    "activateUserConfirmTitle": "Activate user",
+    "confirmUserAction": "Are you sure you want to {{action}} \"{{username}}\"?",
+    "actionBan": "ban",
+    "actionActivate": "activate",
+    "inversor": "investor",
+    "sortByRole": "Role"
   },
   "maintenance": {
     "title": "System Under Maintenance",
@@ -156,7 +194,13 @@
     "verifySubtitle": "Enter the code we sent you",
     "verifying": "Verifying...",
     "verifyButton": "Create Account",
-    "resendCode": "Didn't receive the code? Request another"
+    "resendCode": "Didn't receive the code? Request another",
+    "codeResent": "New code sent to your email",
+    "resendError": "Error resending code",
+    "codeSent": "We sent a verification code to",
+    "codeLabel": "Verification code",
+    "codeHint": "Enter the 6 digits we sent by email",
+    "backToRegister": "← Back to register"
   },
   "forgotPassword": {
     "title": "Recover Password",
@@ -166,6 +210,30 @@
     "rememberPassword": "Remember your password?",
     "login": "Sign in here"
   },
+  "resetPassword": {
+    "title": "New Password",
+    "subtitle": "Enter your new password",
+    "invalidToken": "Invalid or missing token",
+    "invalidTokenTitle": "Invalid Token",
+    "tokenExpired": "The recovery link is invalid or has expired.",
+    "requestNewLink": "Request new link",
+    "passwordLabel": "New Password",
+    "passwordPlaceholder": "Enter your new password",
+    "confirmLabel": "Confirm Password",
+    "confirmPlaceholder": "Confirm your new password",
+    "passwordRequirements": "The password must have:",
+    "minLength": "Minimum 12 characters",
+    "uppercase": "One uppercase letter (A-Z)",
+    "lowercase": "One lowercase letter (a-z)",
+    "number": "One number (0-9)",
+    "symbol": "One symbol (@$!%*?&)",
+    "button": "Change Password",
+    "loading": "Processing...",
+    "redirecting": "You will be redirected to login in 3 seconds...",
+    "error": "Error resetting password",
+    "requestError": "Error processing the request",
+    "backToLogin": "Back to Login"
+  },
   "form": {
     "username": "Username",
     "email": "Email",
@@ -174,7 +242,13 @@
     "usernamePlaceholder": "Enter your username",
     "emailPlaceholder": "Enter your email",
     "passwordPlaceholder": "Enter your password",
-    "confirmPasswordPlaceholder": "Confirm your password"
+    "confirmPasswordPlaceholder": "Confirm your password",
+    "passwordRequirements": "The password must have:",
+    "minLength": "Minimum 12 characters",
+    "uppercase": "One uppercase letter (A-Z)",
+    "lowercase": "One lowercase letter (a-z)",
+    "number": "One number (0-9)",
+    "symbol": "One symbol (@$!%*?&)"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -262,7 +336,8 @@
     "sell": "SELL",
     "recentActivity": "Recent Activity",
     "refresh": "Refresh",
-    "symbol": "Symbol"
+    "symbol": "Symbol",
+    "goBuy": "Go buy"
   },
   "profile": {
     "title": "Profile",
@@ -313,6 +388,10 @@
     "goToMarket": "Go to Market",
     "quote": "The individual investor should act consistently as an investor and not as a speculator.",
     "quoteAuthor": "— Benjamin Graham, The Intelligent Investor",
+    "moduleNotFound": "Module not found",
+    "quiz": {
+      "ariaLabel": "Select the correct answer"
+    },
     "modules": {
       "m1": {
         "title": "Market Foundations",
@@ -420,6 +499,23 @@
     "networkError": "Network error. Please check your connection.",
     "serverError": "Server error. Please try again later."
   },
+  "validation": {
+    "usernameMin": "Username must be at least 3 characters",
+    "usernameMax": "Username must be at most 50 characters",
+    "usernamePattern": "Only lowercase letters, numbers, dots, hyphens and underscores",
+    "emailInvalid": "Please enter a valid email address",
+    "passwordMin": "Password must be at least 12 characters",
+    "passwordMax": "Password must be at most 128 characters",
+    "passwordUpper": "Must contain at least one uppercase letter",
+    "passwordLower": "Must contain at least one lowercase letter",
+    "passwordNumber": "Must contain at least one number",
+    "passwordSpecial": "Must contain at least one symbol (@$!%*?&)",
+    "required": "This field is required",
+    "passwordsMismatch": "Passwords do not match",
+    "quantityPositive": "Quantity must be a positive number",
+    "currentPasswordRequired": "You must enter your current password",
+    "passwordInvalid": "Password does not meet the requirements"
+  },
   "common": {
     "loading": "Loading...",
     "error": "An error occurred",
@@ -438,7 +534,44 @@
     "sort": "Sort",
     "ascending": "Ascending",
     "descending": "Descending",
-    "security": "Security"
+    "security": "Security",
+    "page": "Page",
+    "of": "of"
+  },
+  "tour": {
+    "stepLabel": "Step {{current}}/{{total}}",
+    "close": "Close tour",
+    "previous": "Previous",
+    "next": "Next",
+    "finish": "Finish",
+    "step1": {
+      "title": "Welcome to the Simulator",
+      "description": "You received $10,000 virtual dollars to start your investment journey."
+    },
+    "step2": {
+      "title": "Learn the Fundamentals",
+      "description": "Complete the learning course to understand basic investment concepts."
+    },
+    "step3": {
+      "title": "Explore the Forex Market",
+      "description": "Discover exchange rates and the global currency market."
+    },
+    "step4": {
+      "title": "Buy Your First Stocks",
+      "description": "Browse available stocks and make your first purchase."
+    },
+    "step5": {
+      "title": "Manage Your Portfolio",
+      "description": "Review your investments, gains and losses in your portfolio."
+    },
+    "step6": {
+      "title": "Track Your Progress",
+      "description": "Monitor your performance on the dashboard."
+    },
+    "step7": {
+      "title": "Ready to Invest!",
+      "description": "Now you have all the tools to invest wisely."
+    }
   },
   "toast": {
     "loginSuccess": "Welcome back!",
@@ -474,7 +607,8 @@
     "reviewCourse": "Review course",
     "goToInvest": "Go to invest",
     "finishLesson": "Finish Lesson",
-    "testKnowledge": "Test My Knowledge"
+    "testKnowledge": "Test My Knowledge",
+    "errorCompleting": "Error completing the module"
   },
   "markets": {
     "title": "Global Markets",
@@ -485,23 +619,42 @@
       "NorthAmerica": "North America",
       "SouthAmerica": "South America",
       "Europe": "Europe",
-      "Asia": "Asia"
+      "Asia": "Asia",
+      "Global": "Global",
+      "Oceania": "Oceania"
     }
   },
   "indices": {
     "title": "World Indices",
-    "subtitle": "Follow the major indices of global stock markets"
+    "subtitle": "Follow the major indices of global stock markets",
+    "all": "All",
+    "index": "Index",
+    "country": "Country",
+    "value": "Value",
+    "change": "Change",
+    "percent": "%"
   },
   "leaderboard": {
     "title": "Investor Ranking",
     "subtitle": "Top performing investors in the simulator",
     "yourPosition": "Your position",
     "yourProfitability": "Your profitability",
-    "noData": "No data available yet"
+    "noData": "No data available yet",
+    "position": "Position",
+    "investor": "Investor",
+    "totalValue": "Total Value",
+    "profitability": "Profitability"
   },
   "forex": {
     "title": "Foreign Exchange (Forex)",
     "subtitle": "Check exchange rates of major currencies",
-    "noHistoricalData": "No historical data available"
+    "noHistoricalData": "No historical data available",
+    "pair": "Pair",
+    "price": "Price",
+    "change24h": "24h Change",
+    "min": "Min",
+    "max": "Max",
+    "refresh": "Refresh",
+    "guide": "Currency Guide"
   }
 }

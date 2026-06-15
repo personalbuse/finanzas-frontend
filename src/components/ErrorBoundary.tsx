@@ -1,5 +1,6 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
+import i18n from '../locales/i18n';
 
 interface Props {
   children: ReactNode;
@@ -31,24 +32,24 @@ export class ErrorBoundary extends Component<Props, State> {
           <div className="text-center max-w-md">
             <h1 className="text-6xl font-bold text-slate-200 dark:text-[#1a1a1a] tracking-tight">Oops</h1>
             <h2 className="text-xl font-semibold text-slate-900 dark:text-white mt-4">
-              Something went wrong
+              {i18n.t('common.error')}
             </h2>
             <p className="text-slate-500 dark:text-slate-400 mt-2 text-sm leading-relaxed">
-              An unexpected error occurred. Please try refreshing the page.
+              {i18n.t('errors.serverError')}
             </p>
             <div className="flex gap-3 justify-center mt-6">
               <button
                 onClick={() => this.setState({ hasError: false, error: null })}
                 className="px-5 py-2.5 bg-slate-100 dark:bg-[#1a1a1a] text-slate-700 dark:text-slate-300 rounded-lg text-sm font-medium hover:bg-slate-200 dark:hover:bg-[#262626] transition-colors"
               >
-                Reintentar
+                {i18n.t('common.retry')}
               </button>
               <Link
                 to="/dashboard"
                 className="px-5 py-2.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-lg text-sm font-medium hover:bg-slate-800 dark:hover:bg-slate-100 transition-colors"
                 onClick={() => this.setState({ hasError: false, error: null })}
               >
-                Ir al inicio
+                {i18n.t('notFound.goHome')}
               </Link>
             </div>
           </div>

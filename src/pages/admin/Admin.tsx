@@ -145,9 +145,9 @@ export function Admin() {
   };
 
   const handleAdminError = useCallback((err: unknown, context: string) => {
-    const msg = err instanceof Error ? err.message : 'Error desconocido';
+    const msg = err instanceof Error ? err.message : t('common.error');
     if (msg.includes('403') || msg.includes('Acceso solo para administradores')) {
-      toast.error('No tienes permisos de administrador. Tu cuenta necesita rol "admin".');
+      toast.error(t('admin.noPermission'));
     } else {
       console.warn(`[Admin ${context}]`, msg);
     }
@@ -276,11 +276,11 @@ export function Admin() {
   );
 
   const handleBan = async (user: User) => {
-    const action = user.is_active ? 'banear' : 'activar';
+    const actionLabel = user.is_active ? t('admin.actionBan') : t('admin.actionActivate');
     setConfirmModal({
       open: true,
-      title: `${user.is_active ? 'Banear' : 'Activar'} usuario`,
-      message: `¿Seguro que quieres ${action} a "${user.username}"?`,
+      title: `${user.is_active ? t('admin.banUserConfirmTitle') : t('admin.activateUserConfirmTitle')}`,
+      message: t('admin.confirmUserAction', { action: actionLabel, username: user.username }),
       onConfirm: async () => {
         setConfirmModal((prev) => ({ ...prev, open: false }));
         try {
@@ -288,7 +288,7 @@ export function Admin() {
           setUsers(users.map((u) => (u.id === user.id ? { ...u, is_active: res.is_active } : u)));
           toast.success(res.message);
         } catch (e: unknown) {
-          toast.error(e instanceof Error ? e.message : 'Error');
+          toast.error(e instanceof Error ? e.message : t('common.error'));
         }
       },
     });
@@ -303,7 +303,7 @@ export function Admin() {
       setUsers(users.map((u) => (u.id === user.id ? { ...u, rol: newRole } : u)));
       toast.success(res.message);
     } catch (e: unknown) {
-      toast.error(e instanceof Error ? e.message : 'Error');
+      toast.error(e instanceof Error ? e.message : t('common.error'));
     }
   };
 
@@ -311,7 +311,7 @@ export function Admin() {
     if (!balanceModal.user || !balanceValue) return;
     const val = parseFloat(balanceValue);
     if (isNaN(val) || val < 0) {
-      toast.error('Ingresa un valor válido');
+      toast.error(t('admin.enterValidValue'));
       return;
     }
     try {
@@ -324,7 +324,7 @@ export function Admin() {
       setBalanceModal({ user: null as unknown as User, open: false });
       setBalanceValue('');
     } catch (e: unknown) {
-      toast.error(e instanceof Error ? e.message : 'Error');
+      toast.error(e instanceof Error ? e.message : t('common.error'));
     }
   };
 
@@ -333,7 +333,7 @@ export function Admin() {
       const data = await adminApi(`/admin/users/${userId}`);
       setSelectedUser(data);
     } catch (e: unknown) {
-      toast.error(e instanceof Error ? e.message : 'Error');
+      toast.error(e instanceof Error ? e.message : t('common.error'));
     }
   };
 
@@ -346,7 +346,7 @@ export function Admin() {
       setConfigs(configs.map((c) => (c.key === key ? { ...c, value } : c)));
       toast.success(res.message);
     } catch (e: unknown) {
-      toast.error(e instanceof Error ? e.message : 'Error');
+      toast.error(e instanceof Error ? e.message : t('common.error'));
     }
   };
 
@@ -354,33 +354,33 @@ export function Admin() {
     try {
       const res = await adminApi('/admin/maintenance', { method: 'POST' });
       setConfigs(configs.map((c) => (c.key === 'maintenance_mode' ? { ...c, value: String(res.maintenance_mode) } : c)));
-      toast.success(res.maintenance_mode ? 'Modo mantenimiento activado' : 'Modo mantenimiento desactivado');
+      toast.success(res.maintenance_mode ? t('admin.maintenanceActivated') : t('admin.maintenanceDeactivated'));
     } catch (e: unknown) {
-      toast.error(e instanceof Error ? e.message : 'Error');
+      toast.error(e instanceof Error ? e.message : t('common.error'));
     }
   };
 
   const refreshData = async (type: string, endpoint: string) => {
     try {
       await adminApi(endpoint, { method: 'POST' });
-      toast.success(`Datos de ${type} actualizados`);
+      toast.success(t('admin.dataUpdated', { type }));
     } catch (e: unknown) {
-      toast.error(e instanceof Error ? e.message : 'Error');
+      toast.error(e instanceof Error ? e.message : t('common.error'));
     }
   };
 
   const clearCache = () => {
     setConfirmModal({
       open: true,
-      title: 'Limpiar Caché',
-      message: '¿Limpiar toda la caché del sistema? Los datos se volverán a cargar desde las APIs.',
+      title: t('admin.cacheClearTitle'),
+      message: t('admin.cacheClearMessage'),
       onConfirm: async () => {
         setConfirmModal((prev) => ({ ...prev, open: false }));
         try {
           await adminApi('/admin/cache/clear', { method: 'POST' });
-          toast.success('Caché limpiada');
+          toast.success(t('admin.cacheCleared'));
         } catch (e: unknown) {
-          toast.error(e instanceof Error ? e.message : 'Error');
+          toast.error(e instanceof Error ? e.message : t('common.error'));
         }
       },
     });
@@ -434,7 +434,7 @@ export function Admin() {
         <button
           onClick={() => setMobileMenuOpen(true)}
           className="p-2.5 rounded-lg bg-white dark:bg-[#0d0d0d] border border-slate-200 dark:border-[#1a1a1a] shadow-sm hover:bg-slate-50 dark:hover:bg-[#1a1a1a] transition-colors"
-          aria-label="Abrir menú de navegación"
+            aria-label={t('admin.openMenu')}
         >
           <Menu className="w-5 h-5 text-slate-600 dark:text-slate-400" />
         </button>
@@ -456,14 +456,14 @@ export function Admin() {
         }`}
         role="dialog"
         aria-modal="true"
-        aria-label="Navegación de administración"
+        aria-label={t('admin.navigation')}
       >
         <div className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-[#1a1a1a]">
           <span className="text-sm font-semibold text-slate-900 dark:text-white">{t('admin.title')}</span>
           <button
             onClick={() => setMobileMenuOpen(false)}
             className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-[#1a1a1a] transition-colors"
-            aria-label="Cerrar menú"
+            aria-label={t('common.close')}
           >
             <X className="w-4 h-4 text-slate-500" />
           </button>
@@ -540,7 +540,7 @@ export function Admin() {
                           </LineChart>
                         </ResponsiveContainer>
                       ) : (
-                        <p className="text-sm text-slate-400 py-8 text-center">Sin datos aún</p>
+                        <p className="text-sm text-slate-400 py-8 text-center">{t('admin.noChartsData')}</p>
                       )}
                     </div>
 
@@ -555,13 +555,13 @@ export function Admin() {
                             <Tooltip
                               contentStyle={{ background: '#0d0d0d', border: '1px solid #1a1a1a', borderRadius: 8, fontSize: 12 }}
                               labelStyle={{ color: '#fff' }}
-                              formatter={(v: number) => [`$${v.toLocaleString()}`, 'Volumen']}
+                              formatter={(v: number) => [`$${v.toLocaleString()}`, t('admin.volume')]}
                             />
                             <Bar dataKey="volume" fill="#f59e0b" radius={[4, 4, 0, 0]} />
                           </BarChart>
                         </ResponsiveContainer>
                       ) : (
-                        <p className="text-sm text-slate-400 py-8 text-center">Sin datos aún</p>
+                        <p className="text-sm text-slate-400 py-8 text-center">{t('admin.noChartsData')}</p>
                       )}
                     </div>
                   </div>
@@ -600,7 +600,7 @@ export function Admin() {
                         </div>
                       </div>
                     ) : (
-                      <p className="text-sm text-slate-400 py-8 text-center">Sin datos aún</p>
+                      <p className="text-sm text-slate-400 py-8 text-center">{t('admin.noChartsData')}</p>
                     )}
                   </div>
 
@@ -615,13 +615,13 @@ export function Admin() {
                           <Tooltip
                             contentStyle={{ background: '#0d0d0d', border: '1px solid #1a1a1a', borderRadius: 8, fontSize: 12 }}
                             labelStyle={{ color: '#fff' }}
-                            formatter={(v: number) => [v, 'Transacciones']}
+                            formatter={(v: number) => [v, t('admin.transactions')]}
                           />
                           <Bar dataKey="transaction_count" fill="#8b5cf6" radius={[0, 4, 4, 0]} />
                         </BarChart>
                       </ResponsiveContainer>
                     ) : (
-                      <p className="text-sm text-slate-400 py-8 text-center">Sin datos aún</p>
+                      <p className="text-sm text-slate-400 py-8 text-center">{t('admin.noChartsData')}</p>
                     )}
                   </div>
                 </div>
@@ -644,7 +644,7 @@ export function Admin() {
                       className="w-full pl-9 pr-3 py-2 text-sm bg-white dark:bg-[#0d0d0d] border border-slate-200 dark:border-[#1a1a1a] rounded-lg text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-slate-400"
                     />
                   </div>
-                  <span className="text-xs text-slate-400">{usersTotal} {t('admin.totalUsers').toLowerCase()}</span>
+                  <span className="text-xs text-slate-400">{usersTotal} {t('admin.totalUsers')}</span>
                 </div>
 
                 <div className="bg-white dark:bg-[#0d0d0d] border border-slate-200 dark:border-[#1a1a1a] rounded-xl overflow-hidden p-1">
@@ -654,9 +654,9 @@ export function Admin() {
                     rowHeight={52}
                     maxHeight={600}
                     columns={[
-                      { key: 'id', label: 'ID', width: 60, render: (u: User) => <span className="text-slate-500 dark:text-slate-400 text-xs">{u.id}</span> },
+                      { key: 'id', label: t('admin.id'), width: 60, render: (u: User) => <span className="text-slate-500 dark:text-slate-400 text-xs">{u.id}</span> },
                       { key: 'username', label: t('admin.username'), width: 150, render: (u: User) => <span className="font-medium text-slate-900 dark:text-white">{u.username}</span> },
-                      { key: 'email', label: 'Email', width: 220, render: (u: User) => <span className="text-slate-500 dark:text-slate-400 text-xs truncate block">{u.email}</span> },
+                      { key: 'email', label: t('admin.email'), width: 220, render: (u: User) => <span className="text-slate-500 dark:text-slate-400 text-xs truncate block">{u.email}</span> },
                       {
                         key: 'rol', label: t('admin.role'), width: 100, render: (u: User) => (
                           <select
@@ -668,8 +668,8 @@ export function Admin() {
                                 : 'bg-slate-100 dark:bg-[#1a1a1a] text-slate-500 dark:text-slate-400'
                             }`}
                           >
-                            <option value="inversor">inversor</option>
-                            <option value="admin">admin</option>
+                            <option value="inversor">{t('admin.inversor')}</option>
+                            <option value="admin">{t('admin.sortByRole')}</option>
                           </select>
                         )
                       },
@@ -750,13 +750,13 @@ export function Admin() {
                 <div className="bg-white dark:bg-[#0d0d0d] border border-slate-200 dark:border-[#1a1a1a] rounded-xl p-4 sm:p-5">
                   <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-3">{t('admin.dataManagement')}</h3>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    <button onClick={() => refreshData(t('admin.stocks').toLowerCase(), '/admin/refresh/stocks')} className="flex items-center gap-2 px-3 py-2.5 bg-slate-50 dark:bg-[#1a1a1a] rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#1a1a1a]/70 transition-all">
+                    <button onClick={() => refreshData(t('admin.stocks'), '/admin/refresh/stocks')} className="flex items-center gap-2 px-3 py-2.5 bg-slate-50 dark:bg-[#1a1a1a] rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#1a1a1a]/70 transition-all">
                       <RefreshCw className="w-3.5 h-3.5" /> {t('admin.refreshStocks')}
                     </button>
-                    <button onClick={() => refreshData(t('admin.rates').toLowerCase(), '/admin/refresh/rates')} className="flex items-center gap-2 px-3 py-2.5 bg-slate-50 dark:bg-[#1a1a1a] rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#1a1a1a]/70 transition-all">
+                    <button onClick={() => refreshData(t('admin.rates'), '/admin/refresh/rates')} className="flex items-center gap-2 px-3 py-2.5 bg-slate-50 dark:bg-[#1a1a1a] rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#1a1a1a]/70 transition-all">
                       <RefreshCw className="w-3.5 h-3.5" /> {t('admin.refreshRates')}
                     </button>
-                    <button onClick={() => refreshData(t('admin.indices').toLowerCase(), '/admin/refresh/indices')} className="flex items-center gap-2 px-3 py-2.5 bg-slate-50 dark:bg-[#1a1a1a] rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#1a1a1a]/70 transition-all">
+                    <button onClick={() => refreshData(t('admin.indices'), '/admin/refresh/indices')} className="flex items-center gap-2 px-3 py-2.5 bg-slate-50 dark:bg-[#1a1a1a] rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#1a1a1a]/70 transition-all">
                       <RefreshCw className="w-3.5 h-3.5" /> {t('admin.refreshIndices')}
                     </button>
                     <button onClick={clearCache} className="flex items-center gap-2 px-3 py-2.5 bg-slate-50 dark:bg-[#1a1a1a] rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#1a1a1a]/70 transition-all">
@@ -772,38 +772,38 @@ export function Admin() {
                       <table className="w-full text-sm responsive-table">
                         <thead>
                           <tr className="border-b border-slate-100 dark:border-[#1a1a1a]">
-                            <th className="text-left px-3 py-2 text-[10px] font-medium text-slate-400 uppercase tracking-widest">ID</th>
-                            <th className="text-left px-3 py-2 text-[10px] font-medium text-slate-400 uppercase tracking-widest">Usuario</th>
-                            <th className="text-left px-3 py-2 text-[10px] font-medium text-slate-400 uppercase tracking-widest">Símbolo</th>
-                            <th className="text-left px-3 py-2 text-[10px] font-medium text-slate-400 uppercase tracking-widest">Tipo</th>
-                            <th className="text-right px-3 py-2 text-[10px] font-medium text-slate-400 uppercase tracking-widest">Cantidad</th>
-                            <th className="text-right px-3 py-2 text-[10px] font-medium text-slate-400 uppercase tracking-widest">Total</th>
-                            <th className="text-right px-3 py-2 text-[10px] font-medium text-slate-400 uppercase tracking-widest">Fecha</th>
+                            <th className="text-left px-3 py-2 text-[10px] font-medium text-slate-400 uppercase tracking-widest">{t('admin.id')}</th>
+                            <th className="text-left px-3 py-2 text-[10px] font-medium text-slate-400 uppercase tracking-widest">{t('admin.username')}</th>
+                            <th className="text-left px-3 py-2 text-[10px] font-medium text-slate-400 uppercase tracking-widest">{t('transactions.symbol')}</th>
+                            <th className="text-left px-3 py-2 text-[10px] font-medium text-slate-400 uppercase tracking-widest">{t('transactions.type')}</th>
+                            <th className="text-right px-3 py-2 text-[10px] font-medium text-slate-400 uppercase tracking-widest">{t('transactions.quantity')}</th>
+                            <th className="text-right px-3 py-2 text-[10px] font-medium text-slate-400 uppercase tracking-widest">{t('transactions.total')}</th>
+                            <th className="text-right px-3 py-2 text-[10px] font-medium text-slate-400 uppercase tracking-widest">{t('transactions.date')}</th>
                           </tr>
                         </thead>
                         <tbody className="responsive-table-card">
                           {transactions.map((tx) => (
                             <tr key={tx.id} className="border-b border-slate-100 dark:border-[#1a1a1a] hover:bg-slate-50 dark:hover:bg-[#1a1a1a]/50">
-                              <td data-label="ID" className="px-3 py-2 text-xs text-slate-500">{tx.id}</td>
-                              <td data-label="Usuario" className="px-3 py-2 text-xs text-slate-500">{tx.user_id}</td>
-                              <td data-label="Símbolo" className="px-3 py-2 text-xs font-medium text-slate-900 dark:text-white">{tx.symbol}</td>
-                              <td data-label="Tipo" className="px-3 py-2">
+                              <td data-label={t('admin.id')} className="px-3 py-2 text-xs text-slate-500">{tx.id}</td>
+                              <td data-label={t('admin.username')} className="px-3 py-2 text-xs text-slate-500">{tx.user_id}</td>
+                              <td data-label={t('transactions.symbol')} className="px-3 py-2 text-xs font-medium text-slate-900 dark:text-white">{tx.symbol}</td>
+                              <td data-label={t('transactions.type')} className="px-3 py-2">
                                 <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${
                                   tx.transaction_type === 'buy' ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400' : 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'
                                 }`}>{tx.transaction_type}</span>
                               </td>
-                              <td data-label="Cantidad" className="px-3 py-2 text-right text-xs text-slate-500">{tx.quantity}</td>
-                              <td data-label="Total" className="px-3 py-2 text-right text-xs font-mono text-slate-900 dark:text-white">${tx.total_amount.toLocaleString()}</td>
-                              <td data-label="Fecha" className="px-3 py-2 text-right text-[10px] text-slate-400">{new Date(tx.created_at).toLocaleDateString()}</td>
+                              <td data-label={t('transactions.quantity')} className="px-3 py-2 text-right text-xs text-slate-500">{tx.quantity}</td>
+                              <td data-label={t('transactions.total')} className="px-3 py-2 text-right text-xs font-mono text-slate-900 dark:text-white">${tx.total_amount.toLocaleString()}</td>
+                              <td data-label={t('transactions.date')} className="px-3 py-2 text-right text-[10px] text-slate-400">{new Date(tx.created_at).toLocaleDateString()}</td>
                             </tr>
                           ))}
                         </tbody>
                       </table>
                     </div>
                   ) : (
-                    <p className="text-sm text-slate-400 py-4 text-center">Sin transacciones</p>
+                    <p className="text-sm text-slate-400 py-4 text-center">{t('admin.noTransactions')}</p>
                   )}
-                  <p className="text-xs text-slate-400 mt-2">{txTotal} transacciones en total</p>
+                  <p className="text-xs text-slate-400 mt-2">{t('admin.txTotal', { count: txTotal })}</p>
                 </div>
 
                 {tableStats.length > 0 && (
@@ -867,19 +867,19 @@ export function Admin() {
                       <table className="w-full text-sm responsive-table">
                         <thead>
                           <tr className="border-b border-slate-100 dark:border-[#1a1a1a]">
-                            <th className="text-left px-3 py-2 text-[10px] font-medium text-slate-400 uppercase tracking-widest">Fecha</th>
-                            <th className="text-left px-3 py-2 text-[10px] font-medium text-slate-400 uppercase tracking-widest">Admin</th>
-                            <th className="text-left px-3 py-2 text-[10px] font-medium text-slate-400 uppercase tracking-widest">Acción</th>
-                            <th className="text-left px-3 py-2 text-[10px] font-medium text-slate-400 uppercase tracking-widest">Target</th>
-                            <th className="text-left px-3 py-2 text-[10px] font-medium text-slate-400 uppercase tracking-widest">Detalle</th>
+                            <th className="text-left px-3 py-2 text-[10px] font-medium text-slate-400 uppercase tracking-widest">{t('transactions.date')}</th>
+                            <th className="text-left px-3 py-2 text-[10px] font-medium text-slate-400 uppercase tracking-widest">{t('admin.admin')}</th>
+                            <th className="text-left px-3 py-2 text-[10px] font-medium text-slate-400 uppercase tracking-widest">{t('admin.action')}</th>
+                            <th className="text-left px-3 py-2 text-[10px] font-medium text-slate-400 uppercase tracking-widest">{t('admin.target')}</th>
+                            <th className="text-left px-3 py-2 text-[10px] font-medium text-slate-400 uppercase tracking-widest">{t('admin.detail')}</th>
                           </tr>
                         </thead>
                         <tbody className="responsive-table-card">
                           {logs.map((log) => (
                             <tr key={log.id} className="border-b border-slate-100 dark:border-[#1a1a1a] hover:bg-slate-50 dark:hover:bg-[#1a1a1a]/50">
-                              <td data-label="Fecha" className="px-3 py-2 text-[10px] text-slate-400 whitespace-nowrap">{new Date(log.created_at).toLocaleString()}</td>
-                              <td data-label="Admin" className="px-3 py-2 text-xs text-slate-500">{log.admin_username}</td>
-                              <td data-label="Acción" className="px-3 py-2">
+                              <td data-label={t('transactions.date')} className="px-3 py-2 text-[10px] text-slate-400 whitespace-nowrap">{new Date(log.created_at).toLocaleString()}</td>
+                              <td data-label={t('admin.admin')} className="px-3 py-2 text-xs text-slate-500">{log.admin_username}</td>
+                              <td data-label={t('admin.action')} className="px-3 py-2">
                                 <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${
                                   log.action === 'ban' ? 'bg-red-100 dark:bg-red-900/30 text-red-600' :
                                   log.action === 'unban' ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600' :
@@ -887,15 +887,15 @@ export function Admin() {
                                   'bg-slate-100 dark:bg-[#1a1a1a] text-slate-500'
                                 }`}>{log.action}</span>
                               </td>
-                              <td data-label="Target" className="px-3 py-2 text-xs text-slate-500">{log.target_type}#{log.target_id}</td>
-                              <td data-label="Detalle" className="px-3 py-2 text-[10px] text-slate-400 max-w-[200px] truncate">{log.details ? JSON.stringify(log.details) : '-'}</td>
+                              <td data-label={t('admin.target')} className="px-3 py-2 text-xs text-slate-500">{log.target_type}#{log.target_id}</td>
+                              <td data-label={t('admin.detail')} className="px-3 py-2 text-[10px] text-slate-400 max-w-[200px] truncate">{log.details ? JSON.stringify(log.details) : '-'}</td>
                             </tr>
                           ))}
                         </tbody>
                       </table>
                     </div>
                   ) : (
-                    <p className="text-sm text-slate-400 py-4 text-center">Sin registros aún</p>
+                    <p className="text-sm text-slate-400 py-4 text-center">{t('admin.noLogs')}</p>
                   )}
                 </div>
               </div>
@@ -932,7 +932,7 @@ export function Admin() {
                     <div>
                       <p className="text-sm text-slate-600 dark:text-slate-300">{t('admin.maintenanceDesc')}</p>
                       <p className="text-[10px] text-slate-400 mt-1">
-                        Estado actual: {configs.find((c) => c.key === 'maintenance_mode')?.value === 'true' ? '🟢 Activado' : '⚪ Desactivado'}
+                        {t('admin.statusText')}: {configs.find((c) => c.key === 'maintenance_mode')?.value === 'true' ? `🟢 ${t('admin.statusActive')}` : `⚪ ${t('admin.statusDisabled')}`}
                       </p>
                     </div>
                     <button
@@ -954,28 +954,28 @@ export function Admin() {
                     <div className="flex items-center justify-between bg-slate-50 dark:bg-[#1a1a1a] rounded-lg px-4 py-3">
                       <div className="flex items-center gap-2">
                         <Wifi className="w-4 h-4 text-emerald-500" />
-                        <span className="text-sm text-slate-600 dark:text-slate-300">Finnhub API</span>
+                        <span className="text-sm text-slate-600 dark:text-slate-300">{t('admin.apiFinnhub')}</span>
                       </div>
                       <span className="text-xs text-emerald-500 font-medium">{t('admin.connected')}</span>
                     </div>
                     <div className="flex items-center justify-between bg-slate-50 dark:bg-[#1a1a1a] rounded-lg px-4 py-3">
                       <div className="flex items-center gap-2">
                         <Wifi className="w-4 h-4 text-emerald-500" />
-                        <span className="text-sm text-slate-600 dark:text-slate-300">ExchangeRate API</span>
+                        <span className="text-sm text-slate-600 dark:text-slate-300">{t('admin.apiExchangeRate')}</span>
                       </div>
                       <span className="text-xs text-emerald-500 font-medium">{t('admin.connected')}</span>
                     </div>
                     <div className="flex items-center justify-between bg-slate-50 dark:bg-[#1a1a1a] rounded-lg px-4 py-3">
                       <div className="flex items-center gap-2">
                         <Server className="w-4 h-4 text-blue-500" />
-                        <span className="text-sm text-slate-600 dark:text-slate-300">PostgreSQL</span>
+                        <span className="text-sm text-slate-600 dark:text-slate-300">{t('admin.apiPostgreSQL')}</span>
                       </div>
                       <span className="text-xs text-blue-500 font-medium">{t('admin.connected')}</span>
                     </div>
                     <div className="flex items-center justify-between bg-slate-50 dark:bg-[#1a1a1a] rounded-lg px-4 py-3">
                       <div className="flex items-center gap-2">
                         <Server className="w-4 h-4 text-blue-500" />
-                        <span className="text-sm text-slate-600 dark:text-slate-300">Redis</span>
+                        <span className="text-sm text-slate-600 dark:text-slate-300">{t('admin.apiRedis')}</span>
                       </div>
                       <span className="text-xs text-blue-500 font-medium">{t('admin.connected')}</span>
                     </div>

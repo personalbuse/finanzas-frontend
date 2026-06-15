@@ -13,8 +13,8 @@ export function Footer() {
             <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">{t('footer.description')}</p>
           </div>
           <div className="md:text-center">
-            <p className="text-xs font-medium text-slate-400 dark:text-slate-500">Universidad de Pamplona</p>
-            <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">Finanzas Internacionales</p>
+            <p className="text-xs font-medium text-slate-400 dark:text-slate-500">{t('footer.university')}</p>
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">{t('footer.department')}</p>
           </div>
           <div className="md:text-right">
             <p className="text-xs text-slate-400 dark:text-slate-500">© {year} {t('app.title')}</p>
