@@ -151,7 +151,7 @@ export function Admin() {
     } else {
       console.warn(`[Admin ${context}]`, msg);
     }
-  }, []);
+  }, [t]);
 
   const loadKpis = useCallback(async () => {
     try {

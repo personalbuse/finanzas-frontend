@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from '../../provider/LanguageProvider';
 import { useAuthStore } from '../../store/useAuthStore';
 import api, { createCancelSource } from '../../services/api';
@@ -43,13 +43,7 @@ export function Stocks() {
   const [quantities, setQuantities] = useState<Record<string, number>>({});
   const [buying, setBuying] = useState<string | null>(null);
 
-  useEffect(() => {
-    const source = createCancelSource();
-    fetchStocks(source.signal);
-    return () => source.cancel();
-  }, []);
-
-  const fetchStocks = async (signal: AbortSignal, symbols: string[] = STOCKS_CONFIG.default) => {
+  const fetchStocks = useCallback(async (signal: AbortSignal, symbols: string[] = STOCKS_CONFIG.default) => {
     setLoading(true);
     
     try {
@@ -75,7 +69,13 @@ export function Stocks() {
       setLoading(false);
       setInitialLoad(false);
     }
-  };
+  }, [t]);
+
+  useEffect(() => {
+    const source = createCancelSource();
+    fetchStocks(source.signal);
+    return () => source.cancel();
+  }, [fetchStocks]);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();

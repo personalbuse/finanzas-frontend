@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useTranslation } from '../../provider/LanguageProvider';
 import api, { createCancelSource } from '../../services/api';
 import { TrendingUp, TrendingDown, Globe } from 'lucide-react';
@@ -42,13 +42,7 @@ export function Markets() {
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
   const [regionData, setRegionData] = useState<StockData[] | null>(null);
 
-  useEffect(() => {
-    const source = createCancelSource();
-    fetchStocks(source.signal);
-    return () => source.cancel();
-  }, []);
-
-  const fetchStocks = async (signal: AbortSignal) => {
+  const fetchStocks = useCallback(async (signal: AbortSignal) => {
     setLoading(true);
     try {
       const res = await api.get('/stocks/international', { signal });
@@ -59,7 +53,13 @@ export function Markets() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    const source = createCancelSource();
+    fetchStocks(source.signal);
+    return () => source.cancel();
+  }, [fetchStocks]);
 
   const fetchByRegion = async (region: string) => {
     setLoading(true);

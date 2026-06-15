@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useTranslation } from '../../provider/LanguageProvider';
 import { useAuthStore } from '../../store/useAuthStore';
 import api, { createCancelSource } from '../../services/api';
@@ -54,13 +54,7 @@ export function Portfolio() {
   const [sortField, setSortField] = useState<SortField>('symbol');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
 
-  useEffect(() => {
-    const source = createCancelSource();
-    fetchPortfolio(source.signal);
-    return () => source.cancel();
-  }, []);
-
-  const fetchPortfolio = async (signal: AbortSignal) => {
+  const fetchPortfolio = useCallback(async (signal: AbortSignal) => {
     try {
       setError(null);
       const res = await api.get('/portfolio/values', { signal });
@@ -72,7 +66,13 @@ export function Portfolio() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [t]);
+
+  useEffect(() => {
+    const source = createCancelSource();
+    fetchPortfolio(source.signal);
+    return () => source.cancel();
+  }, [fetchPortfolio]);
 
   const handleSell = async (symbol: string) => {
     const qty = sellQuantities[symbol] || 1;
