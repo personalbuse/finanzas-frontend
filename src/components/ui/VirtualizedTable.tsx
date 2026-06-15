@@ -23,7 +23,6 @@ export function VirtualizedTable<T>({
   maxHeight = 600,
   emptyMessage = 'No data',
 }: VirtualizedTableProps<T>) {
-  // Debug logging
   const data = Array.isArray(initialData) ? initialData : (() => {
     console.error('[DEBUG VirtualizedTable] data is not an array!', typeof initialData, initialData);
     return [] as unknown as T[];
@@ -33,8 +32,26 @@ export function VirtualizedTable<T>({
     return [] as unknown as Column<T>[];
   })();
 
-  console.log('[DEBUG VirtualizedTable] Props:', { dataLength: data.length, columnsCount: columns.length, rowHeight, maxHeight, emptyMessage });
-  console.log(`[DEBUG VirtualizedTable] Rendering List: height=${Math.min(data.length * rowHeight, maxHeight)}px, itemCount=${data.length}`);
+  const Row = ({ index, style, data: items, columns: cols }: { index: number; style: CSSProperties; data: T[]; columns: Column<T>[] }) => {
+    const row = items[index];
+    if (!row) return null;
+    return (
+      <div
+        style={style}
+        className="flex items-center border-b border-slate-100 dark:border-[#1a1a1a] hover:bg-slate-50 dark:hover:bg-[#1a1a1a]/50"
+      >
+        {cols.map((col: Column<T>) => (
+          <div
+            key={col.key}
+            style={{ width: col.width, minWidth: col.width }}
+            className="px-4 py-2 truncate text-sm"
+          >
+            {col.render(row)}
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   if (data.length === 0) {
     return (
@@ -61,33 +78,13 @@ export function VirtualizedTable<T>({
 
       {/* Virtualized rows */}
       <List
-        height={Math.min(data.length * rowHeight, maxHeight)}
-        itemCount={data.length}
-        itemSize={rowHeight}
-        width="100%"
-        itemData={{ data, columns }}
-      >
-        {({ index, style, data: renderData }: { index: number; style: CSSProperties; data: { data: T[]; columns: Column<T>[] } }) => {
-          const row = renderData.data[index];
-          if (!row) return null;
-          return (
-            <div
-              style={style}
-              className="flex items-center border-b border-slate-100 dark:border-[#1a1a1a] hover:bg-slate-50 dark:hover:bg-[#1a1a1a]/50"
-            >
-              {renderData.columns.map((col: Column<T>) => (
-                <div
-                  key={col.key}
-                  style={{ width: col.width, minWidth: col.width }}
-                  className="px-4 py-2 truncate text-sm"
-                >
-                  {col.render(row)}
-                </div>
-              ))}
-            </div>
-          );
-        }}
-      </List>
+        rowCount={data.length}
+        rowHeight={rowHeight}
+        style={{ height: Math.min(data.length * rowHeight, maxHeight), width: '100%' }}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        rowComponent={Row as any}
+        rowProps={{ data, columns }}
+      />
     </div>
   );
 }
