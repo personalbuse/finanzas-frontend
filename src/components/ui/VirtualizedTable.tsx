@@ -81,7 +81,6 @@ export function VirtualizedTable<T>({
         rowCount={data.length}
         rowHeight={rowHeight}
         style={{ height: Math.min(data.length * rowHeight, maxHeight), width: '100%' }}
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         rowComponent={Row as any}
         rowProps={{ data, columns }}
       />
