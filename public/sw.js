@@ -43,9 +43,11 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(event.request).catch(() =>
         caches.open(CACHE_NAME).then((cache) =>
-          cache.match(event.request).then((cached) =>
-            cached || new Response('Offline', { status: 503 })
-          )
+          cache.match(event.request)
+        ).then((cached) =>
+          cached || new Response('Offline', { status: 503 })
+        ).catch(() =>
+          new Response('Offline', { status: 503 })
         )
       )
     );

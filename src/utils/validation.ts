@@ -17,7 +17,7 @@ export const passwordSchema = z
   .regex(/[A-Z]/, 'validation.passwordUpper')
   .regex(/[a-z]/, 'validation.passwordLower')
   .regex(/[0-9]/, 'validation.passwordNumber')
-  .regex(/[^A-Za-z0-9]/, 'validation.passwordSpecial');
+  .regex(/[@$!%*?&]/, 'validation.passwordSpecial');
 
 export const loginSchema = z.object({
   username: usernameSchema,
