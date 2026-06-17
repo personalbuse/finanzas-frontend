@@ -251,7 +251,7 @@ export function Login() {
               <input
                 id="backup-code" name="backup-code" type="text"
                 className="input-clean mt-1 text-center"
-                placeholder="XXXX-XXXX"
+                placeholder="XXXXXX-XXXXXX"
                 maxLength={20}
                 value={backupCode}
                 onChange={(e) => setBackupCode(e.target.value.toUpperCase())}
