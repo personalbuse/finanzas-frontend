@@ -23,6 +23,7 @@ export function TwoFA() {
 
   const [disablePassword, setDisablePassword] = useState('');
   const [disableCode, setDisableCode] = useState('');
+  const [disableMode, setDisableMode] = useState<'totp' | 'backup'>('totp');
   const [showDisable, setShowDisable] = useState(false);
 
   useEffect(() => {
@@ -71,14 +72,14 @@ export function TwoFA() {
   };
 
   const handleDisable = async () => {
-    if (!disablePassword || disableCode.length < 6) {
+    if (!disablePassword || !disableCode.trim()) {
       setError(t('twofa.disableRequired'));
       return;
     }
     setLoading(true);
     setError('');
     try {
-      await disable2FA(disablePassword, disableCode);
+      await disable2FA(disablePassword, disableCode.trim());
       setStep('idle');
       setShowDisable(false);
       setDisablePassword('');
@@ -257,20 +258,45 @@ export function TwoFA() {
                     />
                   </div>
                   <div>
-                    <label htmlFor="disable-code" className="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">
-                      {t('twofa.enterCode')}
-                    </label>
-                    <input
-                      id="disable-code"
-                      type="text"
-                      inputMode="numeric"
-                      className="input-clean mt-1 text-center text-xl tracking-[0.5em]"
-                      placeholder="______"
-                      maxLength={6}
-                      value={disableCode}
-                      onChange={(e) => setDisableCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                      aria-label={t('twofa.enterCode')}
-                    />
+                    <div className="flex items-center justify-between mb-1">
+                      <label htmlFor="disable-code" className="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">
+                        {disableMode === 'totp' ? t('twofa.enterCode') : t('login.backupTitle')}
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setDisableMode(disableMode === 'totp' ? 'backup' : 'totp');
+                          setDisableCode('');
+                        }}
+                        className="text-[10px] text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 underline"
+                      >
+                        {disableMode === 'totp' ? t('login.useBackupCode') : t('twofa.enterCode')}
+                      </button>
+                    </div>
+                    {disableMode === 'totp' ? (
+                      <input
+                        id="disable-code"
+                        type="text"
+                        inputMode="numeric"
+                        className="input-clean mt-1 text-center text-xl tracking-[0.5em]"
+                        placeholder="______"
+                        maxLength={6}
+                        value={disableCode}
+                        onChange={(e) => setDisableCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                        aria-label={t('twofa.enterCode')}
+                      />
+                    ) : (
+                      <input
+                        id="disable-code"
+                        type="text"
+                        className="input-clean mt-1 text-center"
+                        placeholder="XXXXXX-XXXXXX"
+                        maxLength={20}
+                        value={disableCode}
+                        onChange={(e) => setDisableCode(e.target.value.toUpperCase())}
+                        aria-label={t('login.backupTitle')}
+                      />
+                    )}
                   </div>
                   <div className="flex gap-2">
                     <button
