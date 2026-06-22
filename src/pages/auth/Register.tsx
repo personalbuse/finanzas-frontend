@@ -89,7 +89,7 @@ export function Register() {
         const phoneClean = phoneNumber.startsWith('+57')
           ? phoneNumber
           : `+57${phoneNumber.replace(/\D/g, '')}`;
-        if (!/^(\+57(3\d{9})|\+1\d{10})$/.test(phoneClean)) {
+        if (!/^\+57(3\d{9})$/.test(phoneClean)) {
           setError(t('validation.phoneInvalid'));
           return;
         }

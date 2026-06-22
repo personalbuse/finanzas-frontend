@@ -214,7 +214,7 @@
     "codeHint": "Enter the 6 digits we sent by email",
     "codeHintSms": "Enter the 6 digits we sent by SMS",
     "phoneLabel": "Phone",
-    "phonePlaceholder": "+17622493759",
+    "phonePlaceholder": "+573001234567",
     "channelEmail": "Email",
     "channelSms": "SMS to phone",
     "codeSentTo": "We sent a verification code to",
@@ -540,7 +540,7 @@
     "quantityPositive": "Quantity must be a positive number",
     "currentPasswordRequired": "You must enter your current password",
     "passwordInvalid": "Password does not meet the requirements",
-    "phoneInvalid": "Enter a valid phone number (+57 3XX XXX XXXX or +1 XXX XXX XXXX)"
+    "phoneInvalid": "Enter a valid Colombian phone number (+57 3XX XXX XXXX)"
   },
   "common": {
     "loading": "Loading...",
