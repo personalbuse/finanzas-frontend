@@ -169,7 +169,19 @@
     "backupRequired": "Please enter a backup code",
     "backupError": "Invalid or already used backup code",
     "backupExpired": "Session expired. Please sign in again.",
-    "backToTotp": "Use authenticator app"
+    "backToTotp": "Use authenticator app",
+    "chooseMethod": "Choose a verification method",
+    "authenticator": "Authenticator app",
+    "sms": "SMS to phone",
+    "smsTitle": "SMS Verification",
+    "smsSubtitle": "We'll send a code to your registered phone",
+    "sendSmsCode": "Send SMS code",
+    "smsSent": "Code sent to your phone",
+    "smsCodeSentTo": "Code sent to",
+    "smsCodeLabel": "SMS code",
+    "smsCodeHint": "Enter the 6-digit code you received by SMS",
+    "smsVerifyButton": "Verify SMS code",
+    "smsError": "Invalid or expired SMS code"
   },
   "register": {
     "title": "Create Account",
@@ -200,6 +212,12 @@
     "codeSent": "We sent a verification code to",
     "codeLabel": "Verification code",
     "codeHint": "Enter the 6 digits we sent by email",
+    "codeHintSms": "Enter the 6 digits we sent by SMS",
+    "phoneLabel": "Phone",
+    "phonePlaceholder": "+573001234567",
+    "channelEmail": "Email",
+    "channelSms": "SMS to phone",
+    "codeSentTo": "We sent a verification code to",
     "backToRegister": "← Back to register"
   },
   "forgotPassword": {
@@ -365,7 +383,14 @@
     "leaveBlankIfUnchanged": "Leave blank if you don't want to change",
     "tip": "Tip: Diversifying your portfolio across different sectors helps manage risk and increase long-term stability.",
     "darkMode": "Dark Mode",
-    "darkModeDesc": "Switch between light and dark theme"
+    "darkModeDesc": "Switch between light and dark theme",
+    "phone": "Phone",
+    "phoneVerified": "Phone verified",
+    "verifyPhone": "Verify phone",
+    "phoneNotVerified": "Phone not verified. Change the number or verify it.",
+    "loginMethod": "Login verification method",
+    "authenticator": "Authenticator app",
+    "sms": "SMS to phone"
   },
   "learn": {
     "title": "Learning Academy",
@@ -514,7 +539,8 @@
     "passwordsMismatch": "Passwords do not match",
     "quantityPositive": "Quantity must be a positive number",
     "currentPasswordRequired": "You must enter your current password",
-    "passwordInvalid": "Password does not meet the requirements"
+    "passwordInvalid": "Password does not meet the requirements",
+    "phoneInvalid": "Enter a valid Colombian phone number (+57 3XX XXX XXXX)"
   },
   "common": {
     "loading": "Loading...",

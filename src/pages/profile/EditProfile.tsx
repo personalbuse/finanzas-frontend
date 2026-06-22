@@ -14,6 +14,8 @@ export function EditProfile() {
 
   const [username, setUsername] = useState(user?.username || '');
   const [email, setEmail] = useState(user?.email || '');
+  const [phoneNumber, setPhoneNumber] = useState(user?.phone_number || '');
+  const [login2faMethod, setLogin2faMethod] = useState(user?.login_2fa_method || 'authenticator');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -23,11 +25,25 @@ export function EditProfile() {
     e.preventDefault();
     setErrors({});
 
-    const payload: Record<string, string> = {};
+    const payload: Record<string, unknown> = {};
     if (username !== user?.username) payload.username = username;
     if (email !== user?.email) payload.email = email;
     if (currentPassword) payload.current_password = currentPassword;
     if (newPassword) payload.new_password = newPassword;
+
+    const phoneClean = phoneNumber.startsWith('+57') ? phoneNumber : `+57${phoneNumber.replace(/\D/g, '')}`;
+    if (phoneClean !== (user?.phone_number || '')) {
+      if (phoneClean !== '+57' && !/^\+57(3\d{9})$/.test(phoneClean)) {
+        setErrors({ phone: t('validation.phoneInvalid') });
+        return;
+      }
+      payload.phone_number = phoneClean;
+    }
+
+    const methodChanged = login2faMethod !== (user?.login_2fa_method || 'authenticator');
+    if (methodChanged) {
+      payload.login_2fa_method = login2faMethod;
+    }
 
     if (Object.keys(payload).length === 0) {
       navigate('/profile');
@@ -65,6 +81,16 @@ export function EditProfile() {
       setSaving(false);
     }
   }
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    if (!val.startsWith('+57')) {
+      setPhoneNumber(`+57${val.replace(/\D/g, '')}`);
+    } else {
+      const digits = val.slice(3).replace(/\D/g, '');
+      setPhoneNumber(`+57${digits.slice(0, 10)}`);
+    }
+  };
 
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in">
@@ -115,6 +141,39 @@ export function EditProfile() {
             {errors.email && (
               <p className="text-xs text-red-500 mt-1">{errors.email}</p>
             )}
+          </div>
+
+          <div>
+            <label htmlFor="phoneNumber" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+              {t('profile.phone')}
+            </label>
+            <input
+              id="phoneNumber"
+              type="tel"
+              value={phoneNumber}
+              onChange={handlePhoneChange}
+              className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-[#262626] bg-white dark:bg-[#1a1a1a] text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-colors text-sm"
+              aria-invalid={errors.phone ? 'true' : 'false'}
+              placeholder="+573001234567"
+            />
+            {errors.phone && (
+              <p className="text-xs text-red-500 mt-1">{errors.phone}</p>
+            )}
+          </div>
+
+          <div>
+            <label htmlFor="login2faMethod" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+              {t('profile.loginMethod')}
+            </label>
+            <select
+              id="login2faMethod"
+              value={login2faMethod}
+              onChange={(e) => setLogin2faMethod(e.target.value)}
+              className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-[#262626] bg-white dark:bg-[#1a1a1a] text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-colors text-sm"
+            >
+              <option value="authenticator">{t('profile.authenticator')}</option>
+              <option value="sms">{t('profile.sms')}</option>
+            </select>
           </div>
         </div>
 

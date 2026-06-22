@@ -3,11 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../provider/AuthProvider';
 import { useTranslation } from '../../provider/LanguageProvider';
 import { useAuthStore } from '../../store/useAuthStore';
-import { API_BASE_URL, loginVerify2FA, loginBackup2FA } from '../../services/api';
+import { API_BASE_URL, loginVerify2FA, loginBackup2FA, sendSmsCode, loginVerifySMS } from '../../services/api';
 import type { z } from 'zod';
 import { loginSchema } from '../../utils/validation';
+import { toast } from 'react-toastify';
 
-type LoginMode = 'credentials' | 'totp' | 'backup';
+type LoginMode = 'credentials' | 'choose-method' | 'totp' | 'backup' | 'sms';
 
 export function Login() {
   const { login } = useAuth();
@@ -20,8 +21,12 @@ export function Login() {
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState<LoginMode>('credentials');
   const [tempToken, setTempToken] = useState('');
+  const [methods, setMethods] = useState<string[]>([]);
   const [totpCode, setTotpCode] = useState('');
   const [backupCode, setBackupCode] = useState('');
+  const [smsCode, setSmsCode] = useState('');
+  const [smsSent, setSmsSent] = useState(false);
+  const [smsSending, setSmsSending] = useState(false);
 
   const validateField = (name: string, value: string) => {
     const fieldSchema = (loginSchema.shape as Record<string, z.ZodTypeAny>)[name];
@@ -86,7 +91,13 @@ export function Login() {
 
       if (data.requires_2fa) {
         setTempToken(data.temp_token);
-        setMode('totp');
+        const avail: string[] = data.methods || ['authenticator'];
+        setMethods(avail);
+        if (avail.length === 1 && avail[0] === 'authenticator') {
+          setMode('totp');
+        } else {
+          setMode('choose-method');
+        }
         return;
       }
 
@@ -117,8 +128,7 @@ export function Login() {
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : t('login.totpError');
       if (msg.includes('expir')) {
-        setMode('credentials');
-        setTempToken('');
+        resetToCredentials();
         setError(t('login.totpExpired'));
       } else {
         setError(msg);
@@ -144,9 +154,49 @@ export function Login() {
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : t('login.backupError');
       if (msg.includes('expir')) {
-        setMode('credentials');
-        setTempToken('');
+        resetToCredentials();
         setError(t('login.backupExpired'));
+      } else {
+        setError(msg);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSendSms = async () => {
+    setError('');
+    setSmsSending(true);
+    try {
+      await sendSmsCode(tempToken);
+      setSmsSent(true);
+      toast.success(t('login.smsSent'));
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : t('login.smsError');
+      setError(msg);
+    } finally {
+      setSmsSending(false);
+    }
+  };
+
+  const handleSmsSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    if (smsCode.length < 6) {
+      setError(t('login.totpRequired'));
+      return;
+    }
+    setLoading(true);
+    try {
+      const data = await loginVerifySMS(tempToken, smsCode);
+      store.setAuth(data.user);
+      login(data.user);
+      navigate('/dashboard');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : t('login.smsError');
+      if (msg.includes('expir')) {
+        resetToCredentials();
+        setError(t('login.totpExpired'));
       } else {
         setError(msg);
       }
@@ -166,8 +216,46 @@ export function Login() {
     setTempToken('');
     setTotpCode('');
     setBackupCode('');
+    setSmsCode('');
+    setSmsSent(false);
     setError('');
   }, []);
+
+  const chooseMethod = (method: string) => {
+    setError('');
+    if (method === 'authenticator') setMode('totp');
+    else if (method === 'sms') setMode('sms');
+    else if (method === 'backup') setMode('backup');
+  };
+
+  if (mode === 'choose-method') {
+    return (
+      <div className="min-h-[80vh] flex items-center justify-center py-8 px-4 animate-fade-in">
+        <div className="max-w-md w-full space-y-5 bg-white dark:bg-[#0d0d0d] p-6 sm:p-8 rounded-xl border border-slate-200 dark:border-[#1a1a1a]">
+          <div className="text-center">
+            <h2 className="text-3xl font-semibold text-slate-900 dark:text-white tracking-tight">{t('login.chooseMethod')}</h2>
+          </div>
+          <div className="space-y-3 mt-6">
+            {methods.map((m) => (
+              <button
+                key={m}
+                type="button"
+                onClick={() => chooseMethod(m)}
+                className="w-full px-4 py-3 text-sm font-medium rounded-lg border border-slate-300 dark:border-[#262626] hover:border-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-all text-slate-700 dark:text-slate-300"
+              >
+                {m === 'authenticator' ? t('login.authenticator') : t('login.sms')}
+              </button>
+            ))}
+          </div>
+          <div className="text-center mt-4">
+            <button type="button" onClick={resetToCredentials} className="text-sm text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+              {t('login.backToLogin')}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (mode === 'totp') {
     return (
@@ -207,19 +295,16 @@ export function Login() {
           </form>
 
           <div className="text-center space-y-2">
-            <button
-              type="button"
-              onClick={() => setMode('backup')}
-              className="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 underline"
-            >
+            {methods.includes('sms') && (
+              <button type="button" onClick={() => chooseMethod('sms')} className="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 underline mr-3">
+                {t('login.sms')}
+              </button>
+            )}
+            <button type="button" onClick={() => setMode('backup')} className="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 underline">
               {t('login.useBackupCode')}
             </button>
             <br />
-            <button
-              type="button"
-              onClick={resetToCredentials}
-              className="text-sm text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
-            >
+            <button type="button" onClick={resetToCredentials} className="text-sm text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
               {t('login.backToLogin')}
             </button>
           </div>
@@ -266,19 +351,86 @@ export function Login() {
           </form>
 
           <div className="text-center">
-            <button
-              type="button"
-              onClick={() => setMode('totp')}
-              className="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 underline"
-            >
-              {t('login.backToTotp')}
+            {methods.includes('authenticator') && (
+              <button type="button" onClick={() => setMode('totp')} className="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 underline mr-3">
+                {t('login.backToTotp')}
+              </button>
+            )}
+            <button type="button" onClick={resetToCredentials} className="text-sm text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+              {t('login.backToLogin')}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (mode === 'sms') {
+    return (
+      <div className="min-h-[80vh] flex items-center justify-center py-8 px-4 animate-fade-in">
+        <div className="max-w-md w-full space-y-5 bg-white dark:bg-[#0d0d0d] p-6 sm:p-8 rounded-xl border border-slate-200 dark:border-[#1a1a1a]">
+          <div className="text-center">
+            <h2 className="text-3xl font-semibold text-slate-900 dark:text-white tracking-tight">{t('login.smsTitle')}</h2>
+            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+              {smsSent ? t('login.smsCodeSentTo') : t('login.smsSubtitle')}
+            </p>
+          </div>
+
+          {error && (
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-lg text-sm font-medium animate-fade-in">
+              {error}
+            </div>
+          )}
+
+          {!smsSent ? (
+            <div className="mt-6">
+              <button
+                type="button"
+                onClick={handleSendSms}
+                disabled={smsSending}
+                className="btn-primary w-full flex items-center justify-center gap-2"
+              >
+                {smsSending ? <>{t('login.verifying')}</> : t('login.sendSmsCode')}
+              </button>
+            </div>
+          ) : (
+            <form className="mt-6 space-y-5" onSubmit={handleSmsSubmit}>
+              <div>
+                <label htmlFor="sms-code" className="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">
+                  {t('login.smsCodeLabel')}
+                </label>
+                <input
+                  id="sms-code" name="sms-code" type="text" inputMode="numeric" autoComplete="one-time-code"
+                  className="input-clean mt-1 text-center text-2xl tracking-[0.5em]"
+                  placeholder="______"
+                  maxLength={6}
+                  value={smsCode}
+                  onChange={(e) => setSmsCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                  autoFocus
+                  aria-label={t('login.smsCodeLabel')}
+                />
+                <p className="text-xs text-slate-400 dark:text-slate-500 mt-2 text-center">
+                  {t('login.smsCodeHint')}
+                </p>
+              </div>
+
+              <button type="submit" disabled={loading} className="btn-primary w-full mt-2">
+                {loading ? t('login.verifying') : t('login.smsVerifyButton')}
+              </button>
+            </form>
+          )}
+
+          <div className="text-center space-y-2">
+            {methods.includes('authenticator') && (
+              <button type="button" onClick={() => { setMode('totp'); setSmsSent(false); }} className="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 underline mr-3">
+                {t('login.authenticator')}
+              </button>
+            )}
+            <button type="button" onClick={() => { setMode('backup'); setSmsSent(false); }} className="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 underline">
+              {t('login.useBackupCode')}
             </button>
             <br />
-            <button
-              type="button"
-              onClick={resetToCredentials}
-              className="text-sm text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
-            >
+            <button type="button" onClick={resetToCredentials} className="text-sm text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
               {t('login.backToLogin')}
             </button>
           </div>

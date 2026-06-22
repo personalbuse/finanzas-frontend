@@ -7,7 +7,11 @@ export interface User {
   email: string;
   initial_balance: number;
   current_balance: number;
+  completed_courses: number;
   rol: string;
+  phone_number: string | null;
+  register_channel: string;
+  login_2fa_method: string;
   created_at: string;
 }
 

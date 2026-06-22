@@ -170,7 +170,19 @@
     "backupRequired": "Ingresa un código de respaldo",
     "backupError": "Código de respaldo inválido o ya utilizado",
     "backupExpired": "La sesión expiró. Ingresa tus credenciales de nuevo.",
-    "backToTotp": "Usar app autenticadora"
+    "backToTotp": "Usar app autenticadora",
+    "chooseMethod": "Elige un método de verificación",
+    "authenticator": "App autenticadora",
+    "sms": "SMS al celular",
+    "smsTitle": "Verificación por SMS",
+    "smsSubtitle": "Te enviaremos un código a tu celular registrado",
+    "sendSmsCode": "Enviar código por SMS",
+    "smsSent": "Código enviado a tu celular",
+    "smsCodeSentTo": "Código enviado al número",
+    "smsCodeLabel": "Código SMS",
+    "smsCodeHint": "Ingresa el código de 6 dígitos que recibiste por SMS",
+    "smsVerifyButton": "Verificar código SMS",
+    "smsError": "Código SMS inválido o expirado"
   },
   "register": {
     "title": "Crear Cuenta",
@@ -201,6 +213,12 @@
     "codeSent": "Te enviamos un código de verificación a",
     "codeLabel": "Código de verificación",
     "codeHint": "Ingresa los 6 dígitos que te enviamos por correo",
+    "codeHintSms": "Ingresa los 6 dígitos que te enviamos por SMS",
+    "phoneLabel": "Teléfono",
+    "phonePlaceholder": "+573001234567",
+    "channelEmail": "Correo electrónico",
+    "channelSms": "SMS al celular",
+    "codeSentTo": "Te enviamos un código de verificación a",
     "backToRegister": "← Volver al registro"
   },
   "forgotPassword": {
@@ -366,7 +384,14 @@
     "leaveBlankIfUnchanged": "Dejar en blanco si no deseas cambiar",
     "tip": "Consejo: Diversificar tu cartera en diferentes sectores ayuda a gestionar el riesgo y aumentar la estabilidad a largo plazo.",
     "darkMode": "Modo Oscuro",
-    "darkModeDesc": "Cambiar entre tema claro y oscuro"
+    "darkModeDesc": "Cambiar entre tema claro y oscuro",
+    "phone": "Teléfono",
+    "phoneVerified": "Teléfono verificado",
+    "verifyPhone": "Verificar teléfono",
+    "phoneNotVerified": "Teléfono no verificado. Cambia el número o verifícalo.",
+    "loginMethod": "Método de verificación en inicio de sesión",
+    "authenticator": "App autenticadora",
+    "sms": "SMS al celular"
   },
   "learn": {
     "title": "Academia de Aprendizaje",
@@ -515,7 +540,8 @@
     "passwordsMismatch": "Las contraseñas no coinciden",
     "quantityPositive": "La cantidad debe ser un número positivo",
     "currentPasswordRequired": "Debes ingresar tu contraseña actual",
-    "passwordInvalid": "La contraseña no cumple con los requisitos"
+    "passwordInvalid": "La contraseña no cumple con los requisitos",
+    "phoneInvalid": "Ingresa un número de celular colombiano válido (+57 3XX XXX XXXX)"
   },
   "common": {
     "loading": "Cargando...",

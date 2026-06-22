@@ -118,4 +118,16 @@ export async function loginBackup2FA(temp_token: string, backup_code: string): P
   return response.data;
 }
 
+export async function sendSmsCode(temp_token: string): Promise<{ message: string }> {
+  const response = await api.post('/2fa/send-sms-code', { temp_token });
+  return response.data;
+}
+
+export async function loginVerifySMS(temp_token: string, code: string): Promise<{
+  access_token: string; refresh_token: string; token_type: string; user: any;
+}> {
+  const response = await api.post('/2fa/login-verify-sms', { temp_token, code });
+  return response.data;
+}
+
 export default api;

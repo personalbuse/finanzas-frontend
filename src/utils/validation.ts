@@ -57,6 +57,8 @@ export const completeModuleSchema = z.object({
   moduleId: z.enum(['m1', 'm2', 'm3', 'm4', 'm5', 'm6']),
 });
 
+export const phoneSchema = z.string().regex(/^\+57(3\d{9})$/, 'validation.phoneInvalid');
+
 export const editProfileSchema = z.object({
   username: z.string().min(3, 'validation.usernameMin').max(50, 'validation.usernameMax').optional().or(z.literal('')),
   email: z.string().email('validation.emailInvalid').optional().or(z.literal('')),

@@ -16,11 +16,13 @@ export function Register() {
   const store = useAuthStore();
   const setShouldStartTour = useTourStore((s) => s.setShouldStartTour);
   const navigate = useNavigate();
-  
+
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     username: '', email: '', password: '', confirmPassword: '',
   });
+  const [phoneNumber, setPhoneNumber] = useState('+57');
+  const [registerChannel, setRegisterChannel] = useState<'email' | 'sms'>('email');
   const [verificationCode, setVerificationCode] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [error, setError] = useState('');
@@ -53,7 +55,7 @@ export function Register() {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     validateField(name, value);
-    
+
     if (name === 'password') {
       setPasswordRequirements({
         length: value.length >= 12,
@@ -83,17 +85,34 @@ export function Register() {
       return;
     }
 
+      if (registerChannel === 'sms') {
+        const phoneClean = phoneNumber.startsWith('+57')
+          ? phoneNumber
+          : `+57${phoneNumber.replace(/\D/g, '')}`;
+        if (!/^\+57(3\d{9})$/.test(phoneClean)) {
+          setError(t('validation.phoneInvalid'));
+          return;
+        }
+        setPhoneNumber(phoneClean);
+      }
+
     setLoading(true);
     try {
+      const body: Record<string, unknown> = {
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+        initial_balance: 10000.00,
+        register_channel: registerChannel,
+      };
+      if (registerChannel === 'sms') {
+        body.phone_number = phoneNumber.startsWith('+57') ? phoneNumber : `+57${phoneNumber.replace(/\D/g, '')}`;
+      }
+
       const response = await fetch(`${API_BASE_URL}/register-init`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          username: formData.username,
-          email: formData.email,
-          password: formData.password,
-          initial_balance: 10000.00,
-        }),
+        body: JSON.stringify(body),
       });
 
       const data = await response.json();
@@ -303,6 +322,60 @@ export function Register() {
               )}
             </div>
 
+            <div className="border-t border-slate-200 dark:border-[#1a1a1a] pt-4">
+              <p className="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1 mb-2">
+                {t('register.verifyMethod') || 'Método de verificación'}
+              </p>
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setRegisterChannel('email')}
+                  className={`flex-1 px-3 py-2 text-sm font-medium rounded-lg border transition-all ${
+                    registerChannel === 'email'
+                      ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400'
+                      : 'border-slate-300 dark:border-[#262626] text-slate-600 dark:text-slate-400'
+                  }`}
+                >
+                  {t('register.channelEmail')}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setRegisterChannel('sms')}
+                  className={`flex-1 px-3 py-2 text-sm font-medium rounded-lg border transition-all ${
+                    registerChannel === 'sms'
+                      ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400'
+                      : 'border-slate-300 dark:border-[#262626] text-slate-600 dark:text-slate-400'
+                  }`}
+                >
+                  {t('register.channelSms')}
+                </button>
+              </div>
+            </div>
+
+            {registerChannel === 'sms' && (
+              <div>
+                <label htmlFor="phoneNumber" className="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">
+                  {t('register.phoneLabel')}
+                </label>
+                <input
+                  id="phoneNumber" name="phoneNumber" type="tel" required
+                  className="input-clean mt-1"
+                  placeholder={t('register.phonePlaceholder')}
+                  value={phoneNumber}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (!val.startsWith('+57')) {
+                      setPhoneNumber(`+57${val.replace(/\D/g, '')}`);
+                    } else {
+                      const digits = val.slice(3).replace(/\D/g, '');
+                      setPhoneNumber(`+57${digits.slice(0, 10)}`);
+                    }
+                  }}
+                  aria-label={t('register.phoneLabel')}
+                />
+              </div>
+            )}
+
             <button
               type="submit"
               disabled={loading || !allRequirementsMet || formData.password !== formData.confirmPassword}
@@ -319,7 +392,9 @@ export function Register() {
             <div className="text-center mb-3">
               <p className="text-sm text-slate-600 dark:text-slate-400">
                 {t('register.codeSent')}<br />
-                <span className="font-medium text-slate-900 dark:text-white">{formData.email}</span>
+                <span className="font-medium text-slate-900 dark:text-white">
+                  {registerChannel === 'sms' ? phoneNumber : formData.email}
+                </span>
               </p>
             </div>
 
@@ -338,7 +413,7 @@ export function Register() {
                 onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
               />
               <p className="text-xs text-slate-400 dark:text-slate-500 mt-2 text-center">
-                {t('register.codeHint')}
+                {registerChannel === 'sms' ? t('register.codeHintSms') : t('register.codeHint')}
               </p>
             </div>
 
