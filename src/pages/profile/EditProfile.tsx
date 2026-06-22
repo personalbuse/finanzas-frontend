@@ -33,7 +33,7 @@ export function EditProfile() {
 
     const phoneClean = phoneNumber.startsWith('+57') ? phoneNumber : `+57${phoneNumber.replace(/\D/g, '')}`;
     if (phoneClean !== (user?.phone_number || '')) {
-      if (phoneClean !== '+57' && !/^\+57(3\d{9})$/.test(phoneClean)) {
+      if (phoneClean !== '+57' && !/^(\+57(3\d{9})|\+1\d{10})$/.test(phoneClean)) {
         setErrors({ phone: t('validation.phoneInvalid') });
         return;
       }
@@ -154,7 +154,7 @@ export function EditProfile() {
               onChange={handlePhoneChange}
               className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-[#262626] bg-white dark:bg-[#1a1a1a] text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-colors text-sm"
               aria-invalid={errors.phone ? 'true' : 'false'}
-              placeholder="+573001234567"
+              placeholder="+17622493759"
             />
             {errors.phone && (
               <p className="text-xs text-red-500 mt-1">{errors.phone}</p>

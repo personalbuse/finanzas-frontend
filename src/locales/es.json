@@ -215,7 +215,7 @@
     "codeHint": "Ingresa los 6 dígitos que te enviamos por correo",
     "codeHintSms": "Ingresa los 6 dígitos que te enviamos por SMS",
     "phoneLabel": "Teléfono",
-    "phonePlaceholder": "+573001234567",
+    "phonePlaceholder": "+17622493759",
     "channelEmail": "Correo electrónico",
     "channelSms": "SMS al celular",
     "codeSentTo": "Te enviamos un código de verificación a",
@@ -541,7 +541,7 @@
     "quantityPositive": "La cantidad debe ser un número positivo",
     "currentPasswordRequired": "Debes ingresar tu contraseña actual",
     "passwordInvalid": "La contraseña no cumple con los requisitos",
-    "phoneInvalid": "Ingresa un número de celular colombiano válido (+57 3XX XXX XXXX)"
+    "phoneInvalid": "Ingresa un número válido (+57 3XX XXX XXXX o +1 XXX XXX XXXX)"
   },
   "common": {
     "loading": "Cargando...",
