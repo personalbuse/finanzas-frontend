@@ -169,7 +169,17 @@
     "backupRequired": "Please enter a backup code",
     "backupError": "Invalid or already used backup code",
     "backupExpired": "Session expired. Please sign in again.",
-    "backToTotp": "Use authenticator app"
+    "backToTotp": "Use authenticator app",
+    "choose2faTitle": "Two-Factor Authentication",
+    "choose2faSubtitle": "Choose how to verify your identity",
+    "totpMethod": "Authenticator app (TOTP)",
+    "smsMethod": "SMS to {number}",
+    "smsCodeSent": "Code sent to {number}",
+    "sendSmsCode": "Send SMS code",
+    "smsRequired": "Request a code before verifying",
+    "smsError": "Error sending SMS code. Try again.",
+    "backToMethods": "Choose another method",
+    "sending": "Sending..."
   },
   "register": {
     "title": "Create Account",
@@ -197,9 +207,15 @@
     "resendCode": "Didn't receive the code? Request another",
     "codeResent": "New code sent to your email",
     "resendError": "Error resending code",
-    "codeSent": "We sent a verification code to",
+    "codeSent": "We sent a verification code to:",
+    "codeSentSms": "We sent a code to {number}",
     "codeLabel": "Verification code",
-    "codeHint": "Enter the 6 digits we sent by email",
+    "codeHint": "Enter the 6-digit code we sent you",
+    "phoneLabel": "Phone (optional)",
+    "phonePlaceholder": "e.g. +573153979426",
+    "deliveryMethod": "Receive code via",
+    "deliveryEmail": "Email",
+    "deliverySms": "SMS to phone",
     "backToRegister": "← Back to register"
   },
   "forgotPassword": {
