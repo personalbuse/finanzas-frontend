@@ -213,7 +213,7 @@
     "codeLabel": "Código de verificación",
     "codeHint": "Ingresa los 6 dígitos que te enviamos",
     "phoneLabel": "Teléfono (opcional)",
-    "phonePlaceholder": "Ej: +573153979426",
+    "phonePlaceholder": "Ej: +573XXXXXXXXX",
     "deliveryMethod": "Recibir código por",
     "deliveryEmail": "Correo electrónico",
     "deliverySms": "SMS al teléfono",
