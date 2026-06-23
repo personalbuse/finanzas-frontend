@@ -170,7 +170,17 @@
     "backupRequired": "Ingresa un código de respaldo",
     "backupError": "Código de respaldo inválido o ya utilizado",
     "backupExpired": "La sesión expiró. Ingresa tus credenciales de nuevo.",
-    "backToTotp": "Usar app autenticadora"
+    "backToTotp": "Usar app autenticadora",
+    "choose2faTitle": "Verificación en Dos Pasos",
+    "choose2faSubtitle": "Elige cómo quieres verificar tu identidad",
+    "totpMethod": "App autenticadora (TOTP)",
+    "smsMethod": "SMS al {number}",
+    "smsCodeSent": "Código enviado al {number}",
+    "sendSmsCode": "Enviar código SMS",
+    "smsRequired": "Solicita un código antes de verificar",
+    "smsError": "Error al enviar el código SMS. Intenta de nuevo.",
+    "backToMethods": "Elegir otro método",
+    "sending": "Enviando..."
   },
   "register": {
     "title": "Crear Cuenta",
@@ -198,9 +208,15 @@
     "resendCode": "¿No recibiste el código? Solicitar otro",
     "codeResent": "Nuevo código enviado a tu correo",
     "resendError": "Error al reenviar código",
-    "codeSent": "Te enviamos un código de verificación a",
+    "codeSent": "Te enviamos un código de verificación a:",
+    "codeSentSms": "Te enviamos un código al {number}",
     "codeLabel": "Código de verificación",
-    "codeHint": "Ingresa los 6 dígitos que te enviamos por correo",
+    "codeHint": "Ingresa los 6 dígitos que te enviamos",
+    "phoneLabel": "Teléfono (opcional)",
+    "phonePlaceholder": "Ej: +573153979426",
+    "deliveryMethod": "Recibir código por",
+    "deliveryEmail": "Correo electrónico",
+    "deliverySms": "SMS al teléfono",
     "backToRegister": "← Volver al registro"
   },
   "forgotPassword": {

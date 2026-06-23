@@ -118,4 +118,12 @@ export async function loginBackup2FA(temp_token: string, backup_code: string): P
   return response.data;
 }
 
+export async function sendLoginSmsOtp(temp_token: string): Promise<{ message: string }> {
+  const formData = new URLSearchParams({ temp_token });
+  const response = await api.post('/2fa/send-otp', formData, {
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  });
+  return response.data;
+}
+
 export default api;

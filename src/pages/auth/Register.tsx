@@ -19,8 +19,10 @@ export function Register() {
   
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
-    username: '', email: '', password: '', confirmPassword: '',
+    username: '', email: '', password: '', confirmPassword: '', phone_number: '',
   });
+  const [deliveryMethod, setDeliveryMethod] = useState<'email' | 'sms'>('email');
+  const [phoneLastDigits, setPhoneLastDigits] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [error, setError] = useState('');
@@ -85,15 +87,21 @@ export function Register() {
 
     setLoading(true);
     try {
+      const body: Record<string, unknown> = {
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+        initial_balance: 10000.00,
+        delivery_method: deliveryMethod,
+      };
+      if (deliveryMethod === 'sms' && formData.phone_number) {
+        body.phone_number = formData.phone_number;
+      }
+
       const response = await fetch(`${API_BASE_URL}/register-init`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          username: formData.username,
-          email: formData.email,
-          password: formData.password,
-          initial_balance: 10000.00,
-        }),
+        body: JSON.stringify(body),
       });
 
       const data = await response.json();
@@ -106,6 +114,9 @@ export function Register() {
         throw new Error(errorDetail || t('register.error'));
       }
 
+      if (data.phone_last_digits) {
+        setPhoneLastDigits(data.phone_last_digits);
+      }
       setStep(2);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : t('register.error'));
@@ -303,6 +314,51 @@ export function Register() {
               )}
             </div>
 
+            <div>
+              <label htmlFor="phone_number" className="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">
+                {t('register.phoneLabel')}
+              </label>
+              <input
+                id="phone_number" name="phone_number" type="tel"
+                className="input-clean mt-1"
+                placeholder={t('register.phonePlaceholder')}
+                value={formData.phone_number}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div>
+              <label className="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">
+                {t('register.deliveryMethod')}
+              </label>
+              <div className="mt-1 flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setDeliveryMethod('email')}
+                  className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium border transition-all ${
+                    deliveryMethod === 'email'
+                      ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 border-slate-900 dark:border-white'
+                      : 'bg-white dark:bg-[#0d0d0d] text-slate-600 dark:text-slate-400 border-slate-200 dark:border-[#1a1a1a]'
+                  }`}
+                >
+                  {t('register.deliveryEmail')}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => formData.phone_number && setDeliveryMethod('sms')}
+                  className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium border transition-all ${
+                    !formData.phone_number
+                      ? 'opacity-40 cursor-not-allowed bg-slate-100 dark:bg-[#1a1a1a] text-slate-400 dark:text-slate-600 border-slate-200 dark:border-[#1a1a1a]'
+                      : deliveryMethod === 'sms'
+                        ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 border-slate-900 dark:border-white'
+                        : 'bg-white dark:bg-[#0d0d0d] text-slate-600 dark:text-slate-400 border-slate-200 dark:border-[#1a1a1a]'
+                  }`}
+                >
+                  {t('register.deliverySms')}
+                </button>
+              </div>
+            </div>
+
             <button
               type="submit"
               disabled={loading || !allRequirementsMet || formData.password !== formData.confirmPassword}
@@ -318,8 +374,13 @@ export function Register() {
           <form className="mt-6 space-y-4" onSubmit={handleVerifyCode}>
             <div className="text-center mb-3">
               <p className="text-sm text-slate-600 dark:text-slate-400">
-                {t('register.codeSent')}<br />
-                <span className="font-medium text-slate-900 dark:text-white">{formData.email}</span>
+                {deliveryMethod === 'sms'
+                  ? t('register.codeSentSms', { number: phoneLastDigits || `******${formData.phone_number.slice(-4)}` })
+                  : t('register.codeSent')
+                }
+                {deliveryMethod === 'email' && (
+                  <><br /><span className="font-medium text-slate-900 dark:text-white">{formData.email}</span></>
+                )}
               </p>
             </div>
 
