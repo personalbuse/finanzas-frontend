@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback } from 'react';
 import { useTranslation } from '../../provider/LanguageProvider';
 import api from '../../services/api';
-import { Upload, FileText, CheckCircle, XCircle, Shield, Hash } from 'lucide-react';
+import { Upload, FileText, CheckCircle, XCircle, Shield } from 'lucide-react';
 import { Spinner } from '../../components/ui/Spinner';
 
 interface VerifyResult {
