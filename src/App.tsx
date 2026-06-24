@@ -32,6 +32,7 @@ const Indices = lazy(() => import('./pages/indices/Indices').then(m => ({ defaul
 const Forex = lazy(() => import('./pages/forex/Forex').then(m => ({ default: m.Forex })));
 const Leaderboard = lazy(() => import('./pages/leaderboard/Leaderboard').then(m => ({ default: m.Leaderboard })));
 const TwoFA = lazy(() => import('./pages/settings/TwoFA').then(m => ({ default: m.TwoFA })));
+const PDFSignatureVerify = lazy(() => import('./pages/portfolio/PDFSignatureVerify').then(m => ({ default: m.PDFSignatureVerify })));
 
 function LoadingSpinner() {
   return (
@@ -182,6 +183,8 @@ function AppContent() {
             />
 
             <Route path="/maintenance" element={<Maintenance />} />
+
+            <Route path="/verify-signature" element={<PDFSignatureVerify />} />
 
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="*" element={<NotFound />} />

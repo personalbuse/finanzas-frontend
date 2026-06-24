@@ -126,4 +126,23 @@ export async function sendLoginSmsOtp(temp_token: string): Promise<{ message: st
   return response.data;
 }
 
+export async function verifyPDFSignature(file: File): Promise<{
+  valid: boolean;
+  message: string;
+  details: {
+    hash: string;
+    cert_serial: string;
+    cert_subject: string;
+    signature_timestamp: string;
+  } | null;
+}> {
+  const formData = new FormData();
+  formData.append('file', file);
+  const response = await api.post('/portfolio/report/verify', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+    timeout: 30000,
+  });
+  return response.data;
+}
+
 export default api;

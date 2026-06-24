@@ -314,6 +314,24 @@
     "loadingRealTime": "Fetching real-time data...",
     "loadingMarketData": "Loading market data..."
   },
+  "signature": {
+    "title": "Verify Digital Signature",
+    "description": "Upload a PDF file signed by the Investment Simulator to verify its authenticity and integrity.",
+    "upload": "Upload PDF",
+    "dragDrop": "Drag and drop your PDF here",
+    "orClick": "or click to select a file",
+    "verify": "Verify Digital Signature",
+    "verifyAnother": "Verify another file",
+    "valid": "Digital signature is valid",
+    "invalid": "Digital signature is invalid",
+    "tampered": "The document may have been altered since it was signed.",
+    "hash": "SHA-256 hash of the document",
+    "serial": "Certificate Serial",
+    "issuer": "Certificate Issuer",
+    "timestamp": "Signature Timestamp",
+    "noFile": "Select a PDF file",
+    "invalidFormat": "Only PDF files are accepted"
+  },
   "portfolio": {
     "title": "My Portfolio",
     "totalCost": "Total Cost",

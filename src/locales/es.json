@@ -315,6 +315,24 @@
     "loadingRealTime": "Obteniendo información en tiempo real...",
     "loadingMarketData": "Cargando datos del mercado..."
   },
+  "signature": {
+    "title": "Verificar Firma Digital",
+    "description": "Sube un archivo PDF firmado digitalmente por el Simulador de Inversiones para verificar su autenticidad e integridad.",
+    "upload": "Subir PDF",
+    "dragDrop": "Arrastra y suelta tu PDF aqui",
+    "orClick": "o haz clic para seleccionar un archivo",
+    "verify": "Verificar Firma Digital",
+    "verifyAnother": "Verificar otro archivo",
+    "valid": "Firma digital valida",
+    "invalid": "Firma digital invalida",
+    "tampered": "El documento pudo haber sido alterado desde su creacion.",
+    "hash": "Hash SHA-256 del documento",
+    "serial": "Serial del Certificado",
+    "issuer": "Emisor del Certificado",
+    "timestamp": "Fecha de Firma",
+    "noFile": "Selecciona un archivo PDF",
+    "invalidFormat": "Solo se aceptan archivos PDF"
+  },
   "portfolio": {
     "title": "Mi Portafolio",
     "totalCost": "Costo Total",
