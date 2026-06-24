@@ -316,7 +316,7 @@
   },
   "signature": {
     "title": "Verify Digital Signature",
-    "description": "Upload a PDF file signed by the Investment Simulator to verify its authenticity and integrity.",
+    "description": "Upload a PDF file signed by the FIUP Investment Simulator to verify its authenticity and integrity.",
     "upload": "Upload PDF",
     "dragDrop": "Drag and drop your PDF here",
     "orClick": "or click to select a file",
