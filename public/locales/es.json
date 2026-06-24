@@ -315,6 +315,24 @@
     "loadingRealTime": "Obteniendo información en tiempo real...",
     "loadingMarketData": "Cargando datos del mercado..."
   },
+  "signature": {
+    "title": "Verificar firma digital",
+    "description": "Sube un archivo PDF firmado digitalmente por el Simulador de Inversiones FIUP para verificar su autenticidad e integridad.",
+    "upload": "Subir PDF",
+    "dragDrop": "Arrastra y suelta tu PDF aquí",
+    "orClick": "O haz clic para seleccionar un archivo",
+    "verify": "Verificar firma digital",
+    "verifyAnother": "Verificar otro archivo",
+    "valid": "Firma digital válida",
+    "invalid": "Firma digital inválida",
+    "tampered": "El documento pudo haber sido alterado desde su creación.",
+    "hash": "Hash SHA-256 del documento",
+    "serial": "Serial del certificado",
+    "issuer": "Emisor del certificado",
+    "timestamp": "Fecha de firma",
+    "noFile": "Selecciona un archivo PDF",
+    "invalidFormat": "Solo se aceptan archivos PDF"
+  },
   "portfolio": {
     "title": "Mi Portafolio",
     "totalCost": "Costo Total",
